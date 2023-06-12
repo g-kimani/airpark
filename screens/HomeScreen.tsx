@@ -1,4 +1,10 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -15,7 +21,17 @@ type Props = NativeStackScreenProps<NavigationStackParamList, "Home">;
 const HomeScreen = ({ navigation }: Props) => {
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Home Screen</Text>
+      <Text style={styles.Header}>AirPark</Text>
+      <Text>Sign in</Text>
+      <TextInput placeholder="Email" style={styles.inputText} />
+      <TextInput
+        placeholder="Password"
+        style={styles.inputText}
+        // onChange={(event) => {
+        //   console.log(event.target);
+        // }}
+      />
+
       <TouchableOpacity
         onPress={() => {
           navigation.navigate("Login");
@@ -24,13 +40,24 @@ const HomeScreen = ({ navigation }: Props) => {
       >
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
+
+      <TouchableOpacity
+        // onPress={() => {
+        //   navigation.navigate("google");
+        // }}
+        style={styles.button}
+      >
+        <Text style={styles.buttonText}>Continue with Google</Text>
+      </TouchableOpacity>
+
+      <Text>Don't have an account?</Text>
       <TouchableOpacity
         onPress={() => {
           navigation.navigate("Signup");
         }}
-        style={styles.button}
+        // style={styles.button}
       >
-        <Text style={styles.buttonText}>Sign Up</Text>
+        <Text style={styles.signUpText}>Sign up now! </Text>
       </TouchableOpacity>
     </View>
   );
@@ -49,5 +76,19 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "700",
     fontSize: 16,
+  },
+  inputText: {
+    padding: 16,
+    backgroundColor: "#e0e0e0",
+    borderRadius: 10,
+    margin: 10,
+    width: "60%",
+  },
+  signUpText: {
+    color: "blue",
+    fontSize: 16,
+  },
+  Header: {
+    fontSize: 20,
   },
 });
