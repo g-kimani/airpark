@@ -34,7 +34,7 @@ const HomeScreen = ({ navigation }: Props) => {
 
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate("Login");
+          navigation.navigate("HomePage");
         }}
         style={styles.button}
       >
