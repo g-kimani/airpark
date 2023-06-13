@@ -9,7 +9,8 @@ import {
   View,
 } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-// import { NavigationStackParamList } from "./types";
+
+import { NavigationStackParamList } from "./types";
 
 const validationSchema = yup.object().shape({
   firstName: yup.string().required("First name is required"),
@@ -39,12 +40,11 @@ const SignupScreen: React.FC<Props> = ({ navigation }) => {
       navigation.navigate("HomePage");
     },
   });
-return (
+  return (
     <View>
       <TextInput
         style={styles.inputText}
         id="firstName"
-        name="firstName"
         onChangeText={formik.handleChange("firstName")}
         value={formik.values.firstName}
         placeholder="First Name"
@@ -54,7 +54,6 @@ return (
       <TextInput
         style={styles.inputText}
         id="lastName"
-        name="lastName"
         onChangeText={formik.handleChange("lastName")}
         value={formik.values.lastName}
         placeholder="Last Name"
@@ -64,7 +63,6 @@ return (
       <TextInput
         style={styles.inputText}
         id="email"
-        name="email"
         onChangeText={formik.handleChange("email")}
         value={formik.values.email}
         placeholder="Email"
@@ -86,7 +84,7 @@ return (
         <Text style={styles.buttonText}>Submit</Text>
       </TouchableOpacity>
     </View>
-    
+
     // <TouchableOpacity
     //     onPress={() => {
     //       navigation.navigate("Signup");
