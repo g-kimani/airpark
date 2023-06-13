@@ -12,6 +12,8 @@ import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import MapView from "react-native-maps";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const HomePage = ({ navigation }) => {
   const [viewMode, setViewMode] = useState("list"); // Track the current view mode
@@ -39,19 +41,19 @@ const HomePage = ({ navigation }) => {
         "https://images.pexels.com/photos/1500459/pexels-photo-1500459.jpeg?auto=compress&cs=tinysrgb&w=1600",
     },
     {
-      parking_id: 10,
-      host_id: 10,
+      parking_id: 11,
+      host_id: 11,
       price: 10,
-      location: "London",
+      location: "Bristol",
       isBooked: false,
       imgUrl:
         "https://images.pexels.com/photos/1500459/pexels-photo-1500459.jpeg?auto=compress&cs=tinysrgb&w=1600",
     },
     {
-      parking_id: 10,
-      host_id: 10,
+      parking_id: 12,
+      host_id: 13,
       price: 10,
-      location: "London",
+      location: "Manchester",
       isBooked: false,
       imgUrl:
         "https://images.pexels.com/photos/1500459/pexels-photo-1500459.jpeg?auto=compress&cs=tinysrgb&w=1600",
@@ -62,7 +64,21 @@ const HomePage = ({ navigation }) => {
   return (
     <>
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <TextInput placeholder="Search for Parking" style={styles.inputText} />
+        <SafeAreaView style={{ width: "80%" }}>
+          <View style={styles.searchSuggestion}>
+            <GooglePlacesAutocomplete
+              placeholder="Search"
+              onPress={(data, details = null) => {
+                // 'details' is provided when fetchDetails = true
+                console.log(data, details);
+              }}
+              query={{
+                key: "AIzaSyBhcOAI9R7HKqUD9f-2is268fJza5KZ0G8",
+                language: "en",
+              }}
+            />
+          </View>
+        </SafeAreaView>
 
         <View style={styles.buttonContainer}>
           <TouchableOpacity onPress={showList} style={styles.button}>
@@ -109,6 +125,8 @@ export default HomePage;
 const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
+    marginTop: -100,
+    marginBottom: 10,
   },
   button: {
     padding: 16,
@@ -131,5 +149,10 @@ const styles = StyleSheet.create({
   map: {
     width: "100%",
     height: 200,
+  },
+  searchSuggestion: {
+    padding: 5,
+
+    height: "50%",
   },
 });
