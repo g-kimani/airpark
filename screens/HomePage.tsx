@@ -15,9 +15,17 @@ import MapView from "react-native-maps";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import Geocoder from "react-native-geocoding";
+import { Marker } from "react-native-maps";
+
 const HomePage = ({ navigation }) => {
   const [viewMode, setViewMode] = useState("list"); // Track the current view mode
+  const [selectedLocation, setSelectedLocation] = useState({
+    latitude: 51.509865,
+    longitude: -0.118092,
+  }); // Track the user's location
 
+  Geocoder.init("AIzaSyBhcOAI9R7HKqUD9f-2is268fJza5KZ0G8"); //  geocoder
   const navigateToMap = () => {
     navigation.navigate("Map");
   };
@@ -81,13 +89,23 @@ const HomePage = ({ navigation }) => {
   const [filteredParkingList, setFilteredParkingList] = useState(parkingList);
   const handleSearch = (data, details) => {
     const location = data.description.split(",")[0].trim();
-    const filteredList = parkingList.filter((item) =>
-      item.location.toLowerCase().includes(location.toLowerCase())
-    );
-    console.log("Filtered List:", filteredList);
-    setFilteredParkingList(filteredList);
-  };
 
+    // Use Geocoder to get latitude and longitude
+    Geocoder.from(location)
+      .then((response) => {
+        const { lat, lng } = response.results[0].geometry.location;
+        const selectedLocation = { latitude: lat, longitude: lng };
+        setSelectedLocation(selectedLocation);
+
+        const filteredList = parkingList.filter((item) =>
+          item.location.toLowerCase().includes(location.toLowerCase())
+        );
+        setFilteredParkingList(filteredList);
+      })
+      .catch((error) => {
+        console.log("Error fetching coordinates:", error);
+      });
+  };
   return (
     <>
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -128,13 +146,17 @@ const HomePage = ({ navigation }) => {
         ) : (
           <MapView
             style={styles.map}
-            initialRegion={{
-              latitude: 37.78825,
-              longitude: -122.4324,
+            region={{
+              latitude: selectedLocation ? selectedLocation.latitude : 0,
+              longitude: selectedLocation ? selectedLocation.longitude : 0,
               latitudeDelta: 0.0922,
               longitudeDelta: 0.0421,
             }}
-          /> // Replace with your map component
+          >
+            <Marker
+              coordinate={{ latitude: 51.509865, longitude: -0.118092 }}
+            />
+          </MapView> //Replace with your map component
         )}
       </View>
     </>
