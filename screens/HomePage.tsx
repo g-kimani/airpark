@@ -11,13 +11,22 @@ import {
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import MapView from "react-native-maps";
 
 const HomePage = ({ navigation }) => {
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () =>
-    setIsEnabled((previousState) => {
-      return !previousState;
-    });
+  const [viewMode, setViewMode] = useState("list"); // Track the current view mode
+
+  const navigateToMap = () => {
+    navigation.navigate("Map");
+  };
+
+  const showList = () => {
+    setViewMode("list");
+  };
+
+  const showMap = () => {
+    setViewMode("map");
+  };
 
   const [parkingList, setParkingList] = useState([
     {
@@ -31,57 +40,76 @@ const HomePage = ({ navigation }) => {
     },
     {
       parking_id: 10,
-      host_id: 12,
+      host_id: 10,
       price: 10,
       location: "London",
       isBooked: false,
       imgUrl:
         "https://images.pexels.com/photos/1500459/pexels-photo-1500459.jpeg?auto=compress&cs=tinysrgb&w=1600",
     },
+    {
+      parking_id: 10,
+      host_id: 10,
+      price: 10,
+      location: "London",
+      isBooked: false,
+      imgUrl:
+        "https://images.pexels.com/photos/1500459/pexels-photo-1500459.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    },
+    // ... more parking items
   ]);
 
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <TextInput placeholder="Search for Parking" style={styles.inputText} />
-      <Switch
-        trackColor={{ false: "#767577", true: "#81b0ff" }}
-        thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
-        ios_backgroundColor="#3e3e3e"
-        onValueChange={() => {
-          navigation.navigate("HomePage");
-          toggleSwitch;
-        }}
-        value={isEnabled}
-      />
+    <>
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <TextInput placeholder="Search for Parking" style={styles.inputText} />
 
-      <TouchableOpacity onPress={() => {}} style={styles.button}>
-        <Text style={styles.buttonText}>List</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Map</Text>
-      </TouchableOpacity>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity onPress={showList} style={styles.button}>
+            <Text style={styles.buttonText}>List</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={showMap} style={styles.button}>
+            <Text style={styles.buttonText}>Map</Text>
+          </TouchableOpacity>
+        </View>
 
-      <FlatList
-        data={parkingList}
-        renderItem={({ item }) => (
-          <View>
-            <Text>{item.price}</Text>
-            <Text>{item.location}</Text>
-            <Image
-              source={{ uri: item.imgUrl }}
-              style={{ width: 200, height: 200 }}
-            />
-          </View>
+        {viewMode === "list" ? (
+          <FlatList
+            data={parkingList}
+            renderItem={({ item }) => (
+              <View>
+                <Text>{item.price}</Text>
+                <Text>{item.location}</Text>
+                <Image
+                  source={{ uri: item.imgUrl }}
+                  style={{ width: 200, height: 200 }}
+                />
+              </View>
+            )}
+            keyExtractor={(item) => item.host_id.toString()}
+          />
+        ) : (
+          <MapView
+            style={styles.map}
+            initialRegion={{
+              latitude: 37.78825,
+              longitude: -122.4324,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            }}
+          /> // Replace with your map component
         )}
-        keyExtractor={(item) => item.host_id.toString()}
-      />
-    </View>
+      </View>
+    </>
   );
 };
 
 export default HomePage;
 
 const styles = StyleSheet.create({
+  buttonContainer: {
+    flexDirection: "row",
+  },
   button: {
     padding: 16,
     backgroundColor: "red",
@@ -100,16 +128,8 @@ const styles = StyleSheet.create({
     margin: 10,
     width: "60%",
   },
-  signUpText: {
-    color: "blue",
-    fontSize: 16,
-  },
-  Header: {
-    fontSize: 20,
-  },
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+  map: {
+    width: "100%",
+    height: 200,
   },
 });
