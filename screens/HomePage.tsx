@@ -43,11 +43,11 @@ const HomePage = ({ navigation }) => {
     {
       parking_id: 11,
       host_id: 11,
-      price: 10,
+      price: 5,
       location: "Bristol",
       isBooked: false,
       imgUrl:
-        "https://images.pexels.com/photos/1500459/pexels-photo-1500459.jpeg?auto=compress&cs=tinysrgb&w=1600",
+        "https://www.shutterstock.com/image-photo/empty-space-parking-260nw-332087375.jpg",
     },
     {
       parking_id: 12,
@@ -58,8 +58,35 @@ const HomePage = ({ navigation }) => {
       imgUrl:
         "https://images.pexels.com/photos/1500459/pexels-photo-1500459.jpeg?auto=compress&cs=tinysrgb&w=1600",
     },
+    {
+      parking_id: 13,
+      host_id: 14,
+      price: 10,
+      location: "London",
+      isBooked: false,
+      imgUrl:
+        "https://images.pexels.com/photos/1500459/pexels-photo-1500459.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    },
+    {
+      parking_id: 15,
+      host_id: 14,
+      price: 10,
+      location: "Manchester",
+      isBooked: false,
+      imgUrl:
+        "https://images.pexels.com/photos/1500459/pexels-photo-1500459.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    },
     // ... more parking items
   ]);
+  const [filteredParkingList, setFilteredParkingList] = useState(parkingList);
+  const handleSearch = (data, details) => {
+    const location = data.description.split(",")[0].trim();
+    const filteredList = parkingList.filter((item) =>
+      item.location.toLowerCase().includes(location.toLowerCase())
+    );
+    console.log("Filtered List:", filteredList);
+    setFilteredParkingList(filteredList);
+  };
 
   return (
     <>
@@ -68,10 +95,7 @@ const HomePage = ({ navigation }) => {
           <View style={styles.searchSuggestion}>
             <GooglePlacesAutocomplete
               placeholder="Search"
-              onPress={(data, details = null) => {
-                // 'details' is provided when fetchDetails = true
-                console.log(data, details);
-              }}
+              onPress={handleSearch}
               query={{
                 key: "AIzaSyBhcOAI9R7HKqUD9f-2is268fJza5KZ0G8",
                 language: "en",
@@ -91,18 +115,15 @@ const HomePage = ({ navigation }) => {
 
         {viewMode === "list" ? (
           <FlatList
-            data={parkingList}
+            data={filteredParkingList}
             renderItem={({ item }) => (
               <View>
                 <Text>{item.price}</Text>
                 <Text>{item.location}</Text>
-                <Image
-                  source={{ uri: item.imgUrl }}
-                  style={{ width: 200, height: 200 }}
-                />
+                <Image source={{ uri: item.imgUrl }} style={styles.image} />
               </View>
             )}
-            keyExtractor={(item) => item.host_id.toString()}
+            keyExtractor={(item) => item.parking_id.toString()}
           />
         ) : (
           <MapView
@@ -154,5 +175,9 @@ const styles = StyleSheet.create({
     padding: 5,
 
     height: "50%",
+  },
+  image: {
+    width: 200,
+    height: 200,
   },
 });
