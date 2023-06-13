@@ -10,6 +10,7 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 type NavigationStackParamList = {
+  Map: undefined;
   HomePage: undefined;
   Login: undefined;
   Signup: undefined;

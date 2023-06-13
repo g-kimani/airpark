@@ -5,10 +5,20 @@ import {
   TextInput,
   Image,
   FlatList,
+  TouchableOpacity,
+  Switch,
 } from "react-native";
 import React, { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-const HomePage = () => {
+const HomePage = ({ navigation }) => {
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () =>
+    setIsEnabled((previousState) => {
+      return !previousState;
+    });
+
   const [parkingList, setParkingList] = useState([
     {
       parking_id: 10,
@@ -30,11 +40,27 @@ const HomePage = () => {
     },
   ]);
 
-  console.log(parkingList);
-
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <TextInput placeholder="Search for Parking" style={styles.inputText} />
+      <Switch
+        trackColor={{ false: "#767577", true: "#81b0ff" }}
+        thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
+        ios_backgroundColor="#3e3e3e"
+        onValueChange={() => {
+          navigation.navigate("HomePage");
+          toggleSwitch;
+        }}
+        value={isEnabled}
+      />
+
+      <TouchableOpacity onPress={() => {}} style={styles.button}>
+        <Text style={styles.buttonText}>List</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button}>
+        <Text style={styles.buttonText}>Map</Text>
+      </TouchableOpacity>
+
       <FlatList
         data={parkingList}
         renderItem={({ item }) => (
@@ -58,7 +84,7 @@ export default HomePage;
 const styles = StyleSheet.create({
   button: {
     padding: 16,
-    backgroundColor: "#039be5",
+    backgroundColor: "red",
     borderRadius: 10,
     margin: 10,
   },
@@ -80,5 +106,10 @@ const styles = StyleSheet.create({
   },
   Header: {
     fontSize: 20,
+  },
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomePage from "./screens/HomePage";
 import SignupScreen from "./screens/SignupScreen";
 import LogIn from "./screens/Login";
+import Map from "./screens/Map";
 
 type NavigationStackParamList = {
   // provide the props that are needed for a route, undefined if no props
@@ -12,6 +13,7 @@ type NavigationStackParamList = {
 
   Signup: undefined;
   HomePage: undefined;
+  Map: undefined;
   // example of props and types | undefined means props optional
   Profile: { userid: "string" } | undefined;
 };
@@ -26,6 +28,7 @@ export default function App() {
 
         <Stack.Screen name="Signup" component={SignupScreen} />
         <Stack.Screen name="HomePage" component={HomePage} />
+        <Stack.Screen name="Map" component={Map} />
       </Stack.Navigator>
     </NavigationContainer>
   );
