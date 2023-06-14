@@ -47,6 +47,10 @@ const HomePage = ({ navigation }: Props) => {
 
   useEffect(() => {
     getParkings().then(({ parkings }) => {
+      console.log(
+        "🚀 ~ file: HomePage.tsx:50 ~ getParkings ~ parkings:",
+        parkings
+      );
       setParkingList(parkings);
     });
   }, [selectedLocation]);

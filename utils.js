@@ -30,6 +30,13 @@ export function signUpUser(user) {
 
 export function getParkings() {
   return airparkAPI.get("/parkings").then((response) => {
-    return response.data;
+    const { parkings } = response.data;
+    const formatted = parkings.map((parking) => {
+      const latitude = parking.location.x;
+      const longitude = parking.location.y;
+      delete parking.location;
+      return { ...parking, latitude, longitude };
+    });
+    return formatted;
   });
 }
