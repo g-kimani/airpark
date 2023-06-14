@@ -29,8 +29,8 @@ const MapComponent = ({ selectedLocation, parkings }: Props) => {
           renderItem={({ item }) => (
             <Marker
               coordinate={{
-                latitude: item.location.x,
-                longitude: item.location.y,
+                latitude: item.latitude,
+                longitude: item.longitude,
               }}
             />
           )}
