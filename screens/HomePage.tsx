@@ -2,11 +2,9 @@ import {
   StyleSheet,
   Text,
   View,
-  TextInput,
   Image,
   FlatList,
   TouchableOpacity,
-  Switch,
 } from "react-native";
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -17,18 +15,16 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import Geocoder from "react-native-geocoding";
 import { Marker } from "react-native-maps";
-import HomeSearch from "../Components/HomeSearch";
-import ParkingsList from "../Components/ParkingsList";
+import parkingsArray from "../data/parkingsArray";
 
-const HomePage = () => {
-  const navigation = useNavigation();
-  const [viewMode, setViewMode] = useState("list"); // Track the current view mode
+const HomePage = ({ navigation }) => {
+  const [viewMode, setViewMode] = useState("list");
   const [selectedLocation, setSelectedLocation] = useState({
     latitude: 51.509865,
     longitude: -0.118092,
-  }); // Track the user's location
+  });
 
-  Geocoder.init("AIzaSyBhcOAI9R7HKqUD9f-2is268fJza5KZ0G8"); //  geocoder
+  Geocoder.init("AIzaSyBhcOAI9R7HKqUD9f-2is268fJza5KZ0G8");
   const navigateToMap = () => {
     navigation.navigate("Map");
   };
@@ -41,58 +37,10 @@ const HomePage = () => {
     setViewMode("map");
   };
 
-  const [parkingList, setParkingList] = useState([
-    {
-      parking_id: 10,
-      host_id: 10,
-      price: 10,
-      location: "London",
-      isBooked: false,
-      imgUrl:
-        "https://images.pexels.com/photos/1500459/pexels-photo-1500459.jpeg?auto=compress&cs=tinysrgb&w=1600",
-    },
-    {
-      parking_id: 11,
-      host_id: 11,
-      price: 5,
-      location: "Bristol",
-      isBooked: false,
-      imgUrl:
-        "https://www.shutterstock.com/image-photo/empty-space-parking-260nw-332087375.jpg",
-    },
-    {
-      parking_id: 12,
-      host_id: 13,
-      price: 10,
-      location: "Manchester",
-      isBooked: false,
-      imgUrl:
-        "https://images.pexels.com/photos/1500459/pexels-photo-1500459.jpeg?auto=compress&cs=tinysrgb&w=1600",
-    },
-    {
-      parking_id: 13,
-      host_id: 14,
-      price: 10,
-      location: "London",
-      isBooked: false,
-      imgUrl:
-        "https://images.pexels.com/photos/1500459/pexels-photo-1500459.jpeg?auto=compress&cs=tinysrgb&w=1600",
-    },
-    {
-      parking_id: 15,
-      host_id: 14,
-      price: 10,
-      location: "Manchester",
-      isBooked: false,
-      imgUrl:
-        "https://images.pexels.com/photos/1500459/pexels-photo-1500459.jpeg?auto=compress&cs=tinysrgb&w=1600",
-    },
-  ]);
-  const [filteredParkingList, setFilteredParkingList] = useState(parkingList);
+  const [parkingList, setParkingList] = useState(parkingsArray);
   const handleSearch = (data, details) => {
     const location = data.description.split(",")[0].trim();
 
-    // Use Geocoder to get latitude and longitude
     Geocoder.from(location)
       .then((response) => {
         const { lat, lng } = response.results[0].geometry.location;
@@ -102,7 +50,7 @@ const HomePage = () => {
         const filteredList = parkingList.filter((item) =>
           item.location.toLowerCase().includes(location.toLowerCase())
         );
-        setFilteredParkingList(filteredList);
+        setParkingList(filteredList);
       })
       .catch((error) => {
         console.log("Error fetching coordinates:", error);
@@ -112,7 +60,16 @@ const HomePage = () => {
     <>
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
         <SafeAreaView style={{ width: "80%" }}>
-          <HomeSearch navigation={navigation} />
+          <View style={styles.searchSuggestion}>
+            <GooglePlacesAutocomplete
+              placeholder="Search"
+              onPress={handleSearch}
+              query={{
+                key: "AIzaSyBhcOAI9R7HKqUD9f-2is268fJza5KZ0G8",
+                language: "en",
+              }}
+            />
+          </View>
         </SafeAreaView>
 
         <View style={styles.buttonContainer}>
@@ -125,7 +82,17 @@ const HomePage = () => {
         </View>
 
         {viewMode === "list" ? (
-          <ParkingsList parkings={filteredParkingList} />
+          <FlatList
+            data={parkingList}
+            renderItem={({ item }) => (
+              <View>
+                <Text>{item.price}</Text>
+                <Text>{item.location}</Text>
+                <Image source={{ uri: item.imgUrl }} style={styles.image} />
+              </View>
+            )}
+            keyExtractor={(item) => item.parking_id.toString()}
+          />
         ) : (
           <MapView
             style={styles.map}
