@@ -12,6 +12,7 @@ import MapView from "./Components/MapView";
 import { UserContext } from "./contexts/UserContext";
 import { useState, useEffect } from "react";
 import * as SecureStore from "expo-secure-store";
+import AddParkingList from "./screens/AddParkingList";
 
 const Stack = createNativeStackNavigator<NavigationStackParamList>();
 
@@ -21,6 +22,7 @@ type NavigationStackParamList = {
   Signup: undefined;
   Profile: { userid: "string" } | undefined;
   navigate: {};
+  AddParking: undefined;
 };
 export default function App() {
   const [user, setUser] = useState({});
@@ -40,6 +42,7 @@ export default function App() {
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Signup" component={SignupScreen} />
           <Stack.Screen name="HomePage" component={HomePage} />
+          <Stack.Screen name="AddParking" component={AddParkingList} />
         </Stack.Navigator>
       </NavigationContainer>
     </UserContext.Provider>
