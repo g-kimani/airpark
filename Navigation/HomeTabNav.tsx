@@ -1,5 +1,4 @@
 import React from "react";
-import { View, Text } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomePage from "../screens/HomePage";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
