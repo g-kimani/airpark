@@ -1,6 +1,6 @@
 import MapView from "react-native-maps";
 import { Marker } from "react-native-maps";
-import { StyleSheet } from "react-native";
+import { FlatList, StyleSheet } from "react-native";
 import { Text } from "react-native";
 
 type Props = {
@@ -8,9 +8,10 @@ type Props = {
     latitude: number;
     longitude: number;
   };
+  parkings: any[];
 };
 
-const MapComponent = ({ selectedLocation }: Props) => {
+const MapComponent = ({ selectedLocation, parkings }: Props) => {
   return (
     <>
       <MapView
@@ -23,6 +24,12 @@ const MapComponent = ({ selectedLocation }: Props) => {
         }}
       >
         <Marker coordinate={{ latitude: 51.509865, longitude: -0.118092 }} />
+        <FlatList
+          data={parkings}
+          renderItem={({ item }) => (
+            <Marker coordinate={{ latitude: item.lat, longitude: item.long }} />
+          )}
+        />
       </MapView>
     </>
   );

@@ -27,3 +27,9 @@ export function signUpUser(user) {
     return response.data;
   });
 }
+
+export function getParkings() {
+  airparkAPI.get("/parkings").then((response) => {
+    return response.data;
+  });
+}

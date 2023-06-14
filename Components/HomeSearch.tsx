@@ -41,13 +41,13 @@ const HomeSearch = ({ onPlaceSelected }: Props) => {
             language: "en",
           }}
           styles={styles.inputText}
-          renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => handlePlaceSelected(item)}>
+          renderRow={(data: GooglePlaceData) => (
+            <TouchableOpacity onPress={() => handlePlaceSelected(data)}>
               <View style={styles.searchSuggestion}>
                 <View style={styles.iconContainer}>
                   <Feather name="map-pin" size={30} />
                 </View>
-                <Text style={styles.suggestionText}>{item.description}</Text>
+                <Text style={styles.suggestionText}>{data.description}</Text>
               </View>
             </TouchableOpacity>
           )}

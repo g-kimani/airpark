@@ -6,7 +6,7 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import MapView from "react-native-maps";
@@ -19,6 +19,7 @@ import parkingsArray from "../data/parkingsArray";
 import { NavigationStackParamList } from "./types";
 import MapComponent from "../Components/MapView.tsx";
 import HomeSearch from "../Components/HomeSearch.tsx";
+import { getParkings } from "../utils.js";
 
 type Props = NativeStackScreenProps<NavigationStackParamList, "HomePage">;
 
@@ -43,6 +44,13 @@ const HomePage = ({ navigation }: Props) => {
   };
 
   const [parkingList, setParkingList] = useState(parkingsArray);
+
+  useEffect(() => {
+    getParkings().then(({ parkings }) => {
+      setParkingList(parkings);
+    });
+  }, [selectedLocation]);
+
   const handleSearch = (description: string) => {
     const location = description;
 
@@ -52,10 +60,10 @@ const HomePage = ({ navigation }: Props) => {
         const selectedLocation = { latitude: lat, longitude: lng };
         setSelectedLocation(selectedLocation);
 
-        const filteredList = parkingList.filter((item) =>
-          item.location.toLowerCase().includes(location.toLowerCase())
-        );
-        setParkingList(filteredList);
+        // const filteredList = parkingList.filter((item) =>
+        //   item.location.toLowerCase().includes(location.toLowerCase())
+        // );
+        // setParkingList(filteredList);
       })
       .catch((error) => {
         console.log("Error fetching coordinates:", error);
@@ -100,7 +108,10 @@ const HomePage = ({ navigation }: Props) => {
             keyExtractor={(item) => item.parking_id.toString()}
           />
         ) : (
-          <MapComponent selectedLocation={selectedLocation} />
+          <MapComponent
+            selectedLocation={selectedLocation}
+            parkings={parkingList}
+          />
         )}
       </View>
     </>
