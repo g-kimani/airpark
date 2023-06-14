@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import {
@@ -10,11 +10,14 @@ import {
 } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-import { NavigationStackParamList } from "./types";
+import { NavigationStackParamList, UserContextTypes } from "./types.ts";
+import { saveToStore, signUpUser } from "../utils.js";
+import { UserContext } from "../contexts/UserContext.tsx";
 
 const validationSchema = yup.object().shape({
   firstName: yup.string().required("First name is required"),
   lastName: yup.string().required("Last name is required"),
+  username: yup.string().required("username is required"),
   email: yup
     .string()
     .email("Please enter a valid email")
@@ -27,21 +30,33 @@ const validationSchema = yup.object().shape({
 
 type Props = NativeStackScreenProps<NavigationStackParamList, "Signup">;
 
-const SignupScreen: React.FC<Props> = ({ navigation }) => {
+const SignupScreen = ({ navigation }: Props) => {
+  const { user, setUser } = useContext<UserContextTypes>(UserContext);
   const formik = useFormik({
     initialValues: {
       firstName: "",
       lastName: "",
+      username: "",
       email: "",
       password: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      navigation.navigate("HomePage");
+      console.log(values);
+      signUpUser(values)
+        .then((data) => {
+          setUser(data);
+          saveToStore("auth-token", data.token);
+          saveToStore("user", data.username);
+          navigation.replace("HomePage");
+        })
+        .catch((err) => alert(err));
+      // console.log(values);
+      // navigation.navigate("HomePage");
     },
   });
   return (
-    <View>
+    <View style={{ flex: 1, alignItems: "center" }}>
       <TextInput
         style={styles.inputText}
         id="firstName"
@@ -62,6 +77,15 @@ const SignupScreen: React.FC<Props> = ({ navigation }) => {
 
       <TextInput
         style={styles.inputText}
+        id="username"
+        onChangeText={formik.handleChange("username")}
+        value={formik.values.username}
+        placeholder="Username"
+      />
+      <Text>{formik.errors.username}</Text>
+
+      <TextInput
+        style={styles.inputText}
         id="email"
         onChangeText={formik.handleChange("email")}
         value={formik.values.email}
@@ -72,7 +96,6 @@ const SignupScreen: React.FC<Props> = ({ navigation }) => {
       <TextInput
         style={styles.inputText}
         id="password"
-        name="password"
         onChangeText={formik.handleChange("password")}
         value={formik.values.password}
         placeholder="Password"
@@ -80,7 +103,10 @@ const SignupScreen: React.FC<Props> = ({ navigation }) => {
       />
       <Text>{formik.errors.password}</Text>
 
-      <TouchableOpacity style={styles.button} onPress={formik.handleSubmit}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => formik.submitForm()}
+      >
         <Text style={styles.buttonText}>Submit</Text>
       </TouchableOpacity>
     </View>

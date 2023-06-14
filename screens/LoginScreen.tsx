@@ -5,9 +5,15 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useContext, useState, useEffect } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { loginUser } from "../utils";
+import { UserContext } from "../contexts/UserContext";
+import * as SecureStore from "expo-secure-store";
+
+async function save(key: string, value: any) {
+  await SecureStore.setItemAsync(key, value);
+}
 
 type NavigationStackParamList = {
   Map: undefined;
@@ -17,12 +23,31 @@ type NavigationStackParamList = {
   Profile: { userid: "string" } | undefined;
 };
 
-type Props = NativeStackScreenProps<NavigationStackParamList, "HomePage">;
+type Props = NativeStackScreenProps<NavigationStackParamList, "Login">;
 
-const LogIn = ({ navigation }: Props) => {
+type ContextTypes = {
+  user?: any;
+  setUser?: any;
+};
+
+const LoginScreen = ({ navigation }: Props) => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const { user, setUser } = useContext<ContextTypes>(UserContext);
+
+  const handleLogin = () => {
+    loginUser({ username, password }).then((data) => {
+      setUser(data);
+      save("auth-token", data.token);
+      save("user", data.username);
+      navigation.replace("HomePage");
+    });
+  };
+
   return (
     <>
-      <Text style={styles.Header}>AirPark</Text>
+      <Text style={styles.header}>AirPark</Text>
       <View
         style={{
           flex: 1,
@@ -32,18 +57,23 @@ const LogIn = ({ navigation }: Props) => {
         }}
       >
         <Text>Sign in</Text>
-        <TextInput placeholder="Email" style={styles.inputText} />
+        <TextInput
+          placeholder="Email"
+          style={styles.inputText}
+          value={username}
+          onChangeText={(text) => setUsername(text)}
+        />
         <TextInput
           placeholder="Password"
           style={styles.inputText}
-          // onChange={(event) => {
-          //   console.log(event.target);
-          // }}
+          secureTextEntry
+          value={password}
+          onChangeText={(text) => setPassword(text)}
         />
 
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("HomePage");
+            handleLogin();
           }}
           style={styles.button}
         >
@@ -73,7 +103,7 @@ const LogIn = ({ navigation }: Props) => {
   );
 };
 
-export default LogIn;
+export default LoginScreen;
 
 const styles = StyleSheet.create({
   button: {
@@ -98,7 +128,7 @@ const styles = StyleSheet.create({
     color: "blue",
     fontSize: 16,
   },
-  Header: {
+  header: {
     fontSize: 26,
     marginTop: 20,
     textAlign: "center",
