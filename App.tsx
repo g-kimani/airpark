@@ -8,7 +8,7 @@ import {
 import HomePage from "./screens/HomePage";
 import SignupScreen from "./screens/SignupScreen";
 import LoginScreen from "./screens/LoginScreen";
-import MapComponent from "./Components/MapView";
+import MapView from "./Components/MapView";
 import { UserContext } from "./contexts/UserContext";
 import { useState, useEffect } from "react";
 import * as SecureStore from "expo-secure-store";
@@ -16,7 +16,6 @@ import * as SecureStore from "expo-secure-store";
 const Stack = createNativeStackNavigator<NavigationStackParamList>();
 
 type NavigationStackParamList = {
-  Map: undefined;
   HomePage: undefined;
   Login: undefined;
   Signup: undefined;
@@ -41,7 +40,6 @@ export default function App() {
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Signup" component={SignupScreen} />
           <Stack.Screen name="HomePage" component={HomePage} />
-          <Stack.Screen name="Map" component={MapComponent} />
         </Stack.Navigator>
       </NavigationContainer>
     </UserContext.Provider>

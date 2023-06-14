@@ -18,6 +18,7 @@ import { Marker } from "react-native-maps";
 import parkingsArray from "../data/parkingsArray";
 import { NavigationStackParamList } from "./types";
 import MapComponent from "../Components/MapView.tsx";
+import HomeSearch from "../Components/HomeSearch.tsx";
 
 type Props = NativeStackScreenProps<NavigationStackParamList, "HomePage">;
 
@@ -42,8 +43,8 @@ const HomePage = ({ navigation }: Props) => {
   };
 
   const [parkingList, setParkingList] = useState(parkingsArray);
-  const handleSearch = (data: any, details: any) => {
-    const location = data.description.split(",")[0].trim();
+  const handleSearch = (description: string) => {
+    const location = description;
 
     Geocoder.from(location)
       .then((response) => {
@@ -63,7 +64,8 @@ const HomePage = ({ navigation }: Props) => {
   return (
     <>
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <SafeAreaView style={{ width: "80%" }}>
+        <HomeSearch onPlaceSelected={handleSearch} />
+        {/* <SafeAreaView style={{ width: "80%" }}>
           <View style={styles.searchSuggestion}>
             <GooglePlacesAutocomplete
               placeholder="Search"
@@ -74,7 +76,7 @@ const HomePage = ({ navigation }: Props) => {
               }}
             />
           </View>
-        </SafeAreaView>
+        </SafeAreaView> */}
 
         <View style={styles.buttonContainer}>
           <TouchableOpacity onPress={showList} style={styles.button}>
@@ -110,7 +112,7 @@ export default HomePage;
 const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
-    marginTop: -100,
+    // marginTop: -100,
     marginBottom: 10,
   },
   button: {

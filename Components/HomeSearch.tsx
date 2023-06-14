@@ -15,9 +15,18 @@ import {
 } from "react-native-google-places-autocomplete";
 import { useNavigation } from "@react-navigation/native";
 
-const HomeSearch = ({ onPlaceSelected }) => {
-  const handlePlaceSelected = (data, details) => {
+type Props = {
+  onPlaceSelected: any;
+};
+
+const HomeSearch = ({ onPlaceSelected }: Props) => {
+  const handlePlaceSelected = (data: any) => {
+    console.log(
+      "🚀 ~ file: HomeSearch.tsx:24 ~ hdlePlaceSelected ~ data:",
+      data
+    );
     const { description } = data;
+
     onPlaceSelected(description);
   };
 
@@ -26,15 +35,14 @@ const HomeSearch = ({ onPlaceSelected }) => {
       <View style={styles.searchBar}>
         <GooglePlacesAutocomplete
           placeholder="Where to?"
-          onPress={handlePlaceSelected}
-          fetchDetails={true}
+          fetchDetails
           query={{
             key: "AIzaSyBhcOAI9R7HKqUD9f-2is268fJza5KZ0G8",
             language: "en",
           }}
           styles={styles.inputText}
           renderItem={({ item }) => (
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => handlePlaceSelected(item)}>
               <View style={styles.searchSuggestion}>
                 <View style={styles.iconContainer}>
                   <Feather name="map-pin" size={30} />
@@ -57,10 +65,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 10,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#FFF",
     borderRadius: 10,
     marginBottom: 15,
     justifyContent: "center",
+    width: "100%",
   },
   inputText: {
     fontSize: 20,
