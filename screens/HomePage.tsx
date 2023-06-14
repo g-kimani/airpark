@@ -46,7 +46,7 @@ const HomePage = ({ navigation }: Props) => {
   const [parkingList, setParkingList] = useState(parkingsArray);
 
   useEffect(() => {
-    getParkings().then(({ parkings }) => {
+    getParkings().then((parkings) => {
       console.log(
         "🚀 ~ file: HomePage.tsx:50 ~ getParkings ~ parkings:",
         parkings

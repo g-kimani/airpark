@@ -30,6 +30,7 @@ export function signUpUser(user) {
 
 export function getParkings() {
   return airparkAPI.get("/parkings").then((response) => {
+    console.log(response.data);
     const { parkings } = response.data;
     const formatted = parkings.map((parking) => {
       const latitude = parking.location.x;
