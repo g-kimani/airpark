@@ -2,6 +2,9 @@ import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 
 export async function saveToStore(key, value) {
+  console.log(key, value);
+
+  console.log("🚀 ~ file: utils.js:6 ~ saveToStore ~ value:", value);
   await SecureStore.setItemAsync(key, value);
 }
 

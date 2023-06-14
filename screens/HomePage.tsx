@@ -16,8 +16,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Geocoder from "react-native-geocoding";
 import { Marker } from "react-native-maps";
 import parkingsArray from "../data/parkingsArray";
+import { NavigationStackParamList } from "./types";
+import MapComponent from "../Components/MapView.tsx";
 
-const HomePage = ({ navigation }) => {
+type Props = NativeStackScreenProps<NavigationStackParamList, "HomePage">;
+
+const HomePage = ({ navigation }: Props) => {
   const [viewMode, setViewMode] = useState("list");
   const [selectedLocation, setSelectedLocation] = useState({
     latitude: 51.509865,
@@ -38,7 +42,7 @@ const HomePage = ({ navigation }) => {
   };
 
   const [parkingList, setParkingList] = useState(parkingsArray);
-  const handleSearch = (data, details) => {
+  const handleSearch = (data: any, details: any) => {
     const location = data.description.split(",")[0].trim();
 
     Geocoder.from(location)
@@ -94,19 +98,7 @@ const HomePage = ({ navigation }) => {
             keyExtractor={(item) => item.parking_id.toString()}
           />
         ) : (
-          <MapView
-            style={styles.map}
-            region={{
-              latitude: selectedLocation ? selectedLocation.latitude : 0,
-              longitude: selectedLocation ? selectedLocation.longitude : 0,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-            }}
-          >
-            <Marker
-              coordinate={{ latitude: 51.509865, longitude: -0.118092 }}
-            />
-          </MapView>
+          <MapComponent selectedLocation={selectedLocation} />
         )}
       </View>
     </>
@@ -145,8 +137,8 @@ const styles = StyleSheet.create({
   },
   searchSuggestion: {
     padding: 5,
-
-    height: "50%",
+    // height: "50%",
+    backgroundColor: "red",
   },
   image: {
     width: 200,

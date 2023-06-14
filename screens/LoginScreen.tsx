@@ -11,7 +11,8 @@ import { loginUser } from "../utils";
 import { UserContext } from "../contexts/UserContext";
 import * as SecureStore from "expo-secure-store";
 
-async function save(key: string, value: any) {
+async function save(key: string, value: string) {
+  console.log("🚀 ~ file: LoginScreen.tsx:15 ~ save ~ value:", value);
   await SecureStore.setItemAsync(key, value);
 }
 
@@ -40,7 +41,7 @@ const LoginScreen = ({ navigation }: Props) => {
     loginUser({ username, password }).then((data) => {
       setUser(data);
       save("auth-token", data.token);
-      save("user", data.username);
+      save("user", data.user);
       navigation.replace("HomePage");
     });
   };
