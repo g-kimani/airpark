@@ -42,7 +42,7 @@ const LoginScreen = ({ navigation }: Props) => {
       setUser(data);
       save("auth-token", data.token);
       save("user", data.user);
-      navigation.replace("HomePage");
+      navigation.replace("Home");
     });
   };
 
