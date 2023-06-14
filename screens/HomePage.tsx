@@ -17,8 +17,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import Geocoder from "react-native-geocoding";
 import { Marker } from "react-native-maps";
+import HomeSearch from "../Components/HomeSearch";
+import ParkingsList from "../Components/ParkingsList";
 
-const HomePage = ({ navigation }) => {
+const HomePage = () => {
+  const navigation = useNavigation();
   const [viewMode, setViewMode] = useState("list"); // Track the current view mode
   const [selectedLocation, setSelectedLocation] = useState({
     latitude: 51.509865,
@@ -84,7 +87,6 @@ const HomePage = ({ navigation }) => {
       imgUrl:
         "https://images.pexels.com/photos/1500459/pexels-photo-1500459.jpeg?auto=compress&cs=tinysrgb&w=1600",
     },
-    // ... more parking items
   ]);
   const [filteredParkingList, setFilteredParkingList] = useState(parkingList);
   const handleSearch = (data, details) => {
@@ -110,16 +112,7 @@ const HomePage = ({ navigation }) => {
     <>
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
         <SafeAreaView style={{ width: "80%" }}>
-          <View style={styles.searchSuggestion}>
-            <GooglePlacesAutocomplete
-              placeholder="Search"
-              onPress={handleSearch}
-              query={{
-                key: "AIzaSyBhcOAI9R7HKqUD9f-2is268fJza5KZ0G8",
-                language: "en",
-              }}
-            />
-          </View>
+          <HomeSearch navigation={navigation} />
         </SafeAreaView>
 
         <View style={styles.buttonContainer}>
@@ -132,17 +125,7 @@ const HomePage = ({ navigation }) => {
         </View>
 
         {viewMode === "list" ? (
-          <FlatList
-            data={filteredParkingList}
-            renderItem={({ item }) => (
-              <View>
-                <Text>{item.price}</Text>
-                <Text>{item.location}</Text>
-                <Image source={{ uri: item.imgUrl }} style={styles.image} />
-              </View>
-            )}
-            keyExtractor={(item) => item.parking_id.toString()}
-          />
+          <ParkingsList parkings={filteredParkingList} />
         ) : (
           <MapView
             style={styles.map}
@@ -156,7 +139,7 @@ const HomePage = ({ navigation }) => {
             <Marker
               coordinate={{ latitude: 51.509865, longitude: -0.118092 }}
             />
-          </MapView> //Replace with your map component
+          </MapView>
         )}
       </View>
     </>
