@@ -29,7 +29,7 @@ export function signUpUser(user) {
 }
 
 export function getParkings() {
-  airparkAPI.get("/parkings").then((response) => {
+  return airparkAPI.get("/parkings").then((response) => {
     return response.data;
   });
 }
