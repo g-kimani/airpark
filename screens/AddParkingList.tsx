@@ -39,11 +39,6 @@ const AddParkingList = () => {
         />
 
         <TextInput id="price" placeholder="Price" style={styles.inputText} />
-        <TextInput
-          id="Availability"
-          placeholder="Availability"
-          style={styles.inputText}
-        />
       </View>
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
         <TouchableOpacity style={styles.uploadButton}>

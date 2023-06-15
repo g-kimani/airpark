@@ -7,6 +7,7 @@ import {
   Button,
   Image,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -41,16 +42,16 @@ const ProfilePage = ({ navigation }: Props) => {
   };
 
   return (
-    <>
+    <ScrollView contentContainerStyle={styles.ScrollViewcontainer}>
       <View style={styles.container}>
         <View style={styles.pictureContainer}>
           {image && (
             <Image
               source={{ uri: image }}
               style={{
-                width: 150,
-                height: 150,
-                borderRadius: 100,
+                width: 100,
+                height: 100,
+                borderRadius: 50,
                 alignContent: "center",
               }}
             />
@@ -85,10 +86,13 @@ const ProfilePage = ({ navigation }: Props) => {
           <Text style={styles.logoutButtonText}>Logout</Text>
         </TouchableOpacity>
       </View>
-    </>
+    </ScrollView>
   );
 };
 const styles = StyleSheet.create({
+  ScrollViewcontainer: {
+    alignItems: "center",
+  },
   pictureContainer: {
     borderColor: "grey",
     borderStyle: "solid",
@@ -107,6 +111,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     marginTop: 30,
+    width: "100%",
   },
   inputText: {
     padding: 12,
@@ -131,7 +136,7 @@ const styles = StyleSheet.create({
     width: "60%",
   },
   button: {
-    padding: 12,
+    padding: 10,
     backgroundColor: "red",
     borderRadius: 10,
     margin: 5,

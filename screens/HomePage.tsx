@@ -106,7 +106,7 @@ const HomePage = ({ navigation }: Props) => {
               <View>
                 <Text>{item.price}</Text>
                 <Text>{item.location}</Text>
-                <Image source={{ uri: item.imgUrl }} style={styles.image} />
+                {/* <Image source={{ uri: item.imgUrl }} style={styles.image} /> */}
               </View>
             )}
             keyExtractor={(item) => item.parking_id.toString()}
