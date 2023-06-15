@@ -14,7 +14,7 @@ const Stack = createNativeStackNavigator();
 
 export type NavigationStackParamList = {
   Home: undefined;
-  Login: undefined;
+  LoginScreen: undefined;
   Signup: undefined;
   Profile: { userid: string } | undefined;
   AddParking: undefined;
@@ -27,39 +27,32 @@ export default function App() {
       if (result) {
         setUser((user) => {
           return { ...user, token: result };
-          // setUser({});
         });
       }
     });
   }, []);
+
   return (
     <UserContext.Provider value={{ user, setUser }}>
       <NavigationContainer>
         <Stack.Navigator>
-          {!user.token ? (
-            <>
-              <Stack.Screen
-                name="Login"
-                component={LoginScreen}
-                options={{ title: "Sign In" }}
-              />
-              <Stack.Screen
-                name="Signup"
-                component={SignupScreen}
-                options={{ title: "Create Account" }}
-              />
-            </>
-          ) : (
-            <>
-              <Stack.Screen
-                name="Home"
-                component={HomeTabNav}
-                options={{
-                  headerShown: false,
-                }}
-              />
-            </>
-          )}
+          <Stack.Screen
+            name="LoginScreen"
+            component={LoginScreen}
+            options={{ title: "Sign In" }}
+          />
+          <Stack.Screen
+            name="Signup"
+            component={SignupScreen}
+            options={{ title: "Create Account" }}
+          />
+          <Stack.Screen
+            name="Home"
+            component={HomeTabNav}
+            options={{
+              headerShown: false,
+            }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </UserContext.Provider>

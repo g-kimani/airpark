@@ -9,8 +9,18 @@ import {
   TouchableOpacity,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-const ProfilePage = () => {
+type NavigationStackParamList = {
+  LoginScreen: undefined;
+};
+
+type Props = NativeStackScreenProps<NavigationStackParamList>;
+
+const ProfilePage = ({ navigation }: Props) => {
+  const handleLogout = () => {
+    navigation.replace("LoginScreen");
+  };
   const defaultImage =
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXV98JSo6IPuUib7DkMohhXWrHPggU_rGweA&usqp=CAU";
   const [image, setImage] = useState(defaultImage);
@@ -71,6 +81,9 @@ const ProfilePage = () => {
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText}>Save</Text>
         </TouchableOpacity>
+        <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
+          <Text style={styles.logoutButtonText}>Logout</Text>
+        </TouchableOpacity>
       </View>
     </>
   );
@@ -125,6 +138,20 @@ const styles = StyleSheet.create({
     width: "30%",
   },
   buttonText: {
+    color: "white",
+    fontWeight: "700",
+    fontSize: 16,
+    textAlign: "center",
+  },
+  logoutButton: {
+    padding: 12,
+    backgroundColor: "blue",
+    borderRadius: 10,
+    margin: 5,
+    width: "60%",
+    alignItems: "center",
+  },
+  logoutButtonText: {
     color: "white",
     fontWeight: "700",
     fontSize: 16,
