@@ -6,6 +6,7 @@ import { Ionicons, AntDesign } from "@expo/vector-icons";
 import AddParkingList from "../screens/AddParkingList";
 import Inbox from "../screens/Inbox";
 import ProfilePage from "../screens/ProfilePage";
+import Bookings from "../screens/Bookings";
 
 const Tab = createBottomTabNavigator();
 
@@ -36,6 +37,15 @@ const HomeTabNav = () => {
         options={{
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="chatbox-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Bookings"
+        component={Bookings}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <AntDesign name="book" size={size} color={color} />
           ),
         }}
       />
