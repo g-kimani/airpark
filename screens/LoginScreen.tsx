@@ -32,13 +32,13 @@ type ContextTypes = {
 };
 
 const LoginScreen = ({ navigation }: Props) => {
-  const [username, setUsername] = useState("");
+  const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
 
   const { user, setUser } = useContext<ContextTypes>(UserContext);
 
   const handleLogin = () => {
-    loginUser({ username, password }).then((data) => {
+    loginUser({ login, password }).then((data) => {
       setUser(data);
       save("auth-token", data.token);
       save("user", data.user);
@@ -59,10 +59,10 @@ const LoginScreen = ({ navigation }: Props) => {
       >
         <Text>Sign in</Text>
         <TextInput
-          placeholder="Email"
+          placeholder="Email or Username"
           style={styles.inputText}
-          value={username}
-          onChangeText={(text) => setUsername(text)}
+          value={login}
+          onChangeText={(text) => setLogin(text)}
         />
         <TextInput
           placeholder="Password"
