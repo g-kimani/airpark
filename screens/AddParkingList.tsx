@@ -46,7 +46,7 @@ const AddParkingList = () => {
         />
       </View>
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.uploadButton}>
           <Button title="Upload image" onPress={pickImage} />
         </TouchableOpacity>
         {image && (
@@ -76,7 +76,17 @@ const styles = StyleSheet.create({
     margin: 10,
     width: "60%",
   },
+  uploadButton: {
+    padding: 14,
+    backgroundColor: "white",
+    borderColor: "grey",
+    borderStyle: "solid",
+    borderWidth: 0.4,
 
+    borderRadius: 10,
+    margin: 10,
+    width: "50%",
+  },
   button: {
     padding: 16,
     backgroundColor: "red",
