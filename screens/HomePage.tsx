@@ -1,25 +1,14 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  FlatList,
-  TouchableOpacity,
-} from "react-native";
 import React, { useState, useEffect } from "react";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import MapView from "react-native-maps";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { SafeAreaView } from "react-native-safe-area-context";
 
-import Geocoder from "react-native-geocoding";
-import { Marker } from "react-native-maps";
 import parkingsArray from "../data/parkingsArray";
 import { NavigationStackParamList } from "./types";
 import MapComponent from "../Components/MapView.tsx";
 import HomeSearch from "../Components/HomeSearch.tsx";
 import { getParkings } from "../utils.js";
+import ParkingsList from "../Components/ParkingsList.tsx";
 
 type Props = NativeStackScreenProps<NavigationStackParamList, "HomePage">;
 
@@ -30,11 +19,6 @@ const HomePage = ({ navigation }: Props) => {
     longitude: -0.118092,
   });
 
-  Geocoder.init("AIzaSyBhcOAI9R7HKqUD9f-2is268fJza5KZ0G8");
-  const navigateToMap = () => {
-    navigation.navigate("Map");
-  };
-
   const showList = () => {
     setViewMode("list");
   };
@@ -44,6 +28,7 @@ const HomePage = ({ navigation }: Props) => {
   };
 
   const [parkingList, setParkingList] = useState(parkingsArray);
+  const [dummydata, setDummydata] = useState(parkingsArray);
 
   useEffect(() => {
     getParkings().then((parkings) => {
@@ -55,41 +40,20 @@ const HomePage = ({ navigation }: Props) => {
     });
   }, [selectedLocation]);
 
-  const handleSearch = (description: string) => {
-    const location = description;
-
-    Geocoder.from(location)
-      .then((response) => {
-        const { lat, lng } = response.results[0].geometry.location;
-        const selectedLocation = { latitude: lat, longitude: lng };
-        setSelectedLocation(selectedLocation);
-
-        // const filteredList = parkingList.filter((item) =>
-        //   item.location.toLowerCase().includes(location.toLowerCase())
-        // );
-        // setParkingList(filteredList);
-      })
-      .catch((error) => {
-        console.log("Error fetching coordinates:", error);
-      });
+  const handlePlacePress = (detail: any) => {
+    const geometry = detail.geometry.location;
+    setSelectedLocation({ latitude: geometry.lat, longitude: geometry.lng });
   };
+
   return (
     <>
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <HomeSearch onPlaceSelected={handleSearch} />
-        {/* <SafeAreaView style={{ width: "80%" }}>
-          <View style={styles.searchSuggestion}>
-            <GooglePlacesAutocomplete
-              placeholder="Search"
-              onPress={handleSearch}
-              query={{
-                key: "AIzaSyBhcOAI9R7HKqUD9f-2is268fJza5KZ0G8",
-                language: "en",
-              }}
-            />
-          </View>
-        </SafeAreaView> */}
-
+        <View style={styles.searchContainer}>
+          <HomeSearch
+            onPlaceSelected={handlePlacePress}
+            setSelectedLocation={setSelectedLocation}
+          />
+        </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity onPress={showList} style={styles.button}>
             <Text style={styles.buttonText}>List</Text>
@@ -98,19 +62,8 @@ const HomePage = ({ navigation }: Props) => {
             <Text style={styles.buttonText}>Map</Text>
           </TouchableOpacity>
         </View>
-
         {viewMode === "list" ? (
-          <FlatList
-            data={parkingList}
-            renderItem={({ item }) => (
-              <View>
-                <Text>{item.price}</Text>
-                <Text>{item.location}</Text>
-                {/* <Image source={{ uri: item.imgUrl }} style={styles.image} /> */}
-              </View>
-            )}
-            keyExtractor={(item) => item.parking_id.toString()}
-          />
+          <ParkingsList parkings={dummydata} />
         ) : (
           <MapComponent
             selectedLocation={selectedLocation}
@@ -122,13 +75,25 @@ const HomePage = ({ navigation }: Props) => {
   );
 };
 
-export default HomePage;
-
 const styles = StyleSheet.create({
+  container: {
+    margin: 20,
+    // position: "absolute",
+  },
+  searchContainer: {
+    position: "absolute",
+    top: 10,
+    width: "100%",
+    zIndex: 100,
+  },
   buttonContainer: {
     flexDirection: "row",
     // marginTop: -100,
     marginBottom: 10,
+    position: "relative",
+    backgroundColor: "white",
+    zIndex: 100,
+    position: "relative",
   },
   button: {
     padding: 16,
@@ -141,24 +106,40 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     fontSize: 16,
   },
-  inputText: {
-    padding: 16,
-    backgroundColor: "#e0e0e0",
+  searchBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 10,
+    backgroundColor: "#FFF",
     borderRadius: 10,
-    margin: 10,
-    width: "60%",
-  },
-  map: {
+    marginBottom: 15,
+    justifyContent: "center",
     width: "100%",
-    height: 200,
+    height: 50,
+  },
+  inputText: {
+    fontSize: 20,
+    marginTop: 100,
+    height: "50%",
   },
   searchSuggestion: {
-    padding: 5,
-    // height: "50%",
-    backgroundColor: "red",
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: "#EDF2F4",
+    height: "100%",
   },
-  image: {
-    width: 200,
-    height: 200,
+  iconContainer: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    color: "black",
+    marginRight: 10,
+  },
+  suggestionText: {
+    fontSize: 15,
   },
 });
+
+export default HomePage;
