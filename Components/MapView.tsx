@@ -25,17 +25,18 @@ const MapComponent = ({ selectedLocation, parkings }: Props) => {
         }}
       >
         <Marker coordinate={{ latitude: 51.509865, longitude: -0.118092 }} />
-        <FlatList
-          data={parkings}
-          renderItem={({ item }) => (
+
+        {parkings.map((parking) => {
+          return (
             <Marker
+              key={parking.parking_id}
               coordinate={{
-                latitude: item.latitude,
-                longitude: item.longitude,
+                latitude: parking.latitude,
+                longitude: parking.longitude,
               }}
             />
-          )}
-        />
+          );
+        })}
       </MapView>
     </>
   );
