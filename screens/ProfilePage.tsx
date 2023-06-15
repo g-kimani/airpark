@@ -93,10 +93,10 @@ const styles = StyleSheet.create({
   },
   container: {
     alignItems: "center",
-    marginTop: 40,
+    marginTop: 30,
   },
   inputText: {
-    padding: 16,
+    padding: 12,
     backgroundColor: "#e0e0e0",
     borderRadius: 10,
     margin: 10,
@@ -104,24 +104,24 @@ const styles = StyleSheet.create({
   },
 
   listingsButton: {
-    padding: 16,
+    padding: 12,
     backgroundColor: "orange",
     borderRadius: 30,
-    margin: 10,
+    margin: 5,
     width: "60%",
   },
   bookingsButton: {
-    padding: 16,
+    padding: 12,
     backgroundColor: "blue",
     borderRadius: 30,
-    margin: 10,
+    margin: 5,
     width: "60%",
   },
   button: {
-    padding: 16,
+    padding: 12,
     backgroundColor: "red",
     borderRadius: 10,
-    margin: 10,
+    margin: 5,
     width: "30%",
   },
   buttonText: {

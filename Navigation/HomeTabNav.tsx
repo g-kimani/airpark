@@ -2,9 +2,10 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomePage from "../screens/HomePage";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
-import Profile from "../screens/Profile";
+
 import AddParkingList from "../screens/AddParkingList";
 import Inbox from "../screens/Inbox";
+import ProfilePage from "../screens/ProfilePage";
 
 const Tab = createBottomTabNavigator();
 
@@ -40,7 +41,7 @@ const HomeTabNav = () => {
       />
       <Tab.Screen
         name="Account"
-        component={Profile}
+        component={ProfilePage}
         options={{
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="person-outline" size={size} color={color} />
