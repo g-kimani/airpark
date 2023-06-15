@@ -8,10 +8,24 @@ import {
 
 type Props = {
   onPlaceSelected: any;
+  placeholder: string;
 };
 
-const HomeSearch = ({ onPlaceSelected, setSelectedLocation }: Props) => {
+const HomeSearch = ({
+  onPlaceSelected,
+  setSelectedLocation,
+  placeholder,
+}: Props) => {
   const handlePlacePress = (data: GooglePlaceData, detail: GooglePlaceData) => {
+    console.log(
+      "!!!!!!!!!!!!!!!!!!!!",
+      detail,
+
+      "LOCATION~!~~~~~~~~~~~~~",
+      detail.geometry.location, //
+      "VIEWPORT~~~~~~~~~~: ",
+      detail.geometry.viewport
+    );
     const geometry = detail.geometry.location;
     setSelectedLocation({ latitude: geometry.lat, longitude: geometry.lng });
   };
@@ -20,7 +34,7 @@ const HomeSearch = ({ onPlaceSelected, setSelectedLocation }: Props) => {
     <View style={styles.container}>
       <View style={styles.searchBar}>
         <GooglePlacesAutocomplete
-          placeholder="Where to?"
+          placeholder={placeholder}
           fetchDetails
           query={{
             key: "AIzaSyBhcOAI9R7HKqUD9f-2is268fJza5KZ0G8",

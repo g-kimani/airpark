@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import HomeSearch from "../Components/HomeSearch";
 
 const AddParkingList = () => {
   const [image, setImage] = useState(null);
@@ -32,12 +33,15 @@ const AddParkingList = () => {
     <>
       <View style={styles.container}>
         <Text style={styles.header}>Add Parking space</Text>
-        <TextInput
+        {/* <TextInput
           id="location"
           placeholder="Location"
           style={styles.inputText}
+        /> */}
+        <HomeSearch
+          onPlaceSelected={() => {}}
+          placeholder="Where is the parking?"
         />
-
         <TextInput id="price" placeholder="Price" style={styles.inputText} />
       </View>
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -45,8 +49,8 @@ const AddParkingList = () => {
           <Button title="Upload image" onPress={pickImage} />
         </TouchableOpacity>
         {image && (
-          <Text>Successfully uploaded!</Text>
-          // <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
+          // <Text>Successfully uploaded!</Text>
+          <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
         )}
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText}>Submit</Text>
