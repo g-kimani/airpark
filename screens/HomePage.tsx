@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -9,6 +9,7 @@ import MapComponent from "../Components/MapView.tsx";
 import HomeSearch from "../Components/HomeSearch.tsx";
 import { getParkings } from "../utils.js";
 import ParkingsList from "../Components/ParkingsList.tsx";
+import { ParkingsContext } from "../contexts/ParkingsContext.tsx";
 
 type Props = NativeStackScreenProps<NavigationStackParamList, "HomePage">;
 
@@ -29,6 +30,7 @@ const HomePage = ({ navigation }: Props) => {
 
   const [parkingList, setParkingList] = useState(parkingsArray);
   const [dummydata, setDummydata] = useState(parkingsArray);
+  const { parkings, setParkings } = useContext(ParkingsContext);
 
   useEffect(() => {
     getParkings().then((parkings) => {
@@ -36,6 +38,9 @@ const HomePage = ({ navigation }: Props) => {
         "🚀 ~ file: HomePage.tsx:50 ~ getParkings ~ parkings:",
         parkings
       );
+      setParkings((prev: any) => {
+        return { list: [...prev.list, ...parkings] };
+      });
       setParkingList(parkings);
     });
   }, [selectedLocation]);
@@ -49,10 +54,7 @@ const HomePage = ({ navigation }: Props) => {
     <>
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
         <View style={styles.searchContainer}>
-          <HomeSearch
-            onPlaceSelected={handlePlacePress}
-            setSelectedLocation={setSelectedLocation}
-          />
+          <HomeSearch setSelectedLocation={setSelectedLocation} />
         </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity onPress={showList} style={styles.button}>
@@ -67,7 +69,7 @@ const HomePage = ({ navigation }: Props) => {
         ) : (
           <MapComponent
             selectedLocation={selectedLocation}
-            parkings={parkingList}
+            parkings={parkings.list}
           />
         )}
       </View>

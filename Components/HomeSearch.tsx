@@ -8,7 +8,8 @@ import {
 
 type Props = {
   onPlaceSelected: any;
-  placeholder: string;
+  setSelectedLocation: any | undefined;
+  placeholder: string | undefined;
 };
 
 const HomeSearch = ({
@@ -17,17 +18,22 @@ const HomeSearch = ({
   placeholder,
 }: Props) => {
   const handlePlacePress = (data: GooglePlaceData, detail: GooglePlaceData) => {
-    console.log(
-      "!!!!!!!!!!!!!!!!!!!!",
-      detail,
-
-      "LOCATION~!~~~~~~~~~~~~~",
-      detail.geometry.location, //
-      "VIEWPORT~~~~~~~~~~: ",
-      detail.geometry.viewport
+    console.log(detail.address_components);
+    const area = detail.address_components.find((comp: any) =>
+      comp.types?.some((type: any) => type === "postal_town")
     );
+    const { long_name } = area;
+    console.log(
+      "🚀 ~ file: HomeSearch.tsx:23 ~ handlePlacePress ~ area:",
+      area
+    );
+
     const geometry = detail.geometry.location;
-    setSelectedLocation({ latitude: geometry.lat, longitude: geometry.lng });
+    setSelectedLocation({
+      latitude: geometry.lat,
+      longitude: geometry.lng,
+      area: long_name,
+    });
   };
 
   return (

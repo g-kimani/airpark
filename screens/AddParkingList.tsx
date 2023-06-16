@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Text,
   View,
@@ -7,12 +7,19 @@ import {
   Button,
   Image,
   TouchableOpacity,
+  TouchableWithoutFeedback,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import HomeSearch from "../Components/HomeSearch";
+import { postParking } from "../utils";
+import { UserContext } from "../contexts/UserContext";
+import { ParkingsContext } from "../contexts/ParkingsContext";
 
 const AddParkingList = () => {
+  const [parking, setParking] = useState({ price: "" });
   const [image, setImage] = useState(null);
+  const { token } = useContext(UserContext);
+  const [selectedArea, setSelectedArea] = useState({});
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -28,31 +35,66 @@ const AddParkingList = () => {
       setImage(result.assets[0].uri);
     }
   };
+  function handleAreaSelected(locationInfo: any) {
+    setSelectedArea(locationInfo);
+    setParking((prev) => {
+      return { ...prev, ...locationInfo };
+    });
+    console.log(
+      "🚀 ~ file: AddParkingList.tsx:40 ~ handleAreaSelected ~ parking:",
+      parking
+    );
+  }
+  // function dismissKeyboard() {
+
+  // }
+  const { setParkings } = useContext(ParkingsContext);
+
+  function handleSubmit() {
+    postParking(parking).then(({ parking }) => {
+      console.log(
+        "🚀 ~ file: AddParkingList.tsx:55 ~ postParking ~ parking:",
+        parking
+      );
+      // setParkings((prev: any) => [...prev, parking]);
+      setParkings((prev: any) => {
+        return { list: [...prev.list, parking] };
+      });
+      console.log("updated parkings");
+    });
+  }
 
   return (
     <>
       <View style={styles.container}>
         <Text style={styles.header}>Add Parking space</Text>
-        {/* <TextInput
-          id="location"
-          placeholder="Location"
-          style={styles.inputText}
-        /> */}
         <HomeSearch
-          onPlaceSelected={() => {}}
+          setSelectedLocation={handleAreaSelected}
           placeholder="Where is the parking?"
         />
-        <TextInput id="price" placeholder="Price" style={styles.inputText} />
+        <Text>Price: </Text>
+        <TextInput
+          id="price"
+          placeholder="Price"
+          keyboardType="decimal-pad"
+          value={parking.price}
+          onChangeText={(text) =>
+            setParking((prev) => {
+              return { ...prev, price: text };
+            })
+          }
+          style={[styles.inputText, { width: "100%" }]}
+        />
       </View>
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
         <TouchableOpacity style={styles.uploadButton}>
           <Button title="Upload image" onPress={pickImage} />
         </TouchableOpacity>
         {image && (
-          // <Text>Successfully uploaded!</Text>
+          //   <Text>Successfully uploaded!</Text>
           <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
         )}
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
           <Text style={styles.buttonText}>Submit</Text>
         </TouchableOpacity>
       </View>

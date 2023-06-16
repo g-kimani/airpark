@@ -1,6 +1,6 @@
 import React from "react";
-import { StyleSheet } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import { StyleSheet, Text, View } from "react-native";
+import MapView, { Callout, Marker } from "react-native-maps";
 
 type Props = {
   selectedLocation: {
@@ -31,7 +31,14 @@ const MapComponent = ({ selectedLocation, parkings }: Props) => {
               latitude: parking.latitude,
               longitude: parking.longitude,
             }}
-          />
+          >
+            <Callout>
+              <View>
+                <Text>This is a marker callout</Text>
+                <Text>Additional information can be displayed here</Text>
+              </View>
+            </Callout>
+          </Marker>
         );
       })}
     </MapView>
