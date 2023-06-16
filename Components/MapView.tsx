@@ -1,6 +1,8 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import MapView, { Callout, Marker } from "react-native-maps";
+import { useNavigation } from "@react-navigation/native";
+import IndividualParking from "../screens/IndividualParking";
 
 type Props = {
   selectedLocation: {
@@ -11,6 +13,11 @@ type Props = {
 };
 
 const MapComponent = ({ selectedLocation, parkings }: Props) => {
+  const navigation = useNavigation();
+
+  const handleMarkerPress = (parking) => {
+    navigation.navigate("IndividualParking", { parking });
+  };
   return (
     <MapView
       style={styles.map}
@@ -31,6 +38,7 @@ const MapComponent = ({ selectedLocation, parkings }: Props) => {
               latitude: parking.latitude,
               longitude: parking.longitude,
             }}
+            onPress={() => handleMarkerPress(parking)} // Pass the parking object as a parameter
           >
             <Callout>
               <View>

@@ -10,6 +10,7 @@ import React, { useState, useEffect } from "react";
 import * as SecureStore from "expo-secure-store";
 import HomeTabNav from "./Navigation/HomeTabNav";
 import { ParkingsContext } from "./contexts/ParkingsContext";
+import IndividualParking from "./screens/IndividualParking";
 
 const Stack = createNativeStackNavigator();
 
@@ -57,6 +58,10 @@ export default function App() {
               options={{
                 headerShown: false,
               }}
+            />
+            <Stack.Screen
+              name="IndividualParking"
+              component={IndividualParking}
             />
           </Stack.Navigator>
         </NavigationContainer>
