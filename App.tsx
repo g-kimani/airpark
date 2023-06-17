@@ -11,8 +11,6 @@ import * as SecureStore from "expo-secure-store";
 import HomeTabNav from "./Navigation/HomeTabNav";
 import { ParkingsContext } from "./contexts/ParkingsContext";
 import IndividualParking from "./screens/IndividualParking";
-import DestinationResults from "./screens/DestinationResults";
-import HomePage from "./screens/HomePage";
 
 const Stack = createNativeStackNavigator();
 
@@ -68,7 +66,6 @@ export default function App() {
               name="IndividualParking"
               component={IndividualParking}
             />
-            <Stack.Screen name="HomePage" component={HomePage} />
           </Stack.Navigator>
         </NavigationContainer>
       </ParkingsContext.Provider>

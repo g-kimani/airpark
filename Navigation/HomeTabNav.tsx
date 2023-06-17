@@ -24,6 +24,7 @@ const HomeTabNav = () => {
           ),
         }}
       />
+
       <Tab.Screen
         name="Add Parking"
         component={AddParkingList}
