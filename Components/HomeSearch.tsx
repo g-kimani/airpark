@@ -9,12 +9,15 @@ import {
 type Props = {
   onPlaceSelected: any;
   placeholder: string;
+  setSelectedLocation: any;
+  navigation: any;
 };
 
 const HomeSearch = ({
   onPlaceSelected,
   setSelectedLocation,
   placeholder,
+  navigation,
 }: Props) => {
   const handlePlacePress = (data: GooglePlaceData, detail: GooglePlaceData) => {
     console.log(
@@ -28,6 +31,9 @@ const HomeSearch = ({
     );
     const geometry = detail.geometry.location;
     setSelectedLocation({ latitude: geometry.lat, longitude: geometry.lng });
+    if (navigation) {
+      navigation.navigate("HomePage");
+    }
   };
 
   return (
