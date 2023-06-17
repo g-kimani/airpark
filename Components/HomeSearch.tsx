@@ -8,8 +8,7 @@ import {
 
 type Props = {
   onPlaceSelected: any;
-  setSelectedLocation: any | undefined;
-  placeholder: string | undefined;
+  placeholder: string;
 };
 
 const HomeSearch = ({
@@ -18,22 +17,17 @@ const HomeSearch = ({
   placeholder,
 }: Props) => {
   const handlePlacePress = (data: GooglePlaceData, detail: GooglePlaceData) => {
-    console.log(detail.address_components);
-    const area = detail.address_components.find((comp: any) =>
-      comp.types?.some((type: any) => type === "postal_town")
-    );
-    const { long_name } = area;
     console.log(
-      "🚀 ~ file: HomeSearch.tsx:23 ~ handlePlacePress ~ area:",
-      area
-    );
+      "!!!!!!!!!!!!!!!!!!!!",
+      detail,
 
+      "LOCATION~!~~~~~~~~~~~~~",
+      detail.geometry.location, //
+      "VIEWPORT~~~~~~~~~~: ",
+      detail.geometry.viewport
+    );
     const geometry = detail.geometry.location;
-    setSelectedLocation({
-      latitude: geometry.lat,
-      longitude: geometry.lng,
-      area: long_name,
-    });
+    setSelectedLocation({ latitude: geometry.lat, longitude: geometry.lng });
   };
 
   return (
@@ -47,6 +41,9 @@ const HomeSearch = ({
             language: "en",
             components: "country:uk",
           }}
+          debounce={200}
+          enablePoweredByContainer={false}
+          minLength={2}
           onPress={handlePlacePress}
           styles={styles.inputText}
           renderRow={(data: GooglePlaceData) => (
@@ -65,47 +62,26 @@ const HomeSearch = ({
 
 const styles = StyleSheet.create({
   container: {
-    margin: 20,
-  },
-  buttonContainer: {
-    flexDirection: "row",
-    // marginTop: -100,
-    marginBottom: 10,
-  },
-  button: {
-    padding: 16,
-    backgroundColor: "red",
-    borderRadius: 10,
-    margin: 10,
-  },
-  buttonText: {
-    color: "white",
-    fontWeight: "700",
-    fontSize: 16,
+    flex: 0,
   },
   searchBar: {
     flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 10,
-    backgroundColor: "#FFF",
-    borderRadius: 10,
-    marginBottom: 15,
-    justifyContent: "center",
+    alignItems: "left",
     width: "100%",
-    marginTop: 20,
+    padding: 10,
+    // marginTop: 20,
   },
   inputText: {
-    fontSize: 20,
-    marginTop: 100,
-    height: "50%",
+    textInput: {
+      fontSize: 16,
+      fontWeight: "700",
+      backgroundColor: "#f8f9fa",
+    },
   },
   searchSuggestion: {
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: "#EDF2F4",
-    height: "100%",
   },
   iconContainer: {
     width: 30,
@@ -114,8 +90,10 @@ const styles = StyleSheet.create({
     color: "black",
     marginRight: 10,
   },
+
   suggestionText: {
     fontSize: 15,
+    flexWrap: "wrap",
   },
 });
 

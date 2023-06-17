@@ -11,6 +11,7 @@ import * as SecureStore from "expo-secure-store";
 import HomeTabNav from "./Navigation/HomeTabNav";
 import { ParkingsContext } from "./contexts/ParkingsContext";
 import IndividualParking from "./screens/IndividualParking";
+import ExplorePage from "./screens/ExplorePage";
 
 const Stack = createNativeStackNavigator();
 

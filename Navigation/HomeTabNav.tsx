@@ -7,6 +7,7 @@ import AddParkingList from "../screens/AddParkingList";
 import Inbox from "../screens/Inbox";
 import ProfilePage from "../screens/ProfilePage";
 import Bookings from "../screens/Bookings";
+import ExplorePage from "../screens/ExplorePage";
 
 const Tab = createBottomTabNavigator();
 
@@ -15,8 +16,9 @@ const HomeTabNav = () => {
     <Tab.Navigator>
       <Tab.Screen
         name="Explore"
-        component={HomePage}
+        component={ExplorePage}
         options={{
+          headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home-outline" size={size} color={color} />
           ),
