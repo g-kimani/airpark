@@ -31,9 +31,6 @@ const HomeSearch = ({
     );
     const geometry = detail.geometry.location;
     setSelectedLocation({ latitude: geometry.lat, longitude: geometry.lng });
-    if (navigation) {
-      navigation.navigate("HomePage");
-    }
   };
 
   return (
