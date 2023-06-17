@@ -12,7 +12,7 @@ import { UserContext } from "../contexts/UserContext";
 import * as SecureStore from "expo-secure-store";
 
 async function save(key: string, value: string) {
-  console.log("🚀 ~ file: LoginScreen.tsx:15 ~ save ~ value:", value);
+  //console.log("🚀 ~ file: LoginScreen.tsx:15 ~ save ~ value:", value);
   await SecureStore.setItemAsync(key, value);
 }
 

@@ -20,15 +20,15 @@ const HomeSearch = ({
   navigation,
 }: Props) => {
   const handlePlacePress = (data: GooglePlaceData, detail: GooglePlaceData) => {
-    console.log(
-      "!!!!!!!!!!!!!!!!!!!!",
-      detail,
-
-      "LOCATION~!~~~~~~~~~~~~~",
-      detail.geometry.location, //
-      "VIEWPORT~~~~~~~~~~: ",
-      detail.geometry.viewport
+    const area = detail.address_components.find((comp: any) =>
+      comp.types?.some((type: any) => type === "postal_town")
     );
+    const { long_name } = area;
+    //console.log(
+    //   "🚀 ~ file: HomeSearch.tsx:23 ~ handlePlacePress ~ area:",
+    //   area
+    // );
+
     const geometry = detail.geometry.location;
     setSelectedLocation({ latitude: geometry.lat, longitude: geometry.lng });
   };

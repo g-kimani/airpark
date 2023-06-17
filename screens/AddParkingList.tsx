@@ -16,23 +16,23 @@ import { UserContext } from "../contexts/UserContext";
 import { ParkingsContext } from "../contexts/ParkingsContext";
 
 const AddParkingList = () => {
-  const [parking, setParking] = useState({ price: "" });
+  const [parking, setParking] = useState({ price: "", description: "haha" });
   const [image, setImage] = useState(null);
   const { token } = useContext(UserContext);
   const [selectedArea, setSelectedArea] = useState({});
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
 
-    console.log(result);
+    //console.log(result);
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      setImage(result.assets[0]);
     }
   };
   function handleAreaSelected(locationInfo: any) {
@@ -40,10 +40,10 @@ const AddParkingList = () => {
     setParking((prev) => {
       return { ...prev, ...locationInfo };
     });
-    console.log(
-      "🚀 ~ file: AddParkingList.tsx:40 ~ handleAreaSelected ~ parking:",
-      parking
-    );
+    //console.log(
+    //   "🚀 ~ file: AddParkingList.tsx:40 ~ handleAreaSelected ~ parking:",
+    //   parking
+    // );
   }
   // function dismissKeyboard() {
 
@@ -51,17 +51,19 @@ const AddParkingList = () => {
   const { setParkings } = useContext(ParkingsContext);
 
   function handleSubmit() {
-    postParking(parking).then(({ parking }) => {
-      console.log(
-        "🚀 ~ file: AddParkingList.tsx:55 ~ postParking ~ parking:",
-        parking
-      );
-      // setParkings((prev: any) => [...prev, parking]);
-      setParkings((prev: any) => {
-        return { list: [...prev.list, parking] };
-      });
-      console.log("updated parkings");
-    });
+    postParking({ ...parking, image })
+      .then(({ parking }) => {
+        //console.log(
+        //   "🚀 ~ file: AddParkingList.tsx:55 ~ postParking ~ parking:",
+        //   parking
+        // );
+        // setParkings((prev: any) => [...prev, parking]);
+        setParkings((prev: any) => {
+          return { list: [...prev.list, parking] };
+        });
+        //console.log("updated parkings");
+      })
+      .catch((err) => alert(err));
   }
 
   return (
@@ -92,7 +94,10 @@ const AddParkingList = () => {
         </TouchableOpacity>
         {image && (
           //   <Text>Successfully uploaded!</Text>
-          <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
+          <Image
+            source={{ uri: image.uri }}
+            style={{ width: 200, height: 200 }}
+          />
         )}
         <TouchableOpacity style={styles.button} onPress={handleSubmit}>
           <Text style={styles.buttonText}>Submit</Text>
