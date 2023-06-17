@@ -12,6 +12,7 @@ import HomeTabNav from "./Navigation/HomeTabNav";
 import { ParkingsContext } from "./contexts/ParkingsContext";
 import IndividualParking from "./screens/IndividualParking";
 import ExplorePage from "./screens/ExplorePage";
+import HomePage from "./screens/HomePage";
 
 const Stack = createNativeStackNavigator();
 
@@ -21,6 +22,8 @@ export type NavigationStackParamList = {
   Signup: undefined;
   Profile: { userid: string } | undefined;
   AddParking: undefined;
+  Explore: undefined;
+  HomePage: undefined;
 };
 
 export default function App() {
@@ -64,6 +67,7 @@ export default function App() {
               name="IndividualParking"
               component={IndividualParking}
             />
+            <Stack.Screen name="HomePage" component={HomePage} />
           </Stack.Navigator>
         </NavigationContainer>
       </ParkingsContext.Provider>
