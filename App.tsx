@@ -11,7 +11,7 @@ import * as SecureStore from "expo-secure-store";
 import HomeTabNav from "./Navigation/HomeTabNav";
 import { ParkingsContext } from "./contexts/ParkingsContext";
 import IndividualParking from "./screens/IndividualParking";
-import ExplorePage from "./screens/ExplorePage";
+import DestinationResults from "./screens/DestinationResults";
 import HomePage from "./screens/HomePage";
 
 const Stack = createNativeStackNavigator();
@@ -19,11 +19,12 @@ const Stack = createNativeStackNavigator();
 export type NavigationStackParamList = {
   Home: undefined;
   LoginScreen: undefined;
-  Signup: undefined;
+  SignupScreen: undefined;
   Profile: { userid: string } | undefined;
   AddParking: undefined;
   Explore: undefined;
   HomePage: undefined;
+  DestinationResults: undefined;
 };
 
 export default function App() {
