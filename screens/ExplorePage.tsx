@@ -40,6 +40,7 @@ const ExplorePage = ({ navigation }: Props) => {
       <HomeSearch
         setSelectedLocation={setSelectedLocation}
         placeholder="Find your spot"
+        navigation={navigation}
       />
       <View>
         <View style={styles.citiesHeader}>
