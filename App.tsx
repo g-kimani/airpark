@@ -17,9 +17,12 @@ const Stack = createNativeStackNavigator();
 export type NavigationStackParamList = {
   Home: undefined;
   LoginScreen: undefined;
-  Signup: undefined;
+  SignupScreen: undefined;
   Profile: { userid: string } | undefined;
   AddParking: undefined;
+  Explore: undefined;
+  HomePage: undefined;
+  DestinationResults: undefined;
 };
 
 export default function App() {

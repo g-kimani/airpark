@@ -38,7 +38,7 @@ const MapComponent = ({ selectedLocation, parkings }: Props) => {
               latitude: parking.latitude,
               longitude: parking.longitude,
             }}
-            onPress={() => handleMarkerPress(parking)} // Pass the parking object as a parameter
+            onPress={() => handleMarkerPress(parking)}
           >
             <Callout>
               <View>
