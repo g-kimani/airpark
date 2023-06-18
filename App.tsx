@@ -30,15 +30,6 @@ export default function App() {
   const [parkings, setParkings] = useState({
     list: [],
   });
-  useEffect(() => {
-    SecureStore.getItemAsync("auth-token").then((result) => {
-      if (result) {
-        setUser((user) => {
-          return { ...user, token: result };
-        });
-      }
-    });
-  }, []);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>

@@ -7,30 +7,22 @@ import {
 } from "react-native-google-places-autocomplete";
 
 type Props = {
-  onPlaceSelected: any;
   placeholder: string;
   setSelectedLocation: any;
-  navigation: any;
 };
 
-const HomeSearch = ({
-  onPlaceSelected,
-  setSelectedLocation,
-  placeholder,
-  navigation,
-}: Props) => {
+const HomeSearch = ({ setSelectedLocation, placeholder }: Props) => {
   const handlePlacePress = (data: GooglePlaceData, detail: GooglePlaceData) => {
-    console.log(
-      "!!!!!!!!!!!!!!!!!!!!",
-      detail,
-
-      "LOCATION~!~~~~~~~~~~~~~",
-      detail.geometry.location, //
-      "VIEWPORT~~~~~~~~~~: ",
-      detail.geometry.viewport
+    const area = detail.address_components.find((comp: any) =>
+      comp.types?.some((type: any) => type === "postal_town")
     );
+
     const geometry = detail.geometry.location;
-    setSelectedLocation({ latitude: geometry.lat, longitude: geometry.lng });
+    setSelectedLocation({
+      latitude: geometry.lat,
+      longitude: geometry.lng,
+      area: area.long_name,
+    });
   };
 
   return (
@@ -71,7 +63,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "left",
     width: "100%",
-    padding: 10,
+    // padding: 10,
     // marginTop: 20,
   },
   inputText: {

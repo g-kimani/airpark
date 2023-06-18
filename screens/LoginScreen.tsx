@@ -12,7 +12,7 @@ import { UserContext } from "../contexts/UserContext";
 import * as SecureStore from "expo-secure-store";
 
 async function save(key: string, value: string) {
-  console.log("🚀 ~ file: LoginScreen.tsx:15 ~ save ~ value:", value);
+  //console.log("🚀 ~ file: LoginScreen.tsx:15 ~ save ~ value:", value);
   await SecureStore.setItemAsync(key, value);
 }
 
@@ -45,6 +45,18 @@ const LoginScreen = ({ navigation }: Props) => {
       navigation.replace("Home");
     });
   };
+
+  // AUTO Login if previously logged in
+  useEffect(() => {
+    SecureStore.getItemAsync("auth-token").then((result) => {
+      if (result) {
+        setUser((user: any) => {
+          return { ...user, token: result };
+        });
+        navigation.replace("Home");
+      }
+    });
+  }, []);
 
   return (
     <>

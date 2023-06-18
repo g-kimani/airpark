@@ -42,7 +42,7 @@ const SignupScreen = ({ navigation }: Props) => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      console.log(values);
+      //console.log(values);
       signUpUser(values)
         .then((data) => {
           setUser(data);
@@ -51,7 +51,7 @@ const SignupScreen = ({ navigation }: Props) => {
           navigation.replace("HomePage");
         })
         .catch((err) => alert(err));
-      // console.log(values);
+      // //console.log(values);
       // navigation.navigate("HomePage");
     },
   });

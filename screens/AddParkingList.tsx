@@ -4,141 +4,148 @@ import {
   View,
   TextInput,
   StyleSheet,
-  Button,
   Image,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  Keyboard,
+  KeyboardAvoidingView,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import HomeSearch from "../Components/HomeSearch";
 import { postParking } from "../utils";
-import { UserContext } from "../contexts/UserContext";
 import { ParkingsContext } from "../contexts/ParkingsContext";
+import tw from "twrnc";
+import { MaterialIcons } from "@expo/vector-icons";
+import { ParkingContextTypes } from "./types";
 
 const AddParkingList = () => {
-  const [parking, setParking] = useState({ price: "" });
-  const [image, setImage] = useState(null);
-  const { token } = useContext(UserContext);
-  const [selectedArea, setSelectedArea] = useState({});
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+  const [location, setLocation] = useState({});
+  const [price, setPrice] = useState("0");
+  const [image, setImage] = useState({});
+  const [description, setDescription] = useState("");
+  const [disableSubmit, setDisableSubmit] = useState(false);
+
+  const { setParkings } = useContext<ParkingContextTypes>(ParkingsContext);
+
+  function pickImage() {
+    ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
-    });
-
-    console.log(result);
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
-  };
-  function handleAreaSelected(locationInfo: any) {
-    setSelectedArea(locationInfo);
-    setParking((prev) => {
-      return { ...prev, ...locationInfo };
-    });
-    console.log(
-      "🚀 ~ file: AddParkingList.tsx:40 ~ handleAreaSelected ~ parking:",
-      parking
-    );
+    })
+      .then((result) => {
+        if (!result.canceled) {
+          setImage(result.assets[0]);
+        }
+      })
+      .catch((err) => {
+        alert(err);
+      });
   }
-  // function dismissKeyboard() {
-
-  // }
-  const { setParkings } = useContext(ParkingsContext);
 
   function handleSubmit() {
-    postParking(parking).then(({ parking }) => {
-      console.log(
-        "🚀 ~ file: AddParkingList.tsx:55 ~ postParking ~ parking:",
-        parking
-      );
-      // setParkings((prev: any) => [...prev, parking]);
-      setParkings((prev: any) => {
-        return { list: [...prev.list, parking] };
+    const parking = { ...location, price, image, description };
+    console.log(
+      "🚀 ~ file: AddParkingList.tsx:48 ~ handleSubmit ~ parking:",
+      parking
+    );
+    setDisableSubmit(true);
+    postParking(parking)
+      .then(({ parking }) => {
+        setParkings((prev: any) => {
+          return { list: [...prev.list, parking] };
+        });
+      })
+      .catch((err) => alert(err))
+      .finally(() => {
+        setDisableSubmit(false);
       });
-      console.log("updated parkings");
-    });
   }
 
   return (
-    <>
-      <View style={styles.container}>
-        <Text style={styles.header}>Add Parking space</Text>
-        <HomeSearch
-          setSelectedLocation={handleAreaSelected}
-          placeholder="Where is the parking?"
-        />
-        <Text>Price: </Text>
-        <TextInput
-          id="price"
-          placeholder="Price"
-          keyboardType="decimal-pad"
-          value={parking.price}
-          onChangeText={(text) =>
-            setParking((prev) => {
-              return { ...prev, price: text };
-            })
-          }
-          style={[styles.inputText, { width: "100%" }]}
-        />
-      </View>
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <TouchableOpacity style={styles.uploadButton}>
-          <Button title="Upload image" onPress={pickImage} />
-        </TouchableOpacity>
-        {image && (
-          //   <Text>Successfully uploaded!</Text>
-          <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
-        )}
-        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-          <Text style={styles.buttonText}>Submit</Text>
-        </TouchableOpacity>
-      </View>
-    </>
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior="position">
+      <TouchableWithoutFeedback
+        onPress={() => {
+          Keyboard.dismiss();
+        }}
+      >
+        <View style={tw`flex justify-center p-8`}>
+          <View
+            style={tw`flex relative mx-auto justify-center items-center w-4/5 min-h-220px my-4 bg-slate-200 rounded-md `}
+          >
+            {Object.keys(image).length ? (
+              <>
+                <Image
+                  source={{ uri: image.uri }}
+                  style={{ width: 200, height: 200 }}
+                />
+                <TouchableOpacity
+                  onPress={() => {
+                    setImage({});
+                  }}
+                  style={tw`absolute bottom-1 right-1 bg-slate-200 rounded`}
+                >
+                  <MaterialIcons name="delete" size={32} color={"red"} />
+                </TouchableOpacity>
+              </>
+            ) : (
+              <TouchableOpacity onPress={pickImage}>
+                <MaterialIcons name="add-a-photo" size={64} />
+                <Text>Add a photo</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+          <Text style={tw`text-sm font-medium leading-6 text-gray-900 mt-4`}>
+            Address:
+          </Text>
+          <HomeSearch
+            setSelectedLocation={setLocation}
+            placeholder="Your parking location?"
+          />
+          <Text style={tw`text-sm font-medium leading-6 text-gray-900 mt-4`}>
+            Description (optional):
+          </Text>
+          <TextInput
+            placeholder="Description"
+            multiline
+            value={description}
+            onChangeText={(text) => setDescription(text)}
+            textAlignVertical="top"
+            style={[
+              styles.inputBg,
+              tw`w-full rounded-md border-0 py-1.5 px-4 text-gray-900 min-h-75px shadow-sm `,
+            ]}
+          />
+          <Text style={tw`text-sm font-medium leading-6 text-gray-900 mt-4`}>
+            Price (£ / per day):
+          </Text>
+          <TextInput
+            placeholder="0.00"
+            value={price}
+            keyboardType={"decimal-pad"}
+            onChangeText={(text) => setPrice(text)}
+            style={[
+              styles.inputBg,
+              tw`w-full rounded-md border-0 py-1.5 px-4 text-gray-900 shadow-sm `,
+            ]}
+          />
+          <TouchableOpacity
+            style={tw`rounded-md bg-indigo-600 px-3 py-2 shadow-sm m-8 mx-auto`}
+            onPress={handleSubmit}
+            disabled={disableSubmit}
+          >
+            <Text style={tw`text-sm font-semibold text-white`}>Submit</Text>
+          </TouchableOpacity>
+        </View>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
+
 const styles = StyleSheet.create({
-  header: {
-    fontSize: 20,
-    margin: 10,
-    paddingTop: 20,
-  },
-  container: {
-    alignItems: "center",
-  },
-  inputText: {
-    padding: 16,
-    backgroundColor: "#e0e0e0",
-    borderRadius: 10,
-    margin: 10,
-    width: "60%",
-  },
-  uploadButton: {
-    padding: 14,
-    backgroundColor: "white",
-    borderColor: "grey",
-    borderStyle: "solid",
-    borderWidth: 0.4,
-    borderRadius: 10,
-    margin: 10,
-    width: "50%",
-  },
-  button: {
-    padding: 16,
-    backgroundColor: "red",
-    borderRadius: 10,
-    margin: 10,
-    width: "50%",
-  },
-  buttonText: {
-    color: "white",
-    fontWeight: "700",
-    fontSize: 16,
-    textAlign: "center",
+  inputBg: {
+    backgroundColor: "#f8f9fa",
   },
 });
 export default AddParkingList;
