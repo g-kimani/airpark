@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, Image, FlatList } from "react-native";
+import { defaultImage } from "../assets/image_not_found.ts";
 
 interface Parking {
   parking_id: number;
@@ -7,7 +8,7 @@ interface Parking {
   price: number;
   location: string;
   isBooked: boolean;
-  imgUrl: string;
+  picture: string;
 }
 
 interface Props {
@@ -24,9 +25,8 @@ const ParkingsList: React.FC<Props> = ({ parkings }) => {
           <View style={styles.item}>
             <Image
               style={styles.image}
-              source={{
-                uri: item.imgUrl,
-              }}
+              source={{ uri: item.picture ? item.picture : defaultImage }}
+              accessibilityLabel="Parking Image"
             />
             <View style={styles.detailsContainer}>
               <Text style={styles.location}>{item.location}</Text>
