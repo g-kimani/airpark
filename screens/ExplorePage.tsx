@@ -17,9 +17,9 @@ import ExploreParkings from "../Components/ExploreParkings";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { NavigationStackParamList } from "./types";
 import { getParkings } from "../utils.js";
-import parkingsArray from "../data/parkingsArray";
 import DestinationResult from "../Components/DestinationResult";
 import { FontAwesome5 } from "@expo/vector-icons";
+import ParkingsList from "../Components/ParkingsList.js";
 
 type Props = NativeStackScreenProps<NavigationStackParamList, "ExplorePage">;
 
@@ -50,7 +50,6 @@ const ExplorePage = ({ navigation }: Props) => {
           placeholder="Find your spot"
         />
         {selectedLocation && (
-          // only display toggle when selected location
           <View>
             <TouchableOpacity onPress={toggleViewMode}>
               <View
@@ -70,12 +69,12 @@ const ExplorePage = ({ navigation }: Props) => {
           selectedLocation={selectedLocation}
           parkingList={parkingList}
           viewMode={viewMode}
-          dummyData={parkingsArray}
+          parkings={parkingList}
         />
       ) : (
         <View>
           <View style={tw`flex flex-row justify-between py-2`}>
-            <Text style={tw`text-gray-500 text-lg ml-2`}>Cities</Text>
+            <Text style={tw`text-gray-500 text-lg ml-4`}>Cities</Text>
             <AntDesign name="arrowright" size={24} color={"grey"} />
           </View>
           <ScrollView
@@ -92,7 +91,7 @@ const ExplorePage = ({ navigation }: Props) => {
             <Ionicons name="pricetag-outline" size={24} color="grey" />
           </View>
           <ScrollView contentContainerStyle={tw`px-4`}>
-            <ExploreParkings parkings={parkingsArray} />
+            <ExploreParkings parkings={parkingList} />
           </ScrollView>
         </View>
       )}
