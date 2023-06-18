@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { ScrollView } from "react-native";
+import { defaultImage } from "../assets/image_not_found.ts";
 
 interface Parking {
   parking_id: number;
@@ -8,7 +9,7 @@ interface Parking {
   price: number;
   location: string;
   isBooked: boolean;
-  imgUrl: string;
+  picture: string;
 }
 
 interface Props {
@@ -21,7 +22,11 @@ const ExploreParkings: React.FC<Props> = ({ parkings }) => {
       {parkings.map((item) => (
         <TouchableOpacity style={styles.item} key={item.parking_id}>
           <View style={styles.container}>
-            <Image style={styles.image} source={{ uri: item.imgUrl }} />
+            <Image
+              style={styles.image}
+              source={{ uri: item.picture ? item.picture : defaultImage }}
+              accessibilityLabel="Parking Image"
+            />
             <View style={styles.detailsContainer}>
               <Text style={styles.location}>{item.location}</Text>
               <Text style={styles.price}>£{item.price}</Text>

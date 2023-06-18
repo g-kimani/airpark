@@ -11,14 +11,12 @@ type Props = {
   };
   parkingList: any[];
   viewMode: string;
-  dummyData: any[];
 };
 
 const DestinationResult = ({
   selectedLocation,
   parkingList,
   viewMode,
-  dummyData,
 }: Props) => {
   return (
     <View>
@@ -29,7 +27,7 @@ const DestinationResult = ({
         />
       ) : (
         <View>
-          <ParkingsList parkings={dummyData} />
+          <ParkingsList parkings={parkingList} />
         </View>
       )}
     </View>
