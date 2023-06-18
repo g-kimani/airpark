@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, ScrollView, StyleSheet, SafeAreaView } from "react-native";
+import {
+  Text,
+  View,
+  ScrollView,
+  StyleSheet,
+  SafeAreaView,
+  TouchableOpacity,
+} from "react-native";
 import ExploreCities from "../Components/ExploreCities";
 import citiesArray from "../data/citiesArray";
 import tw from "twrnc";
@@ -12,21 +19,18 @@ import { NavigationStackParamList } from "./types";
 import { getParkings } from "../utils.js";
 import parkingsArray from "../data/parkingsArray";
 import DestinationResult from "../Components/DestinationResult";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 type Props = NativeStackScreenProps<NavigationStackParamList, "ExplorePage">;
 
 const ExplorePage = ({ navigation }: Props) => {
   const [selectedLocation, setSelectedLocation] = useState(null);
-  const [cities, setCities] = useState(citiesArray);
   const [parkingList, setParkingList] = useState([]);
-  const [dummyData, setDummyData] = useState(parkingsArray);
   const [viewMode, setViewMode] = useState("map");
 
   useEffect(() => {
     getParkings().then((parkings) => {
-      console.log("🚀 ~ getParkings ~ parkings:", parkings);
       setParkingList(parkings);
-      setDummyData(parkingsArray);
     });
   }, [selectedLocation]);
 
@@ -36,50 +40,62 @@ const ExplorePage = ({ navigation }: Props) => {
 
   return (
     <SafeAreaView style={tw`bg-white h-full`}>
-      <View style={styles.header}>
-        <Text style={styles.text}>Explore</Text>
-        <Ionicons name="ios-compass-outline" size={24} color="black" />
+      <View style={tw`flex flex-row p-3 items-center`}>
+        <Text style={tw`p-2 text-3xl font-bold`}>Explore</Text>
+        <Ionicons name="ios-compass-outline" size={24} />
       </View>
-      <HomeSearch
-        setSelectedLocation={setSelectedLocation}
-        placeholder="Find your spot"
-        navigation={navigation}
-      />
-      <View>
+      <View style={tw`flex flex-row p-2`}>
+        <HomeSearch
+          setSelectedLocation={setSelectedLocation}
+          placeholder="Find your spot"
+        />
         {selectedLocation && (
-          <DestinationResult
-            selectedLocation={selectedLocation}
-            parkingList={parkingList}
-            viewMode={viewMode}
-            toggleViewMode={toggleViewMode}
-            dummyData={dummyData}
-          />
+          // only display toggle when selected location
+          <View>
+            <TouchableOpacity onPress={toggleViewMode}>
+              <View
+                style={tw`flex justify-center items-center bg-white p-4 rounded-md shadow mx-2`}
+              >
+                <FontAwesome5
+                  name={viewMode === "map" ? "list-alt" : "map"}
+                  size={24}
+                />
+              </View>
+            </TouchableOpacity>
+          </View>
         )}
-        <View style={styles.citiesHeader}>
-          <Text style={tw`text-gray-500 text-lg ml-2`}>Cities</Text>
-          <AntDesign name="arrowright" size={24} color="grey" />
-        </View>
-        <ScrollView
-          contentContainerStyle={styles.citiesScrollViewContent}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-        >
-          {cities.map((item) => (
-            <ExploreCities item={item} key={item.location} />
-          ))}
-        </ScrollView>
-        <View style={styles.featuredHeader}>
-          <Text style={tw`text-gray-500 text-lg ml-3`}>Low Price</Text>
-          <Ionicons name="pricetag-outline" size={24} color="grey" />
-        </View>
-        <ScrollView
-          contentContainerStyle={{
-            paddingHorizontal: 10,
-          }}
-        >
-          <ExploreParkings parkings={dummyData} />
-        </ScrollView>
       </View>
+      {selectedLocation ? (
+        <DestinationResult
+          selectedLocation={selectedLocation}
+          parkingList={parkingList}
+          viewMode={viewMode}
+          dummyData={parkingsArray}
+        />
+      ) : (
+        <View>
+          <View style={tw`flex flex-row justify-between py-2`}>
+            <Text style={tw`text-gray-500 text-lg ml-2`}>Cities</Text>
+            <AntDesign name="arrowright" size={24} color={"grey"} />
+          </View>
+          <ScrollView
+            contentContainerStyle={tw`px-2 py-4`}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+          >
+            {citiesArray.map((item) => (
+              <ExploreCities item={item} key={item.location} />
+            ))}
+          </ScrollView>
+          <View style={tw`flex flex-row items-center px-2`}>
+            <Text style={tw`text-gray-500 text-lg ml-3`}>Low Price</Text>
+            <Ionicons name="pricetag-outline" size={24} color="grey" />
+          </View>
+          <ScrollView contentContainerStyle={tw`px-4`}>
+            <ExploreParkings parkings={parkingsArray} />
+          </ScrollView>
+        </View>
+      )}
     </SafeAreaView>
   );
 };

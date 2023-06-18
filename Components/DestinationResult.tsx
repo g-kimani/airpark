@@ -11,7 +11,6 @@ type Props = {
   };
   parkingList: any[];
   viewMode: string;
-  toggleViewMode: () => void;
   dummyData: any[];
 };
 
@@ -19,21 +18,10 @@ const DestinationResult = ({
   selectedLocation,
   parkingList,
   viewMode,
-  toggleViewMode,
   dummyData,
 }: Props) => {
   return (
     <View>
-      <TouchableOpacity onPress={toggleViewMode}>
-        <View style={styles.toggle}>
-          <Text>{viewMode === "map" ? "List" : "Map"}</Text>
-          <FontAwesome5
-            name={viewMode === "map" ? "list-alt" : "map"}
-            size={24}
-            color="black"
-          />
-        </View>
-      </TouchableOpacity>
       {viewMode === "map" ? (
         <MapComponent
           selectedLocation={selectedLocation}

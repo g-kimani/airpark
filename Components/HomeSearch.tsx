@@ -21,7 +21,7 @@ const HomeSearch = ({ setSelectedLocation, placeholder }: Props) => {
     setSelectedLocation({
       latitude: geometry.lat,
       longitude: geometry.lng,
-      area: area.long_name,
+      area: area?.long_name,
     });
   };
 
@@ -58,11 +58,13 @@ const HomeSearch = ({ setSelectedLocation, placeholder }: Props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 0,
+    width: "100%",
+    margin: "auto",
+    flexShrink: 1,
   },
   searchBar: {
     flexDirection: "row",
     alignItems: "left",
-    width: "100%",
     // padding: 10,
     // marginTop: 20,
   },

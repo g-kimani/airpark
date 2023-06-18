@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import MapView, { Callout, Marker } from "react-native-maps";
 import { useNavigation } from "@react-navigation/native";
 import IndividualParking from "../screens/IndividualParking";
+import MarkerCallout from "./MarkerCallout";
 
 type Props = {
   selectedLocation: {
@@ -15,9 +16,6 @@ type Props = {
 const MapComponent = ({ selectedLocation, parkings }: Props) => {
   const navigation = useNavigation();
 
-  const handleMarkerPress = (parking) => {
-    navigation.navigate("IndividualParking", { parking });
-  };
   return (
     <MapView
       style={styles.map}
@@ -28,8 +26,6 @@ const MapComponent = ({ selectedLocation, parkings }: Props) => {
         longitudeDelta: 0.0421,
       }}
     >
-      <Marker coordinate={{ latitude: 51.509865, longitude: -0.118092 }} />
-
       {parkings.map((parking) => {
         return (
           <Marker
@@ -38,13 +34,9 @@ const MapComponent = ({ selectedLocation, parkings }: Props) => {
               latitude: parking.latitude,
               longitude: parking.longitude,
             }}
-            onPress={() => handleMarkerPress(parking)}
           >
             <Callout>
-              <View>
-                <Text>This is a marker callout</Text>
-                <Text>Additional information can be displayed here</Text>
-              </View>
+              <MarkerCallout parking={parking} />
             </Callout>
           </Marker>
         );

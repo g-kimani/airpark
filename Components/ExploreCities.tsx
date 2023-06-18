@@ -1,13 +1,12 @@
-import React from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 
-interface Props {
+type Props = {
   item: {
     location: string;
   };
-}
+};
 
-const ExploreCities: React.FC<Props> = ({ item }) => {
+const ExploreCities = ({ item }: Props) => {
   return (
     <TouchableOpacity style={styles.item}>
       <View style={styles.container}>
