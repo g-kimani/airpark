@@ -1,6 +1,12 @@
 import React from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
-import { ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  FlatList,
+} from "react-native";
 import { defaultImage } from "../assets/image_not_found.ts";
 
 interface Parking {
@@ -14,33 +20,40 @@ interface Parking {
 
 interface Props {
   parkings: Parking[];
+  handlePress: (parking: Parking) => void;
 }
 
 const ExploreParkings: React.FC<Props> = ({ parkings, handlePress }) => {
+  const limitedParkings = parkings.slice(0, 6);
+
+  const renderItem = ({ item }: { item: Parking }) => (
+    <TouchableOpacity
+      style={styles.item}
+      key={item.parking_id}
+      onPress={() => handlePress(item)}
+    >
+      <View style={styles.container}>
+        <Image
+          style={styles.image}
+          source={{ uri: item.picture ? item.picture : defaultImage }}
+          accessibilityLabel="Parking Image"
+        />
+        <View style={styles.detailsContainer}>
+          <Text style={styles.location}>{item.area}</Text>
+          <Text style={styles.price}>£{item.price}</Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+
   return (
-    <View>
-      {parkings.map((item) => (
-        <TouchableOpacity
-          style={styles.item}
-          key={item.parking_id}
-          onPress={() => {
-            handlePress(parkings);
-          }}
-        >
-          <View style={styles.container}>
-            <Image
-              style={styles.image}
-              source={{ uri: item.picture ? item.picture : defaultImage }}
-              accessibilityLabel="Parking Image"
-            />
-            <View style={styles.detailsContainer}>
-              <Text style={styles.location}>{item.area}</Text>
-              <Text style={styles.price}>£{item.price}</Text>
-            </View>
-          </View>
-        </TouchableOpacity>
-      ))}
-    </View>
+    <FlatList
+      data={limitedParkings}
+      keyExtractor={(item) => item.parking_id.toString()}
+      renderItem={renderItem}
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={styles.citiesScrollViewContent}
+    />
   );
 };
 
@@ -69,6 +82,10 @@ const styles = StyleSheet.create({
   },
   price: {
     fontSize: 18,
+  },
+  citiesScrollViewContent: {
+    paddingHorizontal: 5,
+    paddingVertical: 15,
   },
 });
 

@@ -6,6 +6,7 @@ import {
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
+  FlatList,
 } from "react-native";
 import ExploreCities from "../Components/ExploreCities";
 import citiesArray from "../data/citiesArray";
@@ -81,25 +82,24 @@ const ExplorePage = ({ navigation }: Props) => {
             <Text style={tw`text-gray-500 text-lg ml-4`}>Cities</Text>
             <AntDesign name="arrowright" size={24} color={"grey"} />
           </View>
-          <ScrollView
-            contentContainerStyle={tw`px-2 py-4`}
+          <FlatList
+            data={citiesArray}
+            keyExtractor={(item) => item.location}
             horizontal
             showsHorizontalScrollIndicator={false}
-          >
-            {citiesArray.map((item) => (
-              <ExploreCities item={item} key={item.location} />
-            ))}
-          </ScrollView>
+            contentContainerStyle={styles.citiesScrollViewContent}
+            renderItem={({ item }) => <ExploreCities item={item} />}
+          />
           <View style={tw`flex flex-row items-center px-2`}>
             <Text style={tw`text-gray-500 text-lg ml-3`}>Low Price</Text>
             <Ionicons name="pricetag-outline" size={24} color="grey" />
           </View>
-          <ScrollView contentContainerStyle={tw`px-4`}>
+          <View style={tw`px-4 flex flex-row h-3/4`}>
             <ExploreParkings
               parkings={parkingList}
               handlePress={handleParkingPress}
             />
-          </ScrollView>
+          </View>
         </View>
       )}
     </SafeAreaView>
