@@ -16,11 +16,17 @@ interface Props {
   parkings: Parking[];
 }
 
-const ExploreParkings: React.FC<Props> = ({ parkings }) => {
+const ExploreParkings: React.FC<Props> = ({ parkings, handlePress }) => {
   return (
     <View>
       {parkings.map((item) => (
-        <TouchableOpacity style={styles.item} key={item.parking_id}>
+        <TouchableOpacity
+          style={styles.item}
+          key={item.parking_id}
+          onPress={() => {
+            handlePress(parkings);
+          }}
+        >
           <View style={styles.container}>
             <Image
               style={styles.image}

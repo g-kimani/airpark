@@ -11,6 +11,9 @@ import * as SecureStore from "expo-secure-store";
 import HomeTabNav from "./Navigation/HomeTabNav";
 import { ParkingsContext } from "./contexts/ParkingsContext";
 import IndividualParking from "./screens/IndividualParking";
+import CitiesParkingList from "./screens/CitiesParkingList";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
 
 const Stack = createNativeStackNavigator();
 
@@ -23,6 +26,7 @@ export type NavigationStackParamList = {
   Explore: undefined;
   HomePage: undefined;
   DestinationResults: undefined;
+  CitiesParkingList: undefined;
 };
 
 export default function App() {
@@ -56,6 +60,22 @@ export default function App() {
             <Stack.Screen
               name="IndividualParking"
               component={IndividualParking}
+            />
+            <Stack.Screen
+              name="CitiesParkingList"
+              component={CitiesParkingList}
+              options={{
+                headerTitle: () => (
+                  <>
+                    <MaterialCommunityIcons
+                      name="city-variant-outline"
+                      size={24}
+                      color="black"
+                    />
+                    <Text style={{ fontSize: 18, marginLeft: 4 }}>City</Text>
+                  </>
+                ),
+              }}
             />
           </Stack.Navigator>
         </NavigationContainer>

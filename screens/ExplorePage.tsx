@@ -38,6 +38,10 @@ const ExplorePage = ({ navigation }: Props) => {
     setViewMode((prevMode) => (prevMode === "map" ? "list" : "map"));
   };
 
+  const handleParkingPress = (parking) => {
+    navigation.navigate("IndividualParking", { parking });
+  };
+
   return (
     <SafeAreaView style={tw`bg-white h-full`}>
       <View style={tw`flex flex-row p-3 items-center`}>
@@ -91,7 +95,10 @@ const ExplorePage = ({ navigation }: Props) => {
             <Ionicons name="pricetag-outline" size={24} color="grey" />
           </View>
           <ScrollView contentContainerStyle={tw`px-4`}>
-            <ExploreParkings parkings={parkingList} />
+            <ExploreParkings
+              parkings={parkingList}
+              handlePress={handleParkingPress}
+            />
           </ScrollView>
         </View>
       )}
