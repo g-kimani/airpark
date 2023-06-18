@@ -1,4 +1,7 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import React from "react";
+import { useNavigation } from "@react-navigation/native";
+import CitiesParkingList from "../screens/CitiesParkingList";
 
 type Props = {
   item: {
@@ -7,15 +10,19 @@ type Props = {
 };
 
 const ExploreCities = ({ item }: Props) => {
+  const navigation = useNavigation();
+
+  const handleOnPress = () => {
+    navigation.navigate("CitiesParkingList");
+  };
   return (
-    <TouchableOpacity style={styles.item}>
+    <TouchableOpacity style={styles.item} onPress={handleOnPress}>
       <View style={styles.container}>
         <Text style={styles.location}>{item.location.toUpperCase()}</Text>
       </View>
     </TouchableOpacity>
   );
 };
-
 const styles = StyleSheet.create({
   item: {
     marginHorizontal: 8,
