@@ -46,6 +46,18 @@ const LoginScreen = ({ navigation }: Props) => {
     });
   };
 
+  // AUTO Login if previously logged in
+  useEffect(() => {
+    SecureStore.getItemAsync("auth-token").then((result) => {
+      if (result) {
+        setUser((user: any) => {
+          return { ...user, token: result };
+        });
+        navigation.replace("Home");
+      }
+    });
+  }, []);
+
   return (
     <>
       <Text style={styles.header}>AirPark</Text>

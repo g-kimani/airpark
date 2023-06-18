@@ -10,3 +10,13 @@ export type UserContextTypes = {
   user?: any;
   setUser?: any;
 };
+
+export type LocationObject = {
+  lat?: string;
+  long?: string;
+};
+
+export type ParkingContextTypes = {
+  parkings?: any[];
+  setParkings?: any;
+};
