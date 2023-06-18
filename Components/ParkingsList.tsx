@@ -29,7 +29,7 @@ const ParkingsList: React.FC<Props> = ({ parkings }) => {
               accessibilityLabel="Parking Image"
             />
             <View style={styles.detailsContainer}>
-              <Text style={styles.location}>{item.location}</Text>
+              <Text style={styles.location}>{item.area}</Text>
               <Text style={styles.price}>£{item.price}</Text>
             </View>
           </View>
