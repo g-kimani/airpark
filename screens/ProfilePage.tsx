@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import * as SecureStore from "expo-secure-store";
 
 type NavigationStackParamList = {
   LoginScreen: undefined;
@@ -20,7 +21,9 @@ type Props = NativeStackScreenProps<NavigationStackParamList>;
 
 const ProfilePage = ({ navigation }: Props) => {
   const handleLogout = () => {
-    navigation.replace("LoginScreen");
+    SecureStore.deleteItemAsync("auth-token").then(() => {
+      navigation.replace("LoginScreen");
+    });
   };
   const defaultImage =
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXV98JSo6IPuUib7DkMohhXWrHPggU_rGweA&usqp=CAU";
