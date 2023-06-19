@@ -8,7 +8,6 @@ const ListedParkings = () => {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     getParkingsForUser().then((parkings) => {
-      console.log(parkings);
       setParkings(parkings);
       setLoading(false);
     });
@@ -16,13 +15,13 @@ const ListedParkings = () => {
   if (loading) return <Text>Loading...</Text>;
   return (
     <View>
-      {/* <FlatList
+      <FlatList
         data={parkings}
-        renderItem={(item) => <ParkingListing parking={item} />}
-          /> */}
-      {parkings.map((park) => {
-        return <ParkingListing key={park.parking_id} parking={park} />;
-      })}
+        renderItem={({ item }) => {
+          return <ParkingListing parking={item} />;
+        }}
+        keyExtractor={(item) => item.parking_id}
+      />
     </View>
   );
 };
