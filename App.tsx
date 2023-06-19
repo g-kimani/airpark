@@ -14,6 +14,7 @@ import IndividualParking from "./screens/IndividualParking";
 import CitiesParkingList from "./screens/CitiesParkingList";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
+import Chat from "./screens/Chat";
 
 const Stack = createNativeStackNavigator();
 
@@ -81,6 +82,7 @@ export default function App() {
                 ),
               }}
             />
+            <Stack.Screen name="Chat" component={Chat} />
           </Stack.Navigator>
         </NavigationContainer>
       </ParkingsContext.Provider>
