@@ -46,7 +46,13 @@ const IndividualParking = ({ route }: IndividualParkingProps) => {
 
   useEffect(() => {
     console.log("use individual");
-    Geocoder.from(parking).then((result) => {
+    console.log(parking);
+    const loc = {
+      latitude: parking.latitude,
+      longitude: parking.longitude,
+    };
+    console.log(loc);
+    Geocoder.from(loc).then((result) => {
       console.log(result.results[0]);
       setAdressStr(result.results[0].formatted_address);
     });

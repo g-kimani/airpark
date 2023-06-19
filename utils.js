@@ -98,3 +98,20 @@ export function getBookings() {
       return response.data;
     });
 }
+
+export function getParkingsForUser() {
+  return SecureStore.getItemAsync("user_id").then((user_id) => {
+    console.log(user_id);
+    return airparkAPI.get("/parkings").then((response) => {
+      let { parkings } = response.data;
+      parkings = parkings.filter((p) => p.host_id === Number(user_id));
+      const formatted = parkings.map((parking) => {
+        const latitude = parking.location.x;
+        const longitude = parking.location.y;
+        delete parking.location;
+        return { ...parking, latitude, longitude };
+      });
+      return formatted;
+    });
+  });
+}
