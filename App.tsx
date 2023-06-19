@@ -15,6 +15,7 @@ import CitiesParkingList from "./screens/CitiesParkingList";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import Chat from "./screens/Chat";
+import ManageParking from "./screens/ManageParking";
 
 const Stack = createNativeStackNavigator();
 
@@ -28,6 +29,7 @@ export type NavigationStackParamList = {
   HomePage: undefined;
   DestinationResults: undefined;
   CitiesParkingList: undefined;
+  ManageParking: undefined;
 };
 
 export default function App() {
@@ -65,6 +67,11 @@ export default function App() {
                 headerTitle: "",
                 headerTransparent: true,
               }}
+            />
+            <Stack.Screen
+              name="ManageParking"
+              component={ManageParking}
+              options={{ headerTitle: "Manage Parking" }}
             />
             <Stack.Screen
               name="CitiesParkingList"

@@ -17,6 +17,7 @@ import { ParkingsContext } from "../contexts/ParkingsContext";
 import tw from "twrnc";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ParkingContextTypes } from "./types";
+import { useNavigation } from "@react-navigation/native";
 
 const AddParkingList = () => {
   const [location, setLocation] = useState({});
@@ -26,6 +27,7 @@ const AddParkingList = () => {
   const [disableSubmit, setDisableSubmit] = useState(false);
 
   const { setParkings } = useContext<ParkingContextTypes>(ParkingsContext);
+  const navigation = useNavigation();
 
   function pickImage() {
     ImagePicker.launchImageLibraryAsync({
@@ -45,17 +47,23 @@ const AddParkingList = () => {
   }
 
   function handleSubmit() {
-    const parking = { ...location, price, image, description };
+    const request = { ...location, price, image, description };
     console.log(
       "🚀 ~ file: AddParkingList.tsx:48 ~ handleSubmit ~ parking:",
-      parking
+      request
     );
     setDisableSubmit(true);
-    postParking(parking)
+    postParking(request)
       .then(({ parking }) => {
         setParkings((prev: any) => {
           return { list: [...prev.list, parking] };
         });
+        parking = {
+          ...parking,
+          latitude: parking.location.x,
+          longitude: parking.location.y,
+        };
+        navigation.navigate("IndividualParking", { parking });
       })
       .catch((err) => alert(err))
       .finally(() => {
