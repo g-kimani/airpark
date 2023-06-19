@@ -8,6 +8,7 @@ import Inbox from "../screens/Inbox";
 import ProfilePage from "../screens/ProfilePage";
 import Bookings from "../screens/Bookings";
 import ExplorePage from "../screens/ExplorePage";
+import MyParkings from "../screens/MyParkings";
 
 const Tab = createBottomTabNavigator();
 
@@ -44,8 +45,8 @@ const HomeTabNav = () => {
         }}
       />
       <Tab.Screen
-        name="Bookings"
-        component={Bookings}
+        name="My Parkings"
+        component={MyParkings}
         options={{
           tabBarIcon: ({ color, size }) => (
             <AntDesign name="book" size={size} color={color} />

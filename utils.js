@@ -70,3 +70,31 @@ export function postParking(parking) {
       return response.data;
     });
 }
+
+export function postBooking(booking) {
+  return SecureStore.getItemAsync("auth-token")
+    .then((token) => {
+      return airparkAPI.post("/bookings", booking, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    })
+    .then((response) => {
+      return response.data;
+    });
+}
+
+export function getBookings() {
+  return SecureStore.getItemAsync("auth-token")
+    .then((token) => {
+      return airparkAPI.get("/bookings", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    })
+    .then((response) => {
+      return response.data;
+    });
+}
