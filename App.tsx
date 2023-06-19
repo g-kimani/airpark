@@ -60,6 +60,10 @@ export default function App() {
             <Stack.Screen
               name="IndividualParking"
               component={IndividualParking}
+              options={{
+                headerTitle: "",
+                headerTransparent: true,
+              }}
             />
             <Stack.Screen
               name="CitiesParkingList"
