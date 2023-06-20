@@ -1,6 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import MapView, { Callout, Marker } from "react-native-maps";
+import MapView, {
+  Callout,
+  Details,
+  MapViewProps,
+  Marker,
+  Region,
+} from "react-native-maps";
 import { useNavigation } from "@react-navigation/native";
 import IndividualParking from "../screens/IndividualParking";
 import MarkerCallout from "./MarkerCallout";
@@ -9,22 +15,30 @@ type Props = {
   selectedLocation: {
     latitude: number;
     longitude: number;
+    latitudeDelta: number;
+    longitudeDelta: number;
   };
   parkings: any[];
+  setSelectedLocation: any;
 };
 
-const MapComponent = ({ selectedLocation, parkings }: Props) => {
+const MapComponent = ({
+  selectedLocation,
+  parkings,
+  setSelectedLocation,
+}: Props) => {
   const navigation = useNavigation();
+  const [currentViewport, setCurrentViewport] = useState({});
+
+  const handleRegionChange = (region: Region, details: Details) => {
+    setSelectedLocation(region);
+  };
 
   return (
     <MapView
       style={styles.map}
-      region={{
-        latitude: selectedLocation ? selectedLocation.latitude : 0,
-        longitude: selectedLocation ? selectedLocation.longitude : 0,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-      }}
+      region={selectedLocation}
+      onRegionChangeComplete={handleRegionChange}
     >
       {parkings.map((parking) => {
         return (
