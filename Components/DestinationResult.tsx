@@ -30,7 +30,11 @@ const DestinationResult = ({
         />
       ) : (
         <View>
-          <ParkingsList parkings={parkingList} />
+          <ParkingsList
+            parkings={parkingList}
+            selectedLocation={selectedLocation}
+            setSelectedLocation={setSelectedLocation}
+          />
         </View>
       )}
     </View>

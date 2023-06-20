@@ -21,25 +21,44 @@ import DestinationResult from "../Components/DestinationResult";
 import { FontAwesome5 } from "@expo/vector-icons";
 import ParkingsList from "../Components/ParkingsList.js";
 import { SafeAreaView } from "react-native-safe-area-context";
+import * as Location from "expo-location";
 
 type Props = NativeStackScreenProps<NavigationStackParamList, "ExplorePage">;
 
 const ExplorePage = ({ navigation }: Props) => {
-  const [selectedLocation, setSelectedLocation] = useState({
-    latitude: 51.50853,
-    longitude: -0.12574,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
-  });
+  const [selectedLocation, setSelectedLocation] = useState(null);
   const [parkingList, setParkingList] = useState([]);
   const [viewMode, setViewMode] = useState("map");
 
   useEffect(() => {
-    getParkings(selectedLocation).then((parkings) => {
-      setParkingList(parkings);
-    });
-  }, [selectedLocation]);
+    (async () => {
+      try {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") {
+          // Handle permission denied
+          return;
+        }
 
+        const location = await Location.getCurrentPositionAsync({});
+        setSelectedLocation({
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        });
+      } catch (error) {
+        console.log("Error getting current location:", error);
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    if (selectedLocation) {
+      getParkings(selectedLocation).then((parkings) => {
+        setParkingList(parkings);
+      });
+    }
+  }, [selectedLocation]);
   const toggleViewMode = () => {
     setViewMode((prevMode) => (prevMode === "map" ? "list" : "map"));
   };
