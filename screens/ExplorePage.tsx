@@ -4,7 +4,6 @@ import {
   View,
   ScrollView,
   StyleSheet,
-  SafeAreaView,
   TouchableOpacity,
   FlatList,
 } from "react-native";
@@ -21,6 +20,7 @@ import { getParkings } from "../utils.js";
 import DestinationResult from "../Components/DestinationResult";
 import { FontAwesome5 } from "@expo/vector-icons";
 import ParkingsList from "../Components/ParkingsList.js";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 type Props = NativeStackScreenProps<NavigationStackParamList, "ExplorePage">;
 

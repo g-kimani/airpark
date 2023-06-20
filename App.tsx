@@ -16,6 +16,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import Chat from "./screens/Chat";
 import ManageParking from "./screens/ManageParking";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 const Stack = createNativeStackNavigator();
 
@@ -41,57 +42,59 @@ export default function App() {
   return (
     <UserContext.Provider value={{ user, setUser }}>
       <ParkingsContext.Provider value={{ parkings, setParkings }}>
-        <NavigationContainer>
-          <Stack.Navigator>
-            <Stack.Screen
-              name="LoginScreen"
-              component={LoginScreen}
-              options={{ title: "Sign In" }}
-            />
-            <Stack.Screen
-              name="Signup"
-              component={SignupScreen}
-              options={{ title: "Create Account" }}
-            />
-            <Stack.Screen
-              name="Home"
-              component={HomeTabNav}
-              options={{
-                headerShown: false,
-              }}
-            />
-            <Stack.Screen
-              name="IndividualParking"
-              component={IndividualParking}
-              options={{
-                headerTitle: "",
-                headerTransparent: true,
-              }}
-            />
-            <Stack.Screen
-              name="ManageParking"
-              component={ManageParking}
-              options={{ headerTitle: "Manage Parking" }}
-            />
-            <Stack.Screen
-              name="CitiesParkingList"
-              component={CitiesParkingList}
-              options={{
-                headerTitle: () => (
-                  <>
-                    <MaterialCommunityIcons
-                      name="city-variant-outline"
-                      size={24}
-                      color="black"
-                    />
-                    <Text style={{ fontSize: 18, marginLeft: 4 }}>City</Text>
-                  </>
-                ),
-              }}
-            />
-            <Stack.Screen name="Chat" component={Chat} />
-          </Stack.Navigator>
-        </NavigationContainer>
+        <SafeAreaProvider>
+          <NavigationContainer>
+            <Stack.Navigator>
+              <Stack.Screen
+                name="LoginScreen"
+                component={LoginScreen}
+                options={{ title: "Sign In" }}
+              />
+              <Stack.Screen
+                name="Signup"
+                component={SignupScreen}
+                options={{ title: "Create Account" }}
+              />
+              <Stack.Screen
+                name="Home"
+                component={HomeTabNav}
+                options={{
+                  headerShown: false,
+                }}
+              />
+              <Stack.Screen
+                name="IndividualParking"
+                component={IndividualParking}
+                options={{
+                  headerTitle: "",
+                  headerTransparent: true,
+                }}
+              />
+              <Stack.Screen
+                name="ManageParking"
+                component={ManageParking}
+                options={{ headerTitle: "Manage Parking" }}
+              />
+              <Stack.Screen
+                name="CitiesParkingList"
+                component={CitiesParkingList}
+                options={{
+                  headerTitle: () => (
+                    <>
+                      <MaterialCommunityIcons
+                        name="city-variant-outline"
+                        size={24}
+                        color="black"
+                      />
+                      <Text style={{ fontSize: 18, marginLeft: 4 }}>City</Text>
+                    </>
+                  ),
+                }}
+              />
+              <Stack.Screen name="Chat" component={Chat} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </SafeAreaProvider>
       </ParkingsContext.Provider>
     </UserContext.Provider>
   );

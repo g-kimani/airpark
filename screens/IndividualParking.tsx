@@ -8,7 +8,6 @@ import {
   Modal,
   Button,
   Image,
-  SafeAreaView,
 } from "react-native";
 import { Entypo, MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -16,6 +15,7 @@ import tw from "twrnc";
 import moment from "moment";
 import { defaultImage } from "../assets/image_not_found.ts";
 import Geocoder from "react-native-geocoding";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 Geocoder.init("AIzaSyBhcOAI9R7HKqUD9f-2is268fJza5KZ0G8");
 import { Calendar } from "react-native-calendars";
