@@ -11,11 +11,13 @@ type Props = {
   };
   parkingList: any[];
   viewMode: string;
+  setSelectedLocation: any;
 };
 
 const DestinationResult = ({
   selectedLocation,
   parkingList,
+  setSelectedLocation,
   viewMode,
 }: Props) => {
   return (
@@ -23,6 +25,7 @@ const DestinationResult = ({
       {viewMode === "map" ? (
         <MapComponent
           selectedLocation={selectedLocation}
+          setSelectedLocation={setSelectedLocation}
           parkings={parkingList}
         />
       ) : (

@@ -28,12 +28,14 @@ const ExplorePage = ({ navigation }: Props) => {
   const [selectedLocation, setSelectedLocation] = useState({
     latitude: 51.50853,
     longitude: -0.12574,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
   });
   const [parkingList, setParkingList] = useState([]);
   const [viewMode, setViewMode] = useState("map");
 
   useEffect(() => {
-    getParkings().then((parkings) => {
+    getParkings(selectedLocation).then((parkings) => {
       setParkingList(parkings);
     });
   }, [selectedLocation]);
@@ -75,9 +77,9 @@ const ExplorePage = ({ navigation }: Props) => {
 
       <DestinationResult
         selectedLocation={selectedLocation}
+        setSelectedLocation={setSelectedLocation}
         parkingList={parkingList}
         viewMode={viewMode}
-        parkings={parkingList}
       />
     </SafeAreaView>
   );

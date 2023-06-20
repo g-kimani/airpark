@@ -18,10 +18,13 @@ const HomeSearch = ({ setSelectedLocation, placeholder }: Props) => {
     );
 
     const geometry = detail.geometry.location;
-    setSelectedLocation({
-      latitude: geometry.lat,
-      longitude: geometry.lng,
-      area: area?.long_name,
+    setSelectedLocation((prev) => {
+      return {
+        ...prev,
+        latitude: geometry.lat,
+        longitude: geometry.lng,
+        area: area?.long_name,
+      };
     });
   };
 

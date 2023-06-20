@@ -15,50 +15,29 @@ type Props = {
   selectedLocation: {
     latitude: number;
     longitude: number;
+    latitudeDelta: number;
+    longitudeDelta: number;
   };
   parkings: any[];
+  setSelectedLocation: any;
 };
 
-const MapComponent = ({ selectedLocation, parkings }: Props) => {
+const MapComponent = ({
+  selectedLocation,
+  parkings,
+  setSelectedLocation,
+}: Props) => {
   const navigation = useNavigation();
   const [currentViewport, setCurrentViewport] = useState({});
 
   const handleRegionChange = (region: Region, details: Details) => {
-    console.log("🚀 ~ file: MapView.tsx:29 ~ MapComponent ~ details:", details);
-    console.log("🚀 ~ file: MapView.tsx:50 ~ MapComponent ~ region:", region);
-
-    const { latitude, longitude, latitudeDelta, longitudeDelta } = region;
-    const northeastLatitude = latitude + latitudeDelta / 2;
-    const northeastLongitude = longitude + longitudeDelta / 2;
-
-    const southwestLatitude = latitude - latitudeDelta / 2;
-    const southwestLongitude = longitude - longitudeDelta / 2;
-
-    setCurrentViewport({
-      northeast: {
-        latitude: northeastLatitude,
-        longitude: northeastLongitude,
-      },
-      southwest: {
-        latitude: southwestLatitude,
-        longitude: southwestLongitude,
-      },
-    });
-    console.log(
-      "🚀 ~ file: MapView.tsx:48 ~ handleRegionChange ~ currentViewport:",
-      currentViewport
-    );
+    setSelectedLocation(region);
   };
 
   return (
     <MapView
       style={styles.map}
-      region={{
-        latitude: selectedLocation ? selectedLocation.latitude : 0,
-        longitude: selectedLocation ? selectedLocation.longitude : 0,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-      }}
+      region={selectedLocation}
       onRegionChangeComplete={handleRegionChange}
     >
       {parkings.map((parking) => {

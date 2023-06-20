@@ -25,8 +25,16 @@ export function signUpUser(user) {
   });
 }
 
-export function getParkings() {
-  return airparkAPI.get("/parkings").then((response) => {
+export function getParkings(location) {
+  const { latitude, longitude, latitudeDelta, longitudeDelta } = location;
+  const ne_lat = latitude + latitudeDelta / 2;
+  const ne_lng = longitude + longitudeDelta / 2;
+
+  const sw_lat = latitude - latitudeDelta / 2;
+  const sw_lng = longitude - longitudeDelta / 2;
+
+  const query = `ne_lat=${ne_lat}&ne_lng=${ne_lng}&sw_lat=${sw_lat}&sw_lng=${sw_lng}`;
+  return airparkAPI.get(`/parkings?${query}`).then((response) => {
     const { parkings } = response.data;
     const formatted = parkings.map((parking) => {
       const latitude = parking.location.x;
@@ -39,7 +47,6 @@ export function getParkings() {
 }
 
 export function postParking(parking) {
-  // //console.log("🚀 ~ file: utils.js:46 ~ postParking ~ parking:", parking);
   const formData = new FormData();
   formData.append("picture", {
     uri: parking.image.uri,
@@ -51,13 +58,9 @@ export function postParking(parking) {
   formData.append("latitude", parking.latitude);
   formData.append("description", parking.description);
   formData.append("price", parking.price);
-  //console.log("🚀 ~ file: utils.js:54 ~ postParking ~ formData:", formData);
 
-  // parking = { host_id: 3, is_booked: false, ...parking };
-  // //console.log("🚀 ~ file: utils.js:46 ~ postParking ~ parking:", parking);
   return SecureStore.getItemAsync("auth-token")
     .then((token) => {
-      //console.log("🚀 ~ file: utils.js:60 ~ .then ~ token:", token);
       return airparkAPI.post("/parkings", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -101,9 +104,8 @@ export function getBookings() {
 
 export function getParkingsForUser() {
   return SecureStore.getItemAsync("user_id").then((user_id) => {
-    return airparkAPI.get("/parkings").then((response) => {
+    return airparkAPI.get(`/parkings?host_id=${user_id}`).then((response) => {
       let { parkings } = response.data;
-      parkings = parkings.filter((p) => p.host_id === Number(user_id));
       const formatted = parkings.map((parking) => {
         const latitude = parking.location.x;
         const longitude = parking.location.y;
