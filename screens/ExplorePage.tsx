@@ -25,7 +25,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 type Props = NativeStackScreenProps<NavigationStackParamList, "ExplorePage">;
 
 const ExplorePage = ({ navigation }: Props) => {
-  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [selectedLocation, setSelectedLocation] = useState({
+    latitude: 51.50853,
+    longitude: -0.12574,
+  });
   const [parkingList, setParkingList] = useState([]);
   const [viewMode, setViewMode] = useState("map");
 
@@ -69,39 +72,13 @@ const ExplorePage = ({ navigation }: Props) => {
           </View>
         )}
       </View>
-      {selectedLocation ? (
-        <DestinationResult
-          selectedLocation={selectedLocation}
-          parkingList={parkingList}
-          viewMode={viewMode}
-          parkings={parkingList}
-        />
-      ) : (
-        <View>
-          <View style={tw`flex flex-row justify-between py-2`}>
-            <Text style={tw`text-gray-500 text-lg ml-4`}>Cities</Text>
-            <AntDesign name="arrowright" size={24} color={"grey"} />
-          </View>
-          <FlatList
-            data={citiesArray}
-            keyExtractor={(item) => item.location}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.citiesScrollViewContent}
-            renderItem={({ item }) => <ExploreCities item={item} />}
-          />
-          <View style={tw`flex flex-row items-center px-2`}>
-            <Text style={tw`text-gray-500 text-lg ml-3`}>Low Price</Text>
-            <Ionicons name="pricetag-outline" size={24} color="grey" />
-          </View>
-          <View style={tw`px-4 flex flex-row h-3/4`}>
-            <ExploreParkings
-              parkings={parkingList}
-              handlePress={handleParkingPress}
-            />
-          </View>
-        </View>
-      )}
+
+      <DestinationResult
+        selectedLocation={selectedLocation}
+        parkingList={parkingList}
+        viewMode={viewMode}
+        parkings={parkingList}
+      />
     </SafeAreaView>
   );
 };
