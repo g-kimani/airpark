@@ -82,7 +82,7 @@ const IndividualParking = ({ route }: IndividualParkingProps) => {
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={tw`mt-10`}>
       <View style={styles.container}>
         <View style={styles.parkingCover}>
           <Image
