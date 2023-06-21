@@ -2,9 +2,9 @@ import React, { useContext, useState } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import {
-
   Keyboard,
   KeyboardAvoidingView,
+  Platform,
   StyleSheet,
   Text,
   TextInput,
@@ -62,11 +62,10 @@ const SignupScreen = ({ navigation }: Props) => {
     },
   });
   return (
-
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       enabled={avoidKeyboard}
-      behavior="position"
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View style={styles.container}>
@@ -76,7 +75,6 @@ const SignupScreen = ({ navigation }: Props) => {
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.inputText}
-
               id="firstname"
               onChangeText={formik.handleChange("firstname")}
               value={formik.values.firstname}
@@ -85,13 +83,11 @@ const SignupScreen = ({ navigation }: Props) => {
             />
             {formik.touched.firstname && formik.errors.firstname && (
               <Text style={styles.errorText}>{formik.errors.firstname}</Text>
-
             )}
           </View>
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.inputText}
-
               id="lastname"
               onChangeText={formik.handleChange("lastname")}
               value={formik.values.lastname}
@@ -100,7 +96,6 @@ const SignupScreen = ({ navigation }: Props) => {
             />
             {formik.touched.lastname && formik.errors.lastname && (
               <Text style={styles.errorText}>{formik.errors.lastname}</Text>
-
             )}
           </View>
           <View style={styles.inputContainer}>
@@ -110,9 +105,7 @@ const SignupScreen = ({ navigation }: Props) => {
               onChangeText={formik.handleChange("username")}
               value={formik.values.username}
               placeholder="Username"
-
-              onFocus={() => setAvoidKeyboard(true)}
-
+              onFocus={() => setAvoidKeyboard(false)}
             />
             {formik.touched.username && formik.errors.username && (
               <Text style={styles.errorText}>{formik.errors.username}</Text>
@@ -140,9 +133,7 @@ const SignupScreen = ({ navigation }: Props) => {
               value={formik.values.password}
               placeholder="Password"
               secureTextEntry
-
               onFocus={() => setAvoidKeyboard(true)}
-
             />
             {formik.touched.password && formik.errors.password && (
               <Text style={styles.errorText}>{formik.errors.password}</Text>
@@ -153,16 +144,13 @@ const SignupScreen = ({ navigation }: Props) => {
             style={styles.button}
             onPress={() => formik.submitForm()}
           >
-
             <Text style={styles.buttonText}>Register</Text>
-
           </TouchableOpacity>
           <View style={styles.loginContainer}>
             <Text>Already have an account?</Text>
             <TouchableOpacity
               onPress={() => navigation.navigate("LoginScreen")}
             >
-
               <Text style={styles.logIn}>Login</Text>
             </TouchableOpacity>
           </View>
@@ -177,6 +165,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#f2f2f2",
+    paddingTop: 40,
   },
   inputContainer: {
     width: "80%",
