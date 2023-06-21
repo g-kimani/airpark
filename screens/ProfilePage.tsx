@@ -10,6 +10,7 @@ import {
   ScrollView,
   ActivityIndicator,
   KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
