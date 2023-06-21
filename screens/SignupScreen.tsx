@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
     color: "red",
   },
   slogan: {
-    marginBottom: 20,
+    marginBottom: 25,
     fontSize: 10,
     fontStyle: "italic",
     color: "grey",

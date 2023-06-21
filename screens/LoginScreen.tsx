@@ -72,16 +72,10 @@ const LoginScreen = ({ navigation }: Props) => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>AirPark</Text>
-      <View
-        style={{
-          flex: 1,
-          alignItems: "center",
-          justifyContent: "center",
-          marginTop: 0,
-        }}
-      >
-        <Text style={styles.signInText}>Sign in</Text>
+      <Text style={styles.slogan}>Never worry about parking again!</Text>
 
+      <Text style={styles.signInText}>Sign in</Text>
+      <View style={styles.inputContainer}>
         <TextInput
           placeholder="Email or Username"
           style={styles.inputText}
