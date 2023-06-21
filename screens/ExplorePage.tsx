@@ -37,7 +37,6 @@ const ExplorePage = ({ navigation }: Props) => {
       try {
         const { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== "granted") {
-          // Handle permission denied
           return;
         }
 
@@ -79,60 +78,35 @@ const ExplorePage = ({ navigation }: Props) => {
         <View style={tw`flex flex-row p-2`}>
           <HomeSearch
             setSelectedLocation={setSelectedLocation}
-            placeholder="Find your spot"
+            placeholder="Find your next parking spot"
           />
           {selectedLocation && (
             <View>
               <TouchableOpacity onPress={toggleViewMode}>
                 <View
-                  style={tw`flex justify-center items-center bg-white p-4 rounded-md shadow mx-2`}
+                  style={tw`flex justify-center items-center bg-indigo-900 p-2.5 rounded-md shadow mx-2`}
                 >
                   <FontAwesome5
                     name={viewMode === "map" ? "list-alt" : "map"}
                     size={24}
+                    color="white"
                   />
                 </View>
               </TouchableOpacity>
             </View>
           )}
         </View>
-
-        <DestinationResult
-          selectedLocation={selectedLocation}
-          setSelectedLocation={setSelectedLocation}
-          parkingList={parkingList}
-          viewMode={viewMode}
-        />
+        <View style={tw`h-5/6`}>
+          <DestinationResult
+            selectedLocation={selectedLocation}
+            setSelectedLocation={setSelectedLocation}
+            parkingList={parkingList}
+            viewMode={viewMode}
+          />
+        </View>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
 };
-
-const styles = StyleSheet.create({
-  header: {
-    flexDirection: "row",
-    padding: 10,
-    alignItems: "center",
-  },
-  text: {
-    fontSize: 30,
-    padding: 5,
-    fontWeight: "bold",
-  },
-  citiesHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 10,
-  },
-  citiesScrollViewContent: {
-    paddingHorizontal: 5,
-    paddingVertical: 15,
-  },
-  featuredHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 5,
-  },
-});
 
 export default ExplorePage;

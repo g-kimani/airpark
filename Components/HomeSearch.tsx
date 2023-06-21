@@ -68,14 +68,13 @@ const styles = StyleSheet.create({
   searchBar: {
     flexDirection: "row",
     alignItems: "left",
-    // padding: 10,
-    // marginTop: 20,
   },
   inputText: {
     textInput: {
       fontSize: 16,
       fontWeight: "700",
-      backgroundColor: "#f8f9fa",
+      // backgroundColor: "#f8f9fa",
+      backgroundColor: "rgb(243 244 246)",
     },
   },
   searchSuggestion: {
