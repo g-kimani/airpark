@@ -19,6 +19,16 @@ import tw from "twrnc";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ParkingContextTypes } from "./types";
 import { useNavigation } from "@react-navigation/native";
+import { useFormik } from "formik";
+import * as yup from "yup";
+
+const formSchema = yup.object().shape({
+  location: yup.object().required("Location is required"),
+  price: yup
+    .string()
+    .required("Price is required")
+    .matches(/^\d+(\.\d{2})?$/, "Invalid price format"),
+});
 
 const AddParkingList = () => {
   const [location, setLocation] = useState({});
@@ -30,6 +40,17 @@ const AddParkingList = () => {
 
   const { setParkings } = useContext<ParkingContextTypes>(ParkingsContext);
   const navigation = useNavigation();
+
+  const formik = useFormik({
+    initialValues: {
+      location: {},
+      price: "",
+      image: {},
+      description: "",
+    },
+    validationSchema: formSchema,
+    onSubmit: (values) => {},
+  });
 
   function pickImage() {
     ImagePicker.launchImageLibraryAsync({
@@ -66,7 +87,7 @@ const AddParkingList = () => {
           latitude: parking.location.x,
           longitude: parking.location.y,
         };
-        navigation.navigate("IndividualParking", { parking });
+        navigation.navigate("ManageParkings", { parking });
       })
       .catch((err) => alert(err))
       .finally(() => {
