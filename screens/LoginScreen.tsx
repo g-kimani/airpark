@@ -4,6 +4,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  ActivityIndicator,
 } from "react-native";
 import { useContext, useState, useEffect } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -35,11 +36,12 @@ const LoginScreen = ({ navigation }: Props) => {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-
+  const [isLoading, setIsLoading] = useState(false);
   const { user, setUser } = useContext<ContextTypes>(UserContext);
 
   const handleLogin = () => {
     setErrorMessage(""); // Clear any previous error message
+    setIsLoading(true);
     loginUser({ login, password })
       .then((data) => {
         setUser(data);
@@ -54,6 +56,9 @@ const LoginScreen = ({ navigation }: Props) => {
         } else {
           setErrorMessage("An error occurred. Please try again.");
         }
+      })
+      .finally(() => {
+        setIsLoading(false); // Reset loading state
       });
   };
 
@@ -66,6 +71,7 @@ const LoginScreen = ({ navigation }: Props) => {
         });
         navigation.replace("Home");
       }
+      setIsLoading(false);
     });
   }, []);
 
@@ -97,9 +103,15 @@ const LoginScreen = ({ navigation }: Props) => {
         <Text style={styles.errorMessage}>{errorMessage}</Text>
       ) : null}
 
-      <TouchableOpacity onPress={handleLogin} style={styles.button}>
-        <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity>
+      {isLoading ? ( // Render loading indicator if isLoading is true
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="red" />
+        </View>
+      ) : (
+        <TouchableOpacity onPress={handleLogin} style={styles.button}>
+          <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
+      )}
 
       <Text style={styles.signUpText}>Don't have an account?</Text>
       <TouchableOpacity
@@ -177,8 +189,13 @@ const styles = StyleSheet.create({
 
     fontSize: 40,
     fontWeight: "normal",
-    marginTop: 50,
+    marginTop: 70,
     textAlign: "center",
     color: "red",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
