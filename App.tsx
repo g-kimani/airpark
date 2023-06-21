@@ -17,6 +17,7 @@ import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import Chat from "./screens/Chat";
 import ManageParking from "./screens/ManageParking";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import IndividualBooking from "./screens/IndividualBooking";
 
 const Stack = createNativeStackNavigator();
 
@@ -48,7 +49,7 @@ export default function App() {
               <Stack.Screen
                 name="LoginScreen"
                 component={LoginScreen}
-                options={{ title: "Sign In" }}
+                options={{ headerShown: false, title: "Sign In" }}
               />
               <Stack.Screen
                 name="Signup"
@@ -69,6 +70,10 @@ export default function App() {
                   headerTitle: "",
                   headerTransparent: true,
                 }}
+              />
+              <Stack.Screen
+                name="IndividualBooking"
+                component={IndividualBooking}
               />
               <Stack.Screen
                 name="ManageParking"

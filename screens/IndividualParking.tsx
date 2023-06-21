@@ -20,6 +20,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 Geocoder.init("AIzaSyBhcOAI9R7HKqUD9f-2is268fJza5KZ0G8");
 import { Calendar } from "react-native-calendars";
 import { postBooking } from "../utils.js";
+import { useNavigation } from "@react-navigation/native";
+import BookingForm from "../Components/BookingForm.tsx";
+import { formatPrice } from "../tools/helpers.js";
 
 type Parking = {
   parking_id: number;
@@ -32,54 +35,22 @@ type IndividualParkingProps = NativeStackScreenProps<any, "IndividualParking">;
 
 const IndividualParking = ({ route }: IndividualParkingProps) => {
   const { parking } = route.params;
-  const [selectedStartDate, setSelectedStartDate] = useState("");
   const [showBookingModal, setShowBookingModal] = useState(false);
-  const [endDate, setEndDate] = useState("");
   const [addressStr, setAdressStr] = useState("");
-  const [markedDates, setMarkedDates] = useState([]);
-  const [daysNum, setDaysNum] = useState(1);
-  const [calculatedPrice, setCalculatedPrice] = useState(0);
 
   const toggleModal = () => {
     setShowBookingModal(!showBookingModal);
   };
 
   useEffect(() => {
-    console.log("use individual");
-    console.log(parking);
     const loc = {
       latitude: parking.latitude,
       longitude: parking.longitude,
     };
-    console.log(loc);
     Geocoder.from(loc).then((result) => {
-      console.log(result.results[0]);
       setAdressStr(result.results[0].formatted_address);
     });
   }, [parking]);
-  useEffect(() => {
-    const start = new Date(selectedStartDate);
-    const end = new Date(endDate);
-    const time = new Date(end.getTime() - start.getTime()).getTime();
-    const days = time / (1000 * 60 * 60 * 24) + 1;
-    setDaysNum(days);
-    setCalculatedPrice(parking.price * days);
-  }, [endDate]);
-
-  const handleBooking = () => {
-    const booking = {
-      parking_id: parking.parking_id,
-      booking_start: selectedStartDate,
-      booking_end: endDate,
-      price: calculatedPrice,
-    };
-    postBooking(booking).then(({ booking }) => {
-      console.log(
-        "🚀 ~ file: IndividualParking.tsx:80 ~ postBooking ~ booking:",
-        booking
-      );
-    });
-  };
 
   return (
     <SafeAreaView style={tw`mt-10`}>
@@ -91,7 +62,7 @@ const IndividualParking = ({ route }: IndividualParkingProps) => {
           />
           <View style={styles.priceContainer}>
             <Text style={tw`font-bold my-2`}>
-              £{parking.price}
+              {formatPrice(parking.price)}
               <Text style={tw`text-gray-400`}> /day</Text>
             </Text>
           </View>
@@ -118,73 +89,11 @@ const IndividualParking = ({ route }: IndividualParkingProps) => {
             Reserve Spot
           </Text>
         </TouchableOpacity>
-
-        <Modal
+        <BookingForm
           visible={showBookingModal}
-          animationType="slide"
-          transparent
-          onRequestClose={() => {
-            setShowBookingModal(!showBookingModal);
-          }}
-        >
-          <View style={styles.calendarContainer}>
-            <View style={tw`w-full flex flex-row items-end justify-between `}>
-              <Text style={tw`text-base uppercase font-semibold `}>
-                Select days
-              </Text>
-              <TouchableOpacity
-                style={tw`rounded-md bg-white border-2 border-red-600 px-3 py-2 shadow-sm `}
-                onPress={toggleModal}
-              >
-                <Text style={tw`text-sm font-semibold text-red-600`}>
-                  Cancel
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <Calendar
-              style={{
-                marginTop: 20,
-              }}
-              current={moment().format("YYYY-MM-DD")}
-              minDate={moment().format("YYYY-MM-DD")}
-              maxDate={moment().add(2, "months").format("YYYY-MM-DD")}
-              onDayPress={(day) => {
-                if (selectedStartDate) {
-                  setEndDate(day.dateString);
-                } else {
-                  setSelectedStartDate(day.dateString);
-                }
-              }}
-              markedDates={{
-                [selectedStartDate]: {
-                  selected: true,
-                  startingDay: true,
-                  color: "green",
-                },
-                [endDate]: { selected: true, color: "green" },
-              }}
-            />
-            <View style={tw`flex flex-row w-full items-center justify-between`}>
-              <View>
-                <Text style={tw`font-bold my-2`}>£{calculatedPrice}</Text>
-                <Text style={tw`text-gray-400`}>@ £{parking.price} / day</Text>
-              </View>
-              <Text>
-                {daysNum}
-                <Text style={tw`text-gray-400`}> days</Text>
-              </Text>
-
-              <TouchableOpacity
-                style={tw`flex rounded-md bg-white items-center border-2 border-indigo-600 px-3 py-2 shadow-sm `}
-                onPress={handleBooking}
-              >
-                <Text style={tw`text-sm font-semibold text-indigo-600`}>
-                  Book Now
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
+          setVisible={setShowBookingModal}
+          parking={parking}
+        />
       </View>
     </SafeAreaView>
   );
