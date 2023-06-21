@@ -64,7 +64,9 @@ const SignupScreen = ({ navigation }: Props) => {
         value={formik.values.firstName}
         placeholder="First Name"
       />
-      <Text>{formik.errors.firstName}</Text>
+      {formik.touched.firstName && formik.errors.firstName && (
+        <Text>{formik.errors.firstName}</Text>
+      )}
 
       <TextInput
         style={styles.inputText}
@@ -73,7 +75,9 @@ const SignupScreen = ({ navigation }: Props) => {
         value={formik.values.lastName}
         placeholder="Last Name"
       />
-      <Text>{formik.errors.lastName}</Text>
+      {formik.touched.lastName && formik.errors.lastName && (
+        <Text>{formik.errors.lastName}</Text>
+      )}
 
       <TextInput
         style={styles.inputText}
@@ -82,7 +86,9 @@ const SignupScreen = ({ navigation }: Props) => {
         value={formik.values.username}
         placeholder="Username"
       />
-      <Text>{formik.errors.username}</Text>
+      {formik.touched.username && formik.errors.username && (
+        <Text>{formik.errors.username}</Text>
+      )}
 
       <TextInput
         style={styles.inputText}
@@ -91,7 +97,9 @@ const SignupScreen = ({ navigation }: Props) => {
         value={formik.values.email}
         placeholder="Email"
       />
-      <Text>{formik.errors.email}</Text>
+      {formik.touched.email && formik.errors.email && (
+        <Text>{formik.errors.email}</Text>
+      )}
 
       <TextInput
         style={styles.inputText}
@@ -101,7 +109,9 @@ const SignupScreen = ({ navigation }: Props) => {
         placeholder="Password"
         secureTextEntry
       />
-      <Text>{formik.errors.password}</Text>
+      {formik.touched.password && formik.errors.password && (
+        <Text>{formik.errors.password}</Text>
+      )}
 
       <TouchableOpacity
         style={styles.button}
