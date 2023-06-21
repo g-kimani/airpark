@@ -20,6 +20,7 @@ import { getUserProfile } from "../utils";
 import tw from "twrnc";
 import { Entypo } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
+import { Formik } from "formik";
 
 type NavigationStackParamList = {
   LoginScreen: undefined;
@@ -31,6 +32,8 @@ const ProfilePage = ({ navigation }: Props) => {
   const { user } = useContext(UserContext);
   const [userInfo, setUserInfo] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [disabled, setDisabled] = useState(true);
+  const [buttonText, setButtonText] = useState("Edit");
 
   useEffect(() => {
     setIsLoading(true);
@@ -64,6 +67,16 @@ const ProfilePage = ({ navigation }: Props) => {
     }
   };
 
+  const toggleEditSave = () => {
+    if (disabled) {
+      setDisabled(false);
+      setButtonText("Save");
+    } else {
+      setDisabled(true);
+      setButtonText("Edit");
+    }
+  };
+
   return (
     <SafeAreaView>
       <View style={tw`flex justify-center p-5`}>
@@ -94,33 +107,88 @@ const ProfilePage = ({ navigation }: Props) => {
               </View>
               <View style={tw`flex flex-row justify-between items-center`}>
                 <Text style={tw`text-xl`}>Personal Information</Text>
-                <TouchableOpacity style={styles.button}>
-                  <Text style={styles.buttonText}>Edit</Text>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={toggleEditSave}
+                >
+                  <Text style={styles.buttonText}>{buttonText}</Text>
                 </TouchableOpacity>
               </View>
-              <View style={styles.form}>
-                <TextInput
-                  id="firstname"
-                  placeholder={userInfo.firstname}
-                  style={styles.inputText}
-                />
-                <TextInput
-                  id="lastname"
-                  placeholder={userInfo.lastname}
-                  style={styles.inputText}
-                />
-
-                <TextInput
-                  id="username"
-                  placeholder={userInfo.user}
-                  style={styles.inputText}
-                />
-                <TextInput
-                  id="pronouns"
-                  placeholder="Pronouns"
-                  style={styles.inputText}
-                />
-              </View>
+              <Formik
+                initialValues={{
+                  firstname: userInfo.firstname || "",
+                  lastname: userInfo.lastname || "",
+                  username: userInfo.user || "",
+                  pronouns: "",
+                }}
+                onSubmit={(values) => {
+                  console.log(values);
+                }}
+              >
+                {({ handleChange, handleBlur, handleSubmit, values }) => (
+                  <View style={styles.form}>
+                    <Text style={tw`text-decoration-line: underline`}>
+                      Firstname
+                    </Text>
+                    <TextInput
+                      id="firstname"
+                      placeholder="First Name"
+                      style={[
+                        styles.inputText,
+                        !disabled && styles.enabledInputText,
+                      ]}
+                      onChangeText={handleChange("firstname")}
+                      value={values.firstname}
+                      editable={!disabled}
+                    />
+                    <Text style={tw`text-decoration-line: underline`}>
+                      Lastname
+                    </Text>
+                    <TextInput
+                      id="lastname"
+                      placeholder="Last Name"
+                      style={[
+                        styles.inputText,
+                        !disabled && styles.enabledInputText,
+                      ]}
+                      onChangeText={handleChange("lastname")}
+                      onBlur={handleBlur("lastname")}
+                      value={values.lastname}
+                      editable={!disabled}
+                    />
+                    <Text style={tw`text-decoration-line: underline`}>
+                      Username
+                    </Text>
+                    <TextInput
+                      id="username"
+                      placeholder="Username"
+                      style={[
+                        styles.inputText,
+                        !disabled && styles.enabledInputText, // Invert the condition here
+                      ]}
+                      onChangeText={handleChange("username")}
+                      onBlur={handleBlur("username")}
+                      value={values.username}
+                      editable={!disabled}
+                    />
+                    <Text style={tw`text-decoration-line: underline`}>
+                      Email
+                    </Text>
+                    <TextInput
+                      id="pronouns"
+                      placeholder="Pronouns"
+                      style={[
+                        styles.inputText,
+                        !disabled && styles.enabledInputText,
+                      ]}
+                      onChangeText={handleChange("pronouns")}
+                      onBlur={handleBlur("pronouns")}
+                      value={values.pronouns}
+                      editable={!disabled}
+                    />
+                  </View>
+                )}
+              </Formik>
             </View>
           </View>
         )}
@@ -128,6 +196,8 @@ const ProfilePage = ({ navigation }: Props) => {
     </SafeAreaView>
   );
 };
+
+export default ProfilePage;
 
 const styles = StyleSheet.create({
   pictureContainer: {
@@ -169,7 +239,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     margin: 5,
     width: "30%",
-    alignSelf: "flex-end", // Aligns the button to the right side
+    alignSelf: "flex-end",
   },
   buttonText: {
     color: "white",
@@ -177,7 +247,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: "center",
   },
-  form: {},
+  enabledInputText: {
+    backgroundColor: "white",
+  },
 });
-
-export default ProfilePage;
