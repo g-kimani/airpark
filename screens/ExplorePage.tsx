@@ -6,6 +6,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import ExploreCities from "../Components/ExploreCities";
 import citiesArray from "../data/citiesArray";
@@ -68,39 +70,41 @@ const ExplorePage = ({ navigation }: Props) => {
   };
 
   return (
-    <SafeAreaView style={tw`bg-white h-full`}>
-      <View style={tw`flex flex-row p-3 items-center`}>
-        <Text style={tw`p-2 text-3xl font-bold`}>Explore</Text>
-        <Ionicons name="ios-compass-outline" size={24} />
-      </View>
-      <View style={tw`flex flex-row p-2`}>
-        <HomeSearch
-          setSelectedLocation={setSelectedLocation}
-          placeholder="Find your spot"
-        />
-        {selectedLocation && (
-          <View>
-            <TouchableOpacity onPress={toggleViewMode}>
-              <View
-                style={tw`flex justify-center items-center bg-white p-4 rounded-md shadow mx-2`}
-              >
-                <FontAwesome5
-                  name={viewMode === "map" ? "list-alt" : "map"}
-                  size={24}
-                />
-              </View>
-            </TouchableOpacity>
-          </View>
-        )}
-      </View>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <SafeAreaView style={tw`bg-white h-full`}>
+        <View style={tw`flex flex-row p-3 items-center`}>
+          <Text style={tw`p-2 text-3xl font-bold`}>Explore</Text>
+          <Ionicons name="ios-compass-outline" size={24} />
+        </View>
+        <View style={tw`flex flex-row p-2`}>
+          <HomeSearch
+            setSelectedLocation={setSelectedLocation}
+            placeholder="Find your spot"
+          />
+          {selectedLocation && (
+            <View>
+              <TouchableOpacity onPress={toggleViewMode}>
+                <View
+                  style={tw`flex justify-center items-center bg-white p-4 rounded-md shadow mx-2`}
+                >
+                  <FontAwesome5
+                    name={viewMode === "map" ? "list-alt" : "map"}
+                    size={24}
+                  />
+                </View>
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
 
-      <DestinationResult
-        selectedLocation={selectedLocation}
-        setSelectedLocation={setSelectedLocation}
-        parkingList={parkingList}
-        viewMode={viewMode}
-      />
-    </SafeAreaView>
+        <DestinationResult
+          selectedLocation={selectedLocation}
+          setSelectedLocation={setSelectedLocation}
+          parkingList={parkingList}
+          viewMode={viewMode}
+        />
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 

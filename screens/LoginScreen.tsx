@@ -11,6 +11,9 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { loginUser } from "../utils";
 import { UserContext } from "../contexts/UserContext";
 import * as SecureStore from "expo-secure-store";
+import { KeyboardAvoidingView } from "react-native";
+import { TouchableWithoutFeedback } from "react-native";
+import { Keyboard } from "react-native";
 
 async function save(key: string, value: string) {
   //console.log("🚀 ~ file: LoginScreen.tsx:15 ~ save ~ value:", value);
@@ -76,51 +79,53 @@ const LoginScreen = ({ navigation }: Props) => {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>AirPark</Text>
-      <Text style={styles.slogan}>Never worry about parking again!</Text>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View style={styles.container}>
+        <Text style={styles.header}>AirPark</Text>
+        <Text style={styles.slogan}>Never worry about parking again!</Text>
 
-      <Text style={styles.signInText}>Sign in</Text>
-      <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="Email or Username"
-          style={styles.inputText}
-          value={login}
-          onChangeText={(text) => setLogin(text)}
-        />
-      </View>
-
-      <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="Password"
-          style={styles.inputText}
-          secureTextEntry
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-        />
-      </View>
-      {errorMessage ? (
-        <Text style={styles.errorMessage}>{errorMessage}</Text>
-      ) : null}
-
-      {isLoading ? ( // Render loading indicator if isLoading is true
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="red" />
+        <Text style={styles.signInText}>Sign in</Text>
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder="Email or Username"
+            style={styles.inputText}
+            value={login}
+            onChangeText={(text) => setLogin(text)}
+          />
         </View>
-      ) : (
-        <TouchableOpacity onPress={handleLogin} style={styles.button}>
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
-      )}
 
-      <Text style={styles.signUpText}>Don't have an account?</Text>
-      <TouchableOpacity
-        onPress={() => navigation.navigate("Signup")}
-        // style={styles.button}
-      >
-        <Text style={styles.signUp}>Sign up now!</Text>
-      </TouchableOpacity>
-    </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder="Password"
+            style={styles.inputText}
+            secureTextEntry
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+          />
+        </View>
+        {errorMessage ? (
+          <Text style={styles.errorMessage}>{errorMessage}</Text>
+        ) : null}
+
+        {isLoading ? ( // Render loading indicator if isLoading is true
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="red" />
+          </View>
+        ) : (
+          <TouchableOpacity onPress={handleLogin} style={styles.button}>
+            <Text style={styles.buttonText}>Login</Text>
+          </TouchableOpacity>
+        )}
+
+        <Text style={styles.signUpText}>Don't have an account?</Text>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Signup")}
+          // style={styles.button}
+        >
+          <Text style={styles.signUp}>Sign up now!</Text>
+        </TouchableOpacity>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
