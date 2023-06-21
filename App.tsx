@@ -54,7 +54,7 @@ export default function App() {
               <Stack.Screen
                 name="Signup"
                 component={SignupScreen}
-                options={{ title: "Create Account" }}
+                options={{ headerShown: false, title: "Sign Up" }}
               />
               <Stack.Screen
                 name="Home"

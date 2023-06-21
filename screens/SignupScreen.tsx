@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import {
+
   Keyboard,
   KeyboardAvoidingView,
   StyleSheet,
@@ -16,6 +17,8 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { NavigationStackParamList, UserContextTypes } from "./types.ts";
 import { saveToStore, signUpUser } from "../utils.js";
 import { UserContext } from "../contexts/UserContext.tsx";
+import { SafeAreaView } from "react-native-safe-area-context";
+import tw from "twrnc";
 
 const validationSchema = yup.object().shape({
   firstname: yup.string().required("First name is required"),
@@ -59,6 +62,7 @@ const SignupScreen = ({ navigation }: Props) => {
     },
   });
   return (
+
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       enabled={avoidKeyboard}
@@ -72,6 +76,7 @@ const SignupScreen = ({ navigation }: Props) => {
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.inputText}
+
               id="firstname"
               onChangeText={formik.handleChange("firstname")}
               value={formik.values.firstname}
@@ -80,11 +85,13 @@ const SignupScreen = ({ navigation }: Props) => {
             />
             {formik.touched.firstname && formik.errors.firstname && (
               <Text style={styles.errorText}>{formik.errors.firstname}</Text>
+
             )}
           </View>
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.inputText}
+
               id="lastname"
               onChangeText={formik.handleChange("lastname")}
               value={formik.values.lastname}
@@ -93,6 +100,7 @@ const SignupScreen = ({ navigation }: Props) => {
             />
             {formik.touched.lastname && formik.errors.lastname && (
               <Text style={styles.errorText}>{formik.errors.lastname}</Text>
+
             )}
           </View>
           <View style={styles.inputContainer}>
@@ -102,7 +110,9 @@ const SignupScreen = ({ navigation }: Props) => {
               onChangeText={formik.handleChange("username")}
               value={formik.values.username}
               placeholder="Username"
+
               onFocus={() => setAvoidKeyboard(true)}
+
             />
             {formik.touched.username && formik.errors.username && (
               <Text style={styles.errorText}>{formik.errors.username}</Text>
@@ -130,7 +140,9 @@ const SignupScreen = ({ navigation }: Props) => {
               value={formik.values.password}
               placeholder="Password"
               secureTextEntry
+
               onFocus={() => setAvoidKeyboard(true)}
+
             />
             {formik.touched.password && formik.errors.password && (
               <Text style={styles.errorText}>{formik.errors.password}</Text>
@@ -141,13 +153,16 @@ const SignupScreen = ({ navigation }: Props) => {
             style={styles.button}
             onPress={() => formik.submitForm()}
           >
-            <Text style={styles.buttonText}>Sign up</Text>
+
+            <Text style={styles.buttonText}>Register</Text>
+
           </TouchableOpacity>
           <View style={styles.loginContainer}>
             <Text>Already have an account?</Text>
             <TouchableOpacity
               onPress={() => navigation.navigate("LoginScreen")}
             >
+
               <Text style={styles.logIn}>Login</Text>
             </TouchableOpacity>
           </View>
@@ -178,7 +193,7 @@ const styles = StyleSheet.create({
   },
   button: {
     padding: 16,
-    backgroundColor: "#039be5",
+    backgroundColor: "black",
     borderRadius: 10,
     marginVertical: 10,
     width: "80%",
@@ -196,19 +211,20 @@ const styles = StyleSheet.create({
   logIn: {
     color: "#039be5",
     fontWeight: "bold",
+    marginLeft: 5,
   },
   header: {
     marginBottom: 8,
 
     fontSize: 40,
     fontWeight: "normal",
-    marginTop: 50,
+    marginTop: 30,
     textAlign: "center",
     color: "red",
   },
   slogan: {
     marginBottom: 25,
-    fontSize: 10,
+    fontSize: 12,
     fontStyle: "italic",
     color: "grey",
   },
