@@ -77,7 +77,7 @@ const LoginScreen = ({ navigation }: Props) => {
           flex: 1,
           alignItems: "center",
           justifyContent: "center",
-          marginTop: 0,
+          marginTop: 10,
         }}
       >
         <Text style={styles.signInText}>Sign in</Text>
