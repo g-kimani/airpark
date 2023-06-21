@@ -57,6 +57,7 @@ const HomeTabNav = () => {
         name="Account"
         component={ProfilePage}
         options={{
+          headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="person-outline" size={size} color={color} />
           ),

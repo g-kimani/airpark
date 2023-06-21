@@ -8,11 +8,20 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  ActivityIndicator,
+  KeyboardAvoidingView,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import * as SecureStore from "expo-secure-store";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { UserContext } from "../contexts/UserContext";
+import { useContext } from "react";
+import { getUserProfile } from "../utils";
+import tw from "twrnc";
+import { Entypo } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
+import { Formik } from "formik";
 
 type NavigationStackParamList = {
   LoginScreen: undefined;
@@ -21,16 +30,32 @@ type NavigationStackParamList = {
 type Props = NativeStackScreenProps<NavigationStackParamList>;
 
 const ProfilePage = ({ navigation }: Props) => {
+  const { user } = useContext(UserContext);
+  const [userInfo, setUserInfo] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [disabled, setDisabled] = useState(true);
+  const [buttonText, setButtonText] = useState("Edit");
+
+  useEffect(() => {
+    setIsLoading(true);
+    getUserProfile(user).then((data) => {
+      setUserInfo(data);
+      setIsLoading(false);
+    });
+  }, [user]);
+
   const handleLogout = () => {
     SecureStore.deleteItemAsync("auth-token").then(() => {
       navigation.replace("LoginScreen");
     });
   };
+
   const defaultImage =
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXV98JSo6IPuUib7DkMohhXWrHPggU_rGweA&usqp=CAU";
+    "https://i.pinimg.com/564x/65/25/a0/6525a08f1df98a2e3a545fe2ace4be47.jpg";
+
   const [image, setImage] = useState(defaultImage);
+
   const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -38,66 +63,169 @@ const ProfilePage = ({ navigation }: Props) => {
       quality: 1,
     });
 
-    //console.log(result);
-
-    if (!result.canceled) {
+    if (!result.cancelled) {
       setImage(result.assets[0].uri);
     }
   };
 
+  const toggleEditSave = () => {
+    if (disabled) {
+      setDisabled(false);
+      setButtonText("Save");
+    } else {
+      setDisabled(true);
+      setButtonText("Edit");
+    }
+  };
+
   return (
-    <SafeAreaView>
-      <View>
-        <View style={styles.container}>
-          <View style={styles.pictureContainer}>
-            {image && (
-              <Image
-                source={{ uri: image }}
-                style={{
-                  width: 100,
-                  height: 100,
-                  borderRadius: 50,
-                  alignContent: "center",
-                }}
-              />
+    <SafeAreaView style={{ flex: 1 }}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior="padding"
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        <ScrollView>
+          <View style={tw`flex justify-center p-5`}>
+            {isLoading ? (
+              <ActivityIndicator size="large" color="red" />
+            ) : (
+              <View>
+                <View style={tw`flex flex-row items-center justify-between`}>
+                  <Text style={tw`p-2 text-3xl font-bold`}>Profile</Text>
+                  <TouchableOpacity onPress={handleLogout}>
+                    <Entypo name="log-out" size={24} color="black" />
+                  </TouchableOpacity>
+                </View>
+                <View>
+                  <View style={styles.pictureContainer}>
+                    {image && (
+                      <Image source={{ uri: image }} style={styles.picture} />
+                    )}
+                    <View style={tw`items-center`}>
+                      <Text style={tw`text-4xl`}>{userInfo.firstname}</Text>
+                      <TouchableOpacity onPress={pickImage}>
+                        <View style={tw`flex flex-row items-center`}>
+                          <Feather name="edit" size={18} color="black" />
+                          <Text style={tw`text-sm`}>Photo</Text>
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                  <View style={tw`flex flex-row justify-between items-center`}>
+                    <Text style={tw`text-xl`}>Personal Information</Text>
+                    <TouchableOpacity
+                      style={styles.button}
+                      onPress={toggleEditSave}
+                    >
+                      <Text style={styles.buttonText}>{buttonText}</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={styles.form}>
+                    <Formik
+                      initialValues={{
+                        firstname: userInfo.firstname || "",
+                        lastname: userInfo.lastname || "",
+                        username: userInfo.user || "",
+                        email: userInfo.email || "",
+                      }}
+                      onSubmit={(values) => {
+                        console.log(values);
+                      }}
+                    >
+                      {({ handleChange, handleBlur, handleSubmit, values }) => (
+                        <View style={styles.form}>
+                          <Text style={tw`text-decoration-line: underline`}>
+                            Firstname
+                          </Text>
+                          <TextInput
+                            id="firstname"
+                            placeholder="First Name"
+                            style={[
+                              styles.inputText,
+                              !disabled && styles.enabledInputText,
+                            ]}
+                            onChangeText={handleChange("firstname")}
+                            value={values.firstname}
+                            editable={!disabled}
+                          />
+                          <Text style={tw`text-decoration-line: underline`}>
+                            Lastname
+                          </Text>
+                          <TextInput
+                            id="lastname"
+                            placeholder="Last Name"
+                            style={[
+                              styles.inputText,
+                              !disabled && styles.enabledInputText,
+                            ]}
+                            onChangeText={handleChange("lastname")}
+                            onBlur={handleBlur("lastname")}
+                            value={values.lastname}
+                            editable={!disabled}
+                          />
+                          <Text style={tw`text-decoration-line: underline`}>
+                            Username
+                          </Text>
+                          <TextInput
+                            id="username"
+                            placeholder="Username"
+                            style={[
+                              styles.inputText,
+                              !disabled && styles.enabledInputText,
+                            ]}
+                            onChangeText={handleChange("username")}
+                            onBlur={handleBlur("username")}
+                            value={values.username}
+                            editable={!disabled}
+                          />
+                          <Text style={tw`text-decoration-line: underline`}>
+                            Email
+                          </Text>
+                          <TextInput
+                            id="email"
+                            placeholder="email"
+                            style={[
+                              styles.inputText,
+                              !disabled && styles.enabledInputText,
+                            ]}
+                            onChangeText={handleChange("email")}
+                            onBlur={handleBlur("pronouns")}
+                            value={values.email}
+                            editable={!disabled}
+                          />
+                        </View>
+                      )}
+                    </Formik>
+                  </View>
+                </View>
+              </View>
             )}
-            <Button title="Edit picture" onPress={pickImage} />
           </View>
-          <Text style={styles.header}>username</Text>
-
-          <TextInput id="name" placeholder="Name" style={styles.inputText} />
-
-          <TextInput
-            id="username"
-            placeholder="Username"
-            style={styles.inputText}
-          />
-          <TextInput
-            id="pronouns"
-            placeholder="Pronouns"
-            style={styles.inputText}
-          />
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Save</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
-            <Text style={styles.logoutButtonText}>Logout</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
+
+export default ProfilePage;
+
 const styles = StyleSheet.create({
   pictureContainer: {
-    borderColor: "grey",
-    borderStyle: "solid",
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#fafaff",
     borderRadius: 20,
-    paddingTop: 20,
-    paddingLeft: 40,
-    paddingRight: 40,
-    marginBottom: -20,
-    backgroundColor: "white",
+    paddingVertical: 10,
+    marginBottom: 20,
+    width: "100%",
+  },
+  picture: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    marginRight: 10,
+    marginLeft: 10,
   },
   header: {
     fontSize: 20,
@@ -106,30 +234,16 @@ const styles = StyleSheet.create({
   },
   container: {
     alignItems: "center",
-    marginTop: 30,
-    width: "100%",
   },
   inputText: {
     padding: 12,
     backgroundColor: "#e0e0e0",
     borderRadius: 10,
-    margin: 10,
-    width: "60%",
-  },
-
-  listingsButton: {
-    padding: 12,
-    backgroundColor: "orange",
-    borderRadius: 30,
-    margin: 5,
-    width: "60%",
-  },
-  bookingsButton: {
-    padding: 12,
-    backgroundColor: "blue",
-    borderRadius: 30,
-    margin: 5,
-    width: "60%",
+    marginVertical: 5,
+    marginBottom: 20,
+    width: "100%",
+    fontSize: 20,
+    alignItems: "baseline",
   },
   button: {
     padding: 10,
@@ -137,6 +251,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     margin: 5,
     width: "30%",
+    alignSelf: "flex-end",
   },
   buttonText: {
     color: "white",
@@ -144,19 +259,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: "center",
   },
-  logoutButton: {
-    padding: 12,
-    backgroundColor: "blue",
-    borderRadius: 10,
-    margin: 5,
-    width: "60%",
-    alignItems: "center",
+  enabledInputText: {
+    backgroundColor: "white",
   },
-  logoutButtonText: {
-    color: "white",
-    fontWeight: "700",
-    fontSize: 16,
-    textAlign: "center",
+  form: {
+    marginVertical: 10,
   },
 });
-export default ProfilePage;
