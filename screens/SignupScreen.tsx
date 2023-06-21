@@ -55,70 +55,87 @@ const SignupScreen = ({ navigation }: Props) => {
       // navigation.navigate("HomePage");
     },
   });
+  const handleLoginNavigation = () => {
+    navigation.navigate("LoginScreen");
+  };
   return (
-    <View style={{ flex: 1, alignItems: "center" }}>
-      <TextInput
-        style={styles.inputText}
-        id="firstName"
-        onChangeText={formik.handleChange("firstName")}
-        value={formik.values.firstName}
-        placeholder="First Name"
-      />
-      {formik.touched.firstName && formik.errors.firstName && (
-        <Text>{formik.errors.firstName}</Text>
-      )}
-
-      <TextInput
-        style={styles.inputText}
-        id="lastName"
-        onChangeText={formik.handleChange("lastName")}
-        value={formik.values.lastName}
-        placeholder="Last Name"
-      />
-      {formik.touched.lastName && formik.errors.lastName && (
-        <Text>{formik.errors.lastName}</Text>
-      )}
-
-      <TextInput
-        style={styles.inputText}
-        id="username"
-        onChangeText={formik.handleChange("username")}
-        value={formik.values.username}
-        placeholder="Username"
-      />
-      {formik.touched.username && formik.errors.username && (
-        <Text>{formik.errors.username}</Text>
-      )}
-
-      <TextInput
-        style={styles.inputText}
-        id="email"
-        onChangeText={formik.handleChange("email")}
-        value={formik.values.email}
-        placeholder="Email"
-      />
-      {formik.touched.email && formik.errors.email && (
-        <Text>{formik.errors.email}</Text>
-      )}
-
-      <TextInput
-        style={styles.inputText}
-        id="password"
-        onChangeText={formik.handleChange("password")}
-        value={formik.values.password}
-        placeholder="Password"
-        secureTextEntry
-      />
-      {formik.touched.password && formik.errors.password && (
-        <Text>{formik.errors.password}</Text>
-      )}
+    <View style={styles.container}>
+      <Text style={styles.header}>AirPark</Text>
+      <Text style={styles.signup}>Create an account</Text>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.inputText}
+          id="firstName"
+          onChangeText={formik.handleChange("firstName")}
+          value={formik.values.firstName}
+          placeholder="First Name"
+        />
+        {formik.touched.firstName && formik.errors.firstName && (
+          <Text style={styles.errorText}>{formik.errors.firstName}</Text>
+        )}
+      </View>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.inputText}
+          id="lastName"
+          onChangeText={formik.handleChange("lastName")}
+          value={formik.values.lastName}
+          placeholder="Last Name"
+        />
+        {formik.touched.lastName && formik.errors.lastName && (
+          <Text style={styles.errorText}>{formik.errors.lastName}</Text>
+        )}
+      </View>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.inputText}
+          id="username"
+          onChangeText={formik.handleChange("username")}
+          value={formik.values.username}
+          placeholder="Username"
+        />
+        {formik.touched.username && formik.errors.username && (
+          <Text style={styles.errorText}>{formik.errors.username}</Text>
+        )}
+      </View>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.inputText}
+          id="email"
+          onChangeText={formik.handleChange("email")}
+          value={formik.values.email}
+          placeholder="Email"
+        />
+        {formik.touched.email && formik.errors.email && (
+          <Text style={styles.errorText}>{formik.errors.email}</Text>
+        )}
+      </View>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.inputText}
+          id="password"
+          onChangeText={formik.handleChange("password")}
+          value={formik.values.password}
+          placeholder="Password"
+          secureTextEntry
+        />
+        {formik.touched.password && formik.errors.password && (
+          <Text style={styles.errorText}>{formik.errors.password}</Text>
+        )}
+      </View>
 
       <TouchableOpacity
         style={styles.button}
         onPress={() => formik.submitForm()}
       >
-        <Text style={styles.buttonText}>Submit</Text>
+        <Text style={styles.buttonText}>Sign up</Text>
       </TouchableOpacity>
+      <View style={styles.loginContainer}>
+        <Text>Already have an account?</Text>
+        <TouchableOpacity onPress={() => navigation.navigate("LoginScreen")}>
+          <Text style={styles.logIn}>Login</Text>
+        </TouchableOpacity>
+      </View>
     </View>
 
     // <TouchableOpacity
@@ -133,23 +150,58 @@ const SignupScreen = ({ navigation }: Props) => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#f2f2f2",
+  },
+  inputContainer: {
+    width: "80%",
+    marginBottom: 10,
+  },
+  inputText: {
+    padding: 16,
+    backgroundColor: "#ffffff",
+    borderRadius: 10,
+  },
+  errorText: {
+    color: "red",
+    marginBottom: 5,
+  },
   button: {
     padding: 16,
     backgroundColor: "#039be5",
     borderRadius: 10,
-    margin: 10,
+    marginVertical: 10,
+    width: "50%",
   },
   buttonText: {
     color: "white",
     fontWeight: "700",
     fontSize: 16,
+    textAlign: "center",
   },
-  inputText: {
-    padding: 16,
-    backgroundColor: "#e0e0e0",
-    borderRadius: 10,
-    margin: 10,
-    width: "60%",
+  loginContainer: {
+    flexDirection: "row",
+    marginTop: 20,
+  },
+  logIn: {
+    color: "#039be5",
+    fontWeight: "bold",
+  },
+  header: {
+    margin: 0,
+    marginBottom: 20,
+    fontSize: 37,
+    marginTop: 75,
+    textAlign: "center",
+    color: "red",
+  },
+  signup: {
+    paddingBottom: 20,
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
   },
 });
 
