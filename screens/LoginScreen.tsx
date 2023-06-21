@@ -70,24 +70,21 @@ const LoginScreen = ({ navigation }: Props) => {
   }, []);
 
   return (
-    <>
+    <View style={styles.container}>
       <Text style={styles.header}>AirPark</Text>
-      <View
-        style={{
-          flex: 1,
-          alignItems: "center",
-          justifyContent: "center",
-          marginTop: 0,
-        }}
-      >
-        <Text style={styles.signInText}>Sign in</Text>
+      <Text style={styles.slogan}>Never worry about parking again!</Text>
 
+      <Text style={styles.signInText}>Sign in</Text>
+      <View style={styles.inputContainer}>
         <TextInput
           placeholder="Email or Username"
           style={styles.inputText}
           value={login}
           onChangeText={(text) => setLogin(text)}
         />
+      </View>
+
+      <View style={styles.inputContainer}>
         <TextInput
           placeholder="Password"
           style={styles.inputText}
@@ -95,33 +92,49 @@ const LoginScreen = ({ navigation }: Props) => {
           value={password}
           onChangeText={(text) => setPassword(text)}
         />
-
-        {errorMessage ? (
-          <Text style={styles.errorMessage}>{errorMessage}</Text>
-        ) : null}
-
-        <TouchableOpacity onPress={handleLogin} style={styles.button}>
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
-
-        <Text style={styles.signUpText}>Don't have an account?</Text>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("Signup")}
-          // style={styles.button}
-        >
-          <Text style={styles.signUp}>Sign up now!</Text>
-        </TouchableOpacity>
       </View>
-    </>
+      {errorMessage ? (
+        <Text style={styles.errorMessage}>{errorMessage}</Text>
+      ) : null}
+
+      <TouchableOpacity onPress={handleLogin} style={styles.button}>
+        <Text style={styles.buttonText}>Login</Text>
+      </TouchableOpacity>
+
+      <Text style={styles.signUpText}>Don't have an account?</Text>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Signup")}
+        // style={styles.button}
+      >
+        <Text style={styles.signUp}>Sign up now!</Text>
+      </TouchableOpacity>
+    </View>
   );
 };
 
 export default LoginScreen;
 
 const styles = StyleSheet.create({
+  container: {
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#f2f2f2",
+  },
+
+  slogan: {
+    marginBottom: 25,
+    fontSize: 10,
+    fontStyle: "italic",
+    color: "grey",
+  },
+  inputContainer: {
+    width: "80%",
+    marginBottom: 10,
+  },
+
   signInText: {
-    marginTop: -25,
-    fontSize: 18,
+    paddingBottom: 10,
+    fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,
   },
@@ -132,37 +145,39 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   button: {
-    paddingVertical: 16,
-    paddingHorizontal: 32,
+    padding: 16,
     backgroundColor: "#039be5",
     borderRadius: 10,
-    marginHorizontal: 20,
     marginVertical: 10,
+    width: "80%",
   },
   buttonText: {
     color: "white",
     fontWeight: "700",
-    fontSize: 18,
+    fontSize: 16,
+    textAlign: "center",
   },
   inputText: {
     padding: 16,
-    backgroundColor: "#e0e0e0",
+    backgroundColor: "#ffffff",
     borderRadius: 10,
-    margin: 10,
-    width: "60%",
   },
   signUpText: {
-    marginTop: 50,
+    marginTop: 20,
     fontSize: 16,
     marginBottom: 10,
   },
   signUp: {
-    color: "blue",
     fontSize: 16,
+    color: "#039be5",
+    fontWeight: "bold",
   },
   header: {
-    fontSize: 37,
-    marginTop: 75,
+    marginBottom: 8,
+
+    fontSize: 40,
+    fontWeight: "normal",
+    marginTop: 50,
     textAlign: "center",
     color: "red",
   },

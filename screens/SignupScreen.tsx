@@ -61,6 +61,7 @@ const SignupScreen = ({ navigation }: Props) => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>AirPark</Text>
+      <Text style={styles.slogan}>Never worry about parking again!</Text>
       <Text style={styles.signup}>Create an account</Text>
       <View style={styles.inputContainer}>
         <TextInput
@@ -173,7 +174,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#039be5",
     borderRadius: 10,
     marginVertical: 10,
-    width: "50%",
+    width: "80%",
   },
   buttonText: {
     color: "white",
@@ -190,15 +191,22 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   header: {
-    margin: 0,
-    marginBottom: 20,
-    fontSize: 37,
-    marginTop: 75,
+    marginBottom: 8,
+
+    fontSize: 40,
+    fontWeight: "normal",
+    marginTop: 50,
     textAlign: "center",
     color: "red",
   },
+  slogan: {
+    marginBottom: 20,
+    fontSize: 10,
+    fontStyle: "italic",
+    color: "grey",
+  },
   signup: {
-    paddingBottom: 20,
+    paddingBottom: 10,
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 10,
