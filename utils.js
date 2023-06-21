@@ -69,7 +69,6 @@ export function postParking(parking) {
       });
     })
     .then((response) => {
-      //console.log(response.data);
       return response.data;
     });
 }
@@ -143,6 +142,18 @@ export function updateBookingStatus(booking_id, status) {
           },
         }
       );
+    })
+    .then((response) => {
+      return response.data;
+    });
+}
+
+export function getUserProfile(user) {
+  return airparkAUTH
+    .get("/profile", {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
     })
     .then((response) => {
       return response.data;
