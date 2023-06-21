@@ -9,6 +9,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
+  ActivityIndicator,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import HomeSearch from "../Components/HomeSearch";
@@ -25,6 +26,7 @@ const AddParkingList = () => {
   const [image, setImage] = useState({});
   const [description, setDescription] = useState("");
   const [disableSubmit, setDisableSubmit] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { setParkings } = useContext<ParkingContextTypes>(ParkingsContext);
   const navigation = useNavigation();
@@ -53,6 +55,7 @@ const AddParkingList = () => {
       request
     );
     setDisableSubmit(true);
+    setIsLoading(true);
     postParking(request)
       .then(({ parking }) => {
         setParkings((prev: any) => {
@@ -68,6 +71,7 @@ const AddParkingList = () => {
       .catch((err) => alert(err))
       .finally(() => {
         setDisableSubmit(false);
+        setIsLoading(false); // Set isLoading to false after navigating
       });
   }
 
@@ -139,11 +143,23 @@ const AddParkingList = () => {
             ]}
           />
           <TouchableOpacity
-            style={tw`rounded-md bg-indigo-600 px-3 py-2 shadow-sm m-8 mx-auto`}
+            style={[
+              tw`rounded-md bg-indigo-600 px-3 py-2 shadow-sm m-8 mx-auto`,
+              {
+                width: 120,
+                height: 40,
+                justifyContent: "center",
+                alignItems: "center",
+              }, // Set a fixed width and height for the button
+            ]}
             onPress={handleSubmit}
             disabled={disableSubmit}
           >
-            <Text style={tw`text-sm font-semibold text-white`}>Submit</Text>
+            {isLoading ? ( // Conditional rendering of loading indicator
+              <ActivityIndicator size="small" color="white" /> // You can customize the loading indicator as needed
+            ) : (
+              <Text style={tw`text-sm font-semibold text-white`}>Submit</Text>
+            )}
           </TouchableOpacity>
         </View>
       </TouchableWithoutFeedback>
