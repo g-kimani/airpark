@@ -49,7 +49,38 @@ const AddParkingList = () => {
       description: "",
     },
     validationSchema: formSchema,
-    onSubmit: (values) => {},
+    onSubmit: (values) => {
+      Keyboard.dismiss();
+      const request = {
+        ...values.location,
+        price: values.price,
+        image: values.image,
+        description: values.description,
+      };
+      console.log(
+        "🚀 ~ file: AddParkingList.tsx:48 ~ handleSubmit ~ parking:",
+        request
+      );
+      setDisableSubmit(true);
+      setIsLoading(true);
+      postParking(request)
+        .then(({ parking }) => {
+          setParkings((prev: any) => {
+            return { list: [...prev.list, parking] };
+          });
+          parking = {
+            ...parking,
+            latitude: parking.location.x,
+            longitude: parking.location.y,
+          };
+          navigation.navigate("ManageParkings", { parking });
+        })
+        .catch((err) => alert(err))
+        .finally(() => {
+          setDisableSubmit(false);
+          setIsLoading(false); // Set isLoading to false after navigating
+        });
+    },
   });
 
   function pickImage() {
@@ -61,7 +92,8 @@ const AddParkingList = () => {
     })
       .then((result) => {
         if (!result.canceled) {
-          setImage(result.assets[0]);
+          formik.values.image = result.assets[0];
+          // setImage(result.assets[0]);
         }
       })
       .catch((err) => {
@@ -107,10 +139,10 @@ const AddParkingList = () => {
           <View
             style={tw`flex relative mx-auto justify-center items-center w-4/5 min-h-220px my-4 bg-slate-200 rounded-md `}
           >
-            {Object.keys(image).length ? (
+            {Object.keys(formik.values.image).length ? (
               <>
                 <Image
-                  source={{ uri: image.uri }}
+                  source={{ uri: formik.values.image.uri }}
                   style={{ width: 200, height: 200 }}
                 />
                 <TouchableOpacity
