@@ -1,12 +1,15 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import {
+
+  Keyboard,
   KeyboardAvoidingView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -18,8 +21,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import tw from "twrnc";
 
 const validationSchema = yup.object().shape({
-  firstName: yup.string().required("First name is required"),
-  lastName: yup.string().required("Last name is required"),
+  firstname: yup.string().required("First name is required"),
+  lastname: yup.string().required("Last name is required"),
   username: yup.string().required("username is required"),
   email: yup
     .string()
@@ -35,33 +38,37 @@ type Props = NativeStackScreenProps<NavigationStackParamList, "Signup">;
 
 const SignupScreen = ({ navigation }: Props) => {
   const { user, setUser } = useContext<UserContextTypes>(UserContext);
+  const [avoidKeyboard, setAvoidKeyboard] = useState(false);
   const formik = useFormik({
     initialValues: {
-      firstName: "",
-      lastName: "",
+      firstname: "",
+      lastname: "",
       username: "",
       email: "",
       password: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      //console.log(values);
+      Keyboard.dismiss();
       signUpUser(values)
         .then((data) => {
           setUser(data);
+          console.log(data);
           saveToStore("auth-token", data.token);
-          saveToStore("user", data.username);
-          navigation.replace("HomePage");
+          saveToStore("user", data.user);
+          navigation.replace("Home");
         })
         .catch((err) => alert(err));
     },
   });
-  const handleLoginNavigation = () => {
-    navigation.navigate("LoginScreen");
-  };
   return (
-    <SafeAreaView style={tw`flex-1`}>
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      enabled={avoidKeyboard}
+      behavior="position"
+    >
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View style={styles.container}>
           <Text style={styles.header}>AirPark</Text>
           <Text style={styles.slogan}>Never worry about parking again!</Text>
@@ -69,25 +76,31 @@ const SignupScreen = ({ navigation }: Props) => {
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.inputText}
-              id="firstName"
-              onChangeText={formik.handleChange("firstName")}
-              value={formik.values.firstName}
+
+              id="firstname"
+              onChangeText={formik.handleChange("firstname")}
+              value={formik.values.firstname}
               placeholder="First Name"
+              onFocus={() => setAvoidKeyboard(false)}
             />
-            {formik.touched.firstName && formik.errors.firstName && (
-              <Text style={styles.errorText}>{formik.errors.firstName}</Text>
+            {formik.touched.firstname && formik.errors.firstname && (
+              <Text style={styles.errorText}>{formik.errors.firstname}</Text>
+
             )}
           </View>
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.inputText}
-              id="lastName"
-              onChangeText={formik.handleChange("lastName")}
-              value={formik.values.lastName}
+
+              id="lastname"
+              onChangeText={formik.handleChange("lastname")}
+              value={formik.values.lastname}
               placeholder="Last Name"
+              onFocus={() => setAvoidKeyboard(false)}
             />
-            {formik.touched.lastName && formik.errors.lastName && (
-              <Text style={styles.errorText}>{formik.errors.lastName}</Text>
+            {formik.touched.lastname && formik.errors.lastname && (
+              <Text style={styles.errorText}>{formik.errors.lastname}</Text>
+
             )}
           </View>
           <View style={styles.inputContainer}>
@@ -97,6 +110,9 @@ const SignupScreen = ({ navigation }: Props) => {
               onChangeText={formik.handleChange("username")}
               value={formik.values.username}
               placeholder="Username"
+
+              onFocus={() => setAvoidKeyboard(true)}
+
             />
             {formik.touched.username && formik.errors.username && (
               <Text style={styles.errorText}>{formik.errors.username}</Text>
@@ -108,7 +124,9 @@ const SignupScreen = ({ navigation }: Props) => {
               id="email"
               onChangeText={formik.handleChange("email")}
               value={formik.values.email}
+              inputMode="email"
               placeholder="Email"
+              onFocus={() => setAvoidKeyboard(true)}
             />
             {formik.touched.email && formik.errors.email && (
               <Text style={styles.errorText}>{formik.errors.email}</Text>
@@ -122,6 +140,9 @@ const SignupScreen = ({ navigation }: Props) => {
               value={formik.values.password}
               placeholder="Password"
               secureTextEntry
+
+              onFocus={() => setAvoidKeyboard(true)}
+
             />
             {formik.touched.password && formik.errors.password && (
               <Text style={styles.errorText}>{formik.errors.password}</Text>
@@ -132,19 +153,22 @@ const SignupScreen = ({ navigation }: Props) => {
             style={styles.button}
             onPress={() => formik.submitForm()}
           >
+
             <Text style={styles.buttonText}>Register</Text>
+
           </TouchableOpacity>
           <View style={styles.loginContainer}>
             <Text>Already have an account?</Text>
             <TouchableOpacity
               onPress={() => navigation.navigate("LoginScreen")}
             >
-              <Text style={styles.logIn}>Sign In</Text>
+
+              <Text style={styles.logIn}>Login</Text>
             </TouchableOpacity>
           </View>
         </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 

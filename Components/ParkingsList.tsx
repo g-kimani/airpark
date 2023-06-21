@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   Image,
   FlatList,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import { defaultImage } from "../assets/image_not_found.ts";
 import { useNavigation } from "@react-navigation/native";
@@ -25,31 +26,43 @@ interface Props {
 
 const ParkingsList: React.FC<Props> = ({ parkings }) => {
   const navigation = useNavigation();
+  const [isLoading, setIsLoading] = useState(false);
   const handleParkingPress = (parking: Parking) => {
     navigation.navigate("IndividualParking", { parking });
   };
   return (
+
     <View style={styles.container}>
       <FlatList
         data={parkings}
         keyExtractor={(item) => item.parking_id.toString()}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => handleParkingPress(item)}>
+          <TouchableOpacity style={{margin:20}} onPress={() => handleParkingPress(item)}>
             <View style={styles.item}>
+              {isLoading && (
+                <View style={styles.loadingContainer}>
+                  <ActivityIndicator size="large" color="red" />
+                  <Text style={styles.loadingText}>Image is loading...</Text>
+                </View>
+              )}
               <Image
                 style={styles.image}
                 source={{ uri: item.picture ? item.picture : defaultImage }}
                 accessibilityLabel="Parking Image"
+                onLoadStart={() => setIsLoading(true)}
+                onLoadEnd={() => setIsLoading(false)}
               />
               <View style={styles.detailsContainer}>
                 <Text style={styles.location}>{item.area}</Text>
                 <Text style={styles.price}>£{item.price}</Text>
               </View>
-            </View>
-          </TouchableOpacity>
-        )}
-      />
-    </View>
+
+           
+          </View>
+        </TouchableOpacity>
+      )}
+    />
+      </View>
   );
 };
 
@@ -79,6 +92,12 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 18,
     marginVertical: 10,
+  },
+  loadingContainer: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
   },
 });
 

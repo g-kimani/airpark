@@ -2,10 +2,11 @@ import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import tw from "twrnc";
 import { Calendar } from "react-native-calendars";
-import moment from "moment";
 import { Parking } from "../screens/types";
 import { postBooking } from "../utils";
 import { useNavigation } from "@react-navigation/native";
+import { formatPrice } from "../tools/helpers";
+import CalendarPicker from "./CalendarPicker";
 
 type Props = {
   visible: boolean;
@@ -20,6 +21,7 @@ const BookingForm = ({ visible, setVisible, parking }: Props) => {
   const [endDate, setEndDate] = useState("");
   const [daysNum, setDaysNum] = useState(1);
   const [calculatedPrice, setCalculatedPrice] = useState(0);
+  const [submitDisbaled, setSubmitDisabled] = useState(true);
 
   const navigation = useNavigation();
 
@@ -30,7 +32,8 @@ const BookingForm = ({ visible, setVisible, parking }: Props) => {
     const days = time / (1000 * 60 * 60 * 24) + 1;
     setDaysNum(days);
     setCalculatedPrice(Number((parking.price * days).toFixed(2)));
-  }, [endDate]);
+    setSubmitDisabled(selectedStartDate === "" || endDate === "");
+  }, [selectedStartDate, endDate]);
 
   const handleBooking = () => {
     const booking = {
@@ -40,7 +43,7 @@ const BookingForm = ({ visible, setVisible, parking }: Props) => {
       price: calculatedPrice,
     };
     postBooking(booking).then(({ booking }) => {
-      navigation.navigate("MyParkings");
+      navigation.navigate("My Parkings");
     });
   };
   return (
@@ -56,7 +59,11 @@ const BookingForm = ({ visible, setVisible, parking }: Props) => {
         <View style={styles.calendarContainer}>
           <View style={tw`w-full flex flex-row items-end justify-between `}>
             <Text style={tw`text-base uppercase font-semibold `}>
-              Select days
+              {selectedStartDate
+                ? endDate
+                  ? "Book Now!"
+                  : "Select End Date"
+                : "Select Start Date"}
             </Text>
             <TouchableOpacity
               style={tw`rounded-md bg-white border-2 border-red-600 px-3 py-2 shadow-sm `}
@@ -65,44 +72,38 @@ const BookingForm = ({ visible, setVisible, parking }: Props) => {
               <Text style={tw`text-sm font-semibold text-red-600`}>Cancel</Text>
             </TouchableOpacity>
           </View>
-          <Calendar
-            style={{
-              marginTop: 20,
-            }}
-            current={moment().format("YYYY-MM-DD")}
-            minDate={moment().format("YYYY-MM-DD")}
-            maxDate={moment().add(2, "months").format("YYYY-MM-DD")}
-            onDayPress={(day) => {
-              if (selectedStartDate) {
-                setEndDate(day.dateString);
-              } else {
-                setSelectedStartDate(day.dateString);
-              }
-            }}
-            markedDates={{
-              [selectedStartDate]: {
-                selected: true,
-                startingDay: true,
-                color: "green",
-              },
-              [endDate]: { selected: true, color: "green" },
-            }}
+          <CalendarPicker
+            startDate={selectedStartDate}
+            endDate={endDate}
+            setStart={setSelectedStartDate}
+            setEnd={setEndDate}
           />
           <View style={tw`flex flex-row w-full items-center justify-between`}>
             <View>
-              <Text style={tw`font-bold my-2`}>£{calculatedPrice}</Text>
-              <Text style={tw`text-gray-400`}>@ £{parking.price} / day</Text>
+              <Text style={tw`font-bold my-2`}>
+                {formatPrice(calculatedPrice)}
+              </Text>
+              <Text style={tw`text-gray-400`}>
+                @ {formatPrice(parking.price)} / day
+              </Text>
             </View>
             <Text>
-              {daysNum}
+              {daysNum ? daysNum : "~"}
               <Text style={tw`text-gray-400`}> days</Text>
             </Text>
 
             <TouchableOpacity
-              style={tw`flex rounded-md bg-white items-center border-2 border-indigo-600 px-3 py-2 shadow-sm `}
+              style={tw`flex rounded-md bg-white items-center border-2 border-${
+                submitDisbaled ? "gray-500" : "indigo-600"
+              } px-3 py-2 shadow-sm `}
               onPress={handleBooking}
+              disabled={submitDisbaled}
             >
-              <Text style={tw`text-sm font-semibold text-indigo-600`}>
+              <Text
+                style={tw`text-sm font-semibold text-${
+                  submitDisbaled ? "gray-500" : "indigo-600"
+                }`}
+              >
                 Book Now
               </Text>
             </TouchableOpacity>
