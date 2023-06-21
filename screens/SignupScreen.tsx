@@ -15,9 +15,9 @@ import { saveToStore, signUpUser } from "../utils.js";
 import { UserContext } from "../contexts/UserContext.tsx";
 
 const validationSchema = yup.object().shape({
-  firstName: yup.string().required("First name is required"),
-  lastName: yup.string().required("Last name is required"),
-  username: yup.string().required("username is required"),
+  firstname: yup.string().required("First name is required"),
+  lastname: yup.string().required("Last name is required"),
+  username: yup.string().required("Username is required"),
   email: yup
     .string()
     .email("Please enter a valid email")
@@ -34,50 +34,46 @@ const SignupScreen = ({ navigation }: Props) => {
   const { user, setUser } = useContext<UserContextTypes>(UserContext);
   const formik = useFormik({
     initialValues: {
-      firstName: "",
-      lastName: "",
+      firstname: "",
+      lastname: "",
       username: "",
       email: "",
       password: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      //console.log(values);
+      console.log(values);
       signUpUser(values)
         .then((data) => {
           setUser(data);
           saveToStore("auth-token", data.token);
           saveToStore("user", data.username);
-          navigation.replace("HomePage");
+          navigation.replace("Home");
         })
         .catch((err) => alert(err));
-      // //console.log(values);
-      // navigation.navigate("HomePage");
     },
   });
+
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
       <TextInput
         style={styles.inputText}
-        id="firstName"
-        onChangeText={formik.handleChange("firstName")}
-        value={formik.values.firstName}
+        onChangeText={formik.handleChange("firstname")}
+        value={formik.values.firstname}
         placeholder="First Name"
       />
-      <Text>{formik.errors.firstName}</Text>
+      <Text>{formik.errors.firstname}</Text>
 
       <TextInput
         style={styles.inputText}
-        id="lastName"
-        onChangeText={formik.handleChange("lastName")}
-        value={formik.values.lastName}
+        onChangeText={formik.handleChange("lastname")}
+        value={formik.values.lastname}
         placeholder="Last Name"
       />
-      <Text>{formik.errors.lastName}</Text>
+      <Text>{formik.errors.lastname}</Text>
 
       <TextInput
         style={styles.inputText}
-        id="username"
         onChangeText={formik.handleChange("username")}
         value={formik.values.username}
         placeholder="Username"
@@ -86,7 +82,6 @@ const SignupScreen = ({ navigation }: Props) => {
 
       <TextInput
         style={styles.inputText}
-        id="email"
         onChangeText={formik.handleChange("email")}
         value={formik.values.email}
         placeholder="Email"
@@ -95,7 +90,6 @@ const SignupScreen = ({ navigation }: Props) => {
 
       <TextInput
         style={styles.inputText}
-        id="password"
         onChangeText={formik.handleChange("password")}
         value={formik.values.password}
         placeholder="Password"
@@ -105,20 +99,11 @@ const SignupScreen = ({ navigation }: Props) => {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => formik.submitForm()}
+        onPress={() => formik.handleSubmit()}
       >
         <Text style={styles.buttonText}>Submit</Text>
       </TouchableOpacity>
     </View>
-
-    // <TouchableOpacity
-    //     onPress={() => {
-    //       navigation.navigate("Signup");
-    //     }}
-    //     // style={styles.button}
-    //   >
-    //     <Text style={styles.signUpText}>Sign up now! </Text>
-    //   </TouchableOpacity>
   );
 };
 

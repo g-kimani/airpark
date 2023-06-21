@@ -21,6 +21,7 @@ export function loginUser(user) {
 
 export function signUpUser(user) {
   return airparkAUTH.post("/signup", user).then((response) => {
+    console.log("in utils", response.data);
     return response.data;
   });
 }
@@ -146,5 +147,22 @@ export function updateBookingStatus(booking_id, status) {
     })
     .then((response) => {
       return response.data;
+    });
+}
+
+export function getUserProfile(user) {
+  return airparkAUTH
+    .get("/profile", {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    })
+    .then((response) => {
+      console.log("in the utils", response.data);
+      return response.data;
+    })
+    .catch((error) => {
+      console.error("Error fetching user profile", error);
+      throw error; // Rethrow the error to handle it further up the chain
     });
 }
