@@ -1,18 +1,21 @@
+import React, { useContext, useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
+  ActivityIndicator,
+  Image,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
-import { useContext, useState, useEffect } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { loginUser } from "../utils";
 import { UserContext } from "../contexts/UserContext";
 import * as SecureStore from "expo-secure-store";
+import tw from "twrnc";
 
 async function save(key: string, value: string) {
-  //console.log("🚀 ~ file: LoginScreen.tsx:15 ~ save ~ value:", value);
   await SecureStore.setItemAsync(key, value);
 }
 
@@ -35,11 +38,12 @@ const LoginScreen = ({ navigation }: Props) => {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-
+  const [isLoading, setIsLoading] = useState(false);
   const { user, setUser } = useContext<ContextTypes>(UserContext);
 
   const handleLogin = () => {
-    setErrorMessage(""); // Clear any previous error message
+    setErrorMessage("");
+    setIsLoading(true);
     loginUser({ login, password })
       .then((data) => {
         setUser(data);
@@ -54,10 +58,12 @@ const LoginScreen = ({ navigation }: Props) => {
         } else {
           setErrorMessage("An error occurred. Please try again.");
         }
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
-  // AUTO Login if previously logged in
   useEffect(() => {
     SecureStore.getItemAsync("auth-token").then((result) => {
       if (result) {
@@ -66,49 +72,70 @@ const LoginScreen = ({ navigation }: Props) => {
         });
         navigation.replace("Home");
       }
+      setIsLoading(false);
     });
   }, []);
 
+  const handleKeyPress = () => {
+    handleLogin();
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>AirPark</Text>
-      <Text style={styles.slogan}>Never worry about parking again!</Text>
-
-      <Text style={styles.signInText}>Sign in</Text>
-      <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="Email or Username"
-          style={styles.inputText}
-          value={login}
-          onChangeText={(text) => setLogin(text)}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        <Text style={styles.header}>AirPark</Text>
+        <Text style={styles.slogan}>Never worry about parking again!</Text>
+        <Image
+          style={tw`w-40 h-40`}
+          source={require("../assets/loginMap.png")}
         />
+
+        <Text style={styles.signInText}>Sign in</Text>
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder="Email or Username"
+            style={styles.inputText}
+            value={login}
+            onChangeText={(text) => setLogin(text)}
+            onSubmitEditing={handleKeyPress}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder="Password"
+            style={styles.inputText}
+            secureTextEntry
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+            onSubmitEditing={handleKeyPress}
+          />
+        </View>
+        {errorMessage ? (
+          <Text style={styles.errorMessage}>{errorMessage}</Text>
+        ) : null}
+
+        {isLoading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="red" />
+          </View>
+        ) : (
+          <TouchableWithoutFeedback onPress={handleLogin}>
+            <View style={styles.button}>
+              <Text style={styles.buttonText}>Login</Text>
+            </View>
+          </TouchableWithoutFeedback>
+        )}
+        <View style={styles.signUpContainer}>
+          <Text style={styles.signUpText}>Don't have an account?</Text>
+          <TouchableWithoutFeedback
+            onPress={() => navigation.navigate("Signup")}
+          >
+            <Text style={styles.signUp}>Sign up now!</Text>
+          </TouchableWithoutFeedback>
+        </View>
       </View>
-
-      <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="Password"
-          style={styles.inputText}
-          secureTextEntry
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-        />
-      </View>
-      {errorMessage ? (
-        <Text style={styles.errorMessage}>{errorMessage}</Text>
-      ) : null}
-
-      <TouchableOpacity onPress={handleLogin} style={styles.button}>
-        <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity>
-
-      <Text style={styles.signUpText}>Don't have an account?</Text>
-      <TouchableOpacity
-        onPress={() => navigation.navigate("Signup")}
-        // style={styles.button}
-      >
-        <Text style={styles.signUp}>Sign up now!</Text>
-      </TouchableOpacity>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -120,10 +147,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "#f2f2f2",
   },
-
   slogan: {
     marginBottom: 25,
-    fontSize: 10,
+    fontSize: 12,
     fontStyle: "italic",
     color: "grey",
   },
@@ -131,7 +157,6 @@ const styles = StyleSheet.create({
     width: "80%",
     marginBottom: 10,
   },
-
   signInText: {
     paddingBottom: 10,
     fontSize: 20,
@@ -146,7 +171,8 @@ const styles = StyleSheet.create({
   },
   button: {
     padding: 16,
-    backgroundColor: "#039be5",
+    // backgroundColor: "#039be5",
+    backgroundColor: "black",
     borderRadius: 10,
     marginVertical: 10,
     width: "80%",
@@ -162,8 +188,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     borderRadius: 10,
   },
-  signUpText: {
+  signUpContainer: {
+    flexDirection: "row",
     marginTop: 20,
+    marginBottom: 10,
+  },
+  signUpText: {
     fontSize: 16,
     marginBottom: 10,
   },
@@ -171,14 +201,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#039be5",
     fontWeight: "bold",
+    marginLeft: 5,
   },
   header: {
-    marginBottom: 8,
-
+    marginBottom: 5,
     fontSize: 40,
     fontWeight: "normal",
-    marginTop: 50,
+    marginTop: 70,
     textAlign: "center",
     color: "red",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
