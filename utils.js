@@ -87,6 +87,16 @@ export function postBooking(booking) {
     });
 }
 
+export function getParkingById(parking_id) {
+  return airparkAPI.get(`/parkings/${parking_id}`).then((response) => {
+    const { parking } = response.data;
+    const latitude = parking.location.x;
+    const longitude = parking.location.y;
+    delete parking.location;
+    return { ...parking, latitude, longitude };
+  });
+}
+
 export function getBookings() {
   return SecureStore.getItemAsync("auth-token")
     .then((token) => {

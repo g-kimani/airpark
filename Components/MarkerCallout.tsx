@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 // import Geocoder from "react-native-geocoding";
 import { useNavigation } from "@react-navigation/native";
 import tw from "twrnc";
+import { formatPrice } from "../tools/helpers";
 
 // Geocoder.init("AIzaSyBhcOAI9R7HKqUD9f-2is268fJza5KZ0G8");
 type Props = {
@@ -38,7 +39,7 @@ const MarkerCallout = ({ parking }: Props) => {
             <Text>{comp.short_name}</Text>
           ))} */}
           <Text style={tw`font-bold my-2`}>
-            £{parking.price}
+            {formatPrice(parking.price)}
             <Text style={tw`text-gray-400`}> /day</Text>
           </Text>
         </>
