@@ -34,17 +34,27 @@ type ContextTypes = {
 const LoginScreen = ({ navigation }: Props) => {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const { user, setUser } = useContext<ContextTypes>(UserContext);
 
   const handleLogin = () => {
-    loginUser({ login, password }).then((data) => {
-      setUser(data);
-      save("auth-token", data.token);
-      save("user", data.user);
-      save("user_id", `${data.user_id}`);
-      navigation.replace("Home");
-    });
+    setErrorMessage(""); // Clear any previous error message
+    loginUser({ login, password })
+      .then((data) => {
+        setUser(data);
+        save("auth-token", data.token);
+        save("user", data.user);
+        save("user_id", `${data.user_id}`);
+        navigation.replace("Home");
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 401) {
+          setErrorMessage("Incorrect email or password");
+        } else {
+          setErrorMessage("An error occurred. Please try again.");
+        }
+      });
   };
 
   // AUTO Login if previously logged in
@@ -70,7 +80,8 @@ const LoginScreen = ({ navigation }: Props) => {
           marginTop: 0,
         }}
       >
-        <Text>Sign in</Text>
+        <Text style={styles.signInText}>Sign in</Text>
+
         <TextInput
           placeholder="Email or Username"
           style={styles.inputText}
@@ -85,32 +96,20 @@ const LoginScreen = ({ navigation }: Props) => {
           onChangeText={(text) => setPassword(text)}
         />
 
-        <TouchableOpacity
-          onPress={() => {
-            handleLogin();
-          }}
-          style={styles.button}
-        >
+        {errorMessage ? (
+          <Text style={styles.errorMessage}>{errorMessage}</Text>
+        ) : null}
+
+        <TouchableOpacity onPress={handleLogin} style={styles.button}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
 
+        <Text style={styles.signUpText}>Don't have an account?</Text>
         <TouchableOpacity
-          // onPress={() => {
-          //   navigation.navigate("google");
-          // }}
-          style={styles.button}
-        >
-          <Text style={styles.buttonText}>Continue with Google</Text>
-        </TouchableOpacity>
-
-        <Text>Don't have an account?</Text>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("Signup");
-          }}
+          onPress={() => navigation.navigate("Signup")}
           // style={styles.button}
         >
-          <Text style={styles.signUpText}>Sign up now! </Text>
+          <Text style={styles.signUp}>Sign up now!</Text>
         </TouchableOpacity>
       </View>
     </>
@@ -120,16 +119,30 @@ const LoginScreen = ({ navigation }: Props) => {
 export default LoginScreen;
 
 const styles = StyleSheet.create({
+  signInText: {
+    marginTop: -25,
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  errorMessage: {
+    color: "red",
+    marginTop: 10,
+    marginBottom: 8,
+    textAlign: "center",
+  },
   button: {
-    padding: 16,
+    paddingVertical: 16,
+    paddingHorizontal: 32,
     backgroundColor: "#039be5",
     borderRadius: 10,
-    margin: 10,
+    marginHorizontal: 20,
+    marginVertical: 10,
   },
   buttonText: {
     color: "white",
     fontWeight: "700",
-    fontSize: 16,
+    fontSize: 18,
   },
   inputText: {
     padding: 16,
@@ -139,12 +152,17 @@ const styles = StyleSheet.create({
     width: "60%",
   },
   signUpText: {
+    marginTop: 50,
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  signUp: {
     color: "blue",
     fontSize: 16,
   },
   header: {
-    fontSize: 26,
-    marginTop: 20,
+    fontSize: 37,
+    marginTop: 75,
     textAlign: "center",
     color: "red",
   },
