@@ -5,6 +5,7 @@ import { formatPrice } from "../tools/helpers";
 import { Booking, Parking } from "../screens/types";
 import { useNavigation } from "@react-navigation/native";
 import { getParkingById } from "../utils";
+import BookingStatus from "./BookingStatus";
 type Props = {
   booking: Booking;
 };
@@ -19,7 +20,7 @@ const BookingHistoryCard = ({ booking }: Props) => {
   }, [booking]);
   return (
     <View style={tw`w-full bg-white m-2 p-4 rounded`}>
-      <View style={tw`flex flex-row justify-between`}>
+      <View style={tw`flex flex-row justify-between items-center`}>
         <View>
           <Text style={tw`text-sm font-medium leading-6 text-gray-900`}>
             Start - End
@@ -29,14 +30,8 @@ const BookingHistoryCard = ({ booking }: Props) => {
             {new Date(booking.booking_end).toLocaleDateString()}
           </Text>
         </View>
-        <View style={tw``}>
-          <View
-            style={tw`p-1 shrink bg-slate-50 border-gray-400 border-2 rounded `}
-          >
-            <Text style={tw`text-gray-400 uppercase font-bold `}>
-              {booking.status}
-            </Text>
-          </View>
+        <View>
+          <BookingStatus status={booking.status} />
         </View>
       </View>
       <View style={tw`flex flex-row mt-2 justify-between`}>

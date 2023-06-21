@@ -29,27 +29,28 @@ const ParkingsList: React.FC<Props> = ({ parkings }) => {
     navigation.navigate("IndividualParking", { parking });
   };
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={parkings}
-        keyExtractor={(item) => item.parking_id.toString()}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => handleParkingPress(item)}>
-            <View style={styles.item}>
-              <Image
-                style={styles.image}
-                source={{ uri: item.picture ? item.picture : defaultImage }}
-                accessibilityLabel="Parking Image"
-              />
-              <View style={styles.detailsContainer}>
-                <Text style={styles.location}>{item.area}</Text>
-                <Text style={styles.price}>£{item.price}</Text>
-              </View>
+    <FlatList
+      data={parkings}
+      keyExtractor={(item) => item.parking_id.toString()}
+      renderItem={({ item }) => (
+        <TouchableOpacity
+          style={{ margin: 20 }}
+          onPress={() => handleParkingPress(item)}
+        >
+          <View style={styles.item}>
+            <Image
+              style={styles.image}
+              source={{ uri: item.picture ? item.picture : defaultImage }}
+              accessibilityLabel="Parking Image"
+            />
+            <View style={styles.detailsContainer}>
+              <Text style={styles.location}>{item.area}</Text>
+              <Text style={styles.price}>£{item.price}</Text>
             </View>
-          </TouchableOpacity>
-        )}
-      />
-    </View>
+          </View>
+        </TouchableOpacity>
+      )}
+    />
   );
 };
 
