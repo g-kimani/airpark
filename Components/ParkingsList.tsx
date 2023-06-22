@@ -51,7 +51,7 @@ const ParkingsList: React.FC<Props> = ({ parkings }) => {
               style={{ margin: 20 }}
               onPress={() => handleParkingPress(item)}
             >
-              <View style={styles.item}>
+              <View>
                 {isLoading && (
                   <View style={styles.loadingContainer}>
                     <ActivityIndicator size="large" color="red" />
@@ -83,9 +83,6 @@ const styles = StyleSheet.create({
     marginVertical: 40,
     width: "100%",
     alignSelf: "center",
-  },
-  item: {
-    marginVertical: 8,
   },
   image: {
     width: "100%",
