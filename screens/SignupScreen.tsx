@@ -53,9 +53,9 @@ const SignupScreen = ({ navigation }: Props) => {
       signUpUser(values)
         .then((data) => {
           setUser(data);
-          console.log(data);
           saveToStore("auth-token", data.token);
           saveToStore("user", data.user);
+          saveToStore("user_id", String(data.user_id));
           navigation.replace("Home");
         })
         .catch((err) => alert(err));

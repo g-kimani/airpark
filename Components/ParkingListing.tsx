@@ -8,10 +8,6 @@ type Props = {
   parking: any;
 };
 const ParkingListing = ({ parking }: Props) => {
-  console.log(
-    "🚀 ~ file: ParkingListing.tsx:9 ~ ParkingListing ~ parking:",
-    parking
-  );
   const [address, setAddress] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 

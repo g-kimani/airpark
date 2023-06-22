@@ -29,7 +29,7 @@ const DestinationResult = ({
           parkings={parkingList}
         />
       ) : (
-        <View>
+        <View style={{ paddingBottom: 100 }}>
           <ParkingsList
             parkings={parkingList}
             selectedLocation={selectedLocation}

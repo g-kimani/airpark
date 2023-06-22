@@ -48,7 +48,7 @@ const IndividualParking = ({ route }: IndividualParkingProps) => {
       longitude: parking.longitude,
     };
     Geocoder.from(loc).then((result) => {
-      setAdressStr(result.results[0].formatted_address);
+      setAdressStr(result.results[0].formatted_address.split(",")[0]);
     });
   }, [parking]);
 

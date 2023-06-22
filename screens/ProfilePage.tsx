@@ -18,7 +18,7 @@ import * as SecureStore from "expo-secure-store";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { UserContext } from "../contexts/UserContext";
 import { useContext } from "react";
-import { getUserProfile } from "../utils";
+import { getUserProfile, patchUserProfile } from "../utils";
 import tw from "twrnc";
 import { Entypo } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
@@ -39,14 +39,20 @@ const ProfilePage = ({ navigation }: Props) => {
 
   useEffect(() => {
     setIsLoading(true);
-    getUserProfile(user).then((data) => {
-      setUserInfo(data);
-      setIsLoading(false);
-    });
+    getUserProfile(user)
+      .then((data) => {
+        setUserInfo(data);
+        setIsLoading(false);
+      })
+      .catch((err) => alert(err));
   }, [user]);
 
   const handleLogout = () => {
-    SecureStore.deleteItemAsync("auth-token").then(() => {
+    Promise.all([
+      SecureStore.deleteItemAsync("auth-token"),
+      SecureStore.deleteItemAsync("user_id"),
+      SecureStore.deleteItemAsync("user"),
+    ]).then(() => {
       navigation.replace("LoginScreen");
     });
   };
@@ -54,7 +60,8 @@ const ProfilePage = ({ navigation }: Props) => {
   const defaultImage =
     "https://i.pinimg.com/564x/65/25/a0/6525a08f1df98a2e3a545fe2ace4be47.jpg";
 
-  const [image, setImage] = useState(defaultImage);
+  const [image, setImage] = useState(null);
+  const [displayAvatar, setDisplayAvatar] = useState("");
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -65,7 +72,7 @@ const ProfilePage = ({ navigation }: Props) => {
     });
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      setImage(result.assets[0]);
     }
   };
 
@@ -82,6 +89,13 @@ const ProfilePage = ({ navigation }: Props) => {
   const capitaliseName = (string: string): string => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   };
+  useEffect(() => {
+    if (userInfo?.avatar_url) {
+      setDisplayAvatar(userInfo.avatar_url);
+    } else {
+      setDisplayAvatar(defaultImage);
+    }
+  }, [userInfo]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -104,29 +118,26 @@ const ProfilePage = ({ navigation }: Props) => {
                 </View>
                 <View>
                   <View style={styles.pictureContainer}>
-                    {image && (
-                      <Image source={{ uri: image }} style={styles.picture} />
-                    )}
+                    <Image
+                      source={{ uri: image?.uri ?? displayAvatar }}
+                      style={styles.picture}
+                    />
                     <View style={tw`items-center`}>
                       <Text style={tw`text-4xl`}>
                         {capitaliseName(userInfo.firstname)}
                       </Text>
-                      <TouchableOpacity onPress={pickImage}>
-                        <View style={tw`flex flex-row items-center`}>
-                          <Feather name="edit" size={18} color="black" />
-                          <Text style={tw`text-sm`}>Photo</Text>
-                        </View>
-                      </TouchableOpacity>
+                      {!disabled && (
+                        <TouchableOpacity onPress={pickImage}>
+                          <View style={tw`flex flex-row items-center`}>
+                            <Feather name="edit" size={18} color="black" />
+                            <Text style={tw`text-sm`}>Photo</Text>
+                          </View>
+                        </TouchableOpacity>
+                      )}
                     </View>
                   </View>
                   <View style={tw`flex flex-row justify-between items-center`}>
                     <Text style={tw`text-xl`}>Personal Information</Text>
-                    <TouchableOpacity
-                      style={styles.button}
-                      onPress={toggleEditSave}
-                    >
-                      <Text style={styles.buttonText}>{buttonText}</Text>
-                    </TouchableOpacity>
                   </View>
                   <View style={styles.form}>
                     <Formik
@@ -137,11 +148,31 @@ const ProfilePage = ({ navigation }: Props) => {
                         email: userInfo.email || "",
                       }}
                       onSubmit={(values) => {
+                        const request = { ...values, image };
+                        patchUserProfile(request)
+                          .then(({ user }) => {
+                            setUserInfo(user);
+                            setDisabled(true);
+                            setButtonText("Edit");
+                          })
+                          .catch((err) => alert(err));
                         console.log(values);
                       }}
                     >
                       {({ handleChange, handleBlur, handleSubmit, values }) => (
                         <View style={styles.form}>
+                          <TouchableOpacity
+                            style={styles.button}
+                            onPress={() => {
+                              if (disabled) {
+                                toggleEditSave();
+                              } else {
+                                handleSubmit();
+                              }
+                            }}
+                          >
+                            <Text style={styles.buttonText}>{buttonText}</Text>
+                          </TouchableOpacity>
                           <Text>Firstname</Text>
                           <TextInput
                             id="firstname"

@@ -11,7 +11,7 @@ const ParkingInfo = ({ route }) => {
 
   useEffect(() => {
     Geocoder.from(parking).then((result) => {
-      setAddress(result.results[0].formatted_address.split(",")[0]);
+      setAddress(result.results[0].formatted_address);
     });
   }, [parking]);
   return (

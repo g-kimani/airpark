@@ -169,3 +169,29 @@ export function getUserProfile(user) {
       return response.data;
     });
 }
+
+export function patchUserProfile(user) {
+  const formData = new FormData();
+  if (user.image) {
+    formData.append("avatar", {
+      uri: user.image.uri,
+      name: `${Date.now()}-${user.username}-avatar.png`,
+      type: "image/png",
+    });
+  }
+  formData.append("firstname", user.firstname);
+  formData.append("lastname", user.lastname);
+  formData.append("username", user.username);
+  formData.append("email", user.email);
+  return SecureStore.getItemAsync("auth-token").then((token) => {
+    return airparkAUTH
+      .patch("/profile", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        return response.data;
+      });
+  });
+}
