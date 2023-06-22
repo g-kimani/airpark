@@ -94,7 +94,7 @@ const ExplorePage = ({ navigation }: Props) => {
             </View>
           )}
         </View>
-        <View style={tw`h-5/6`}>
+        <View style={styles.resultsContainer}>
           <DestinationResult
             selectedLocation={selectedLocation}
             setSelectedLocation={setSelectedLocation}
@@ -106,5 +106,11 @@ const ExplorePage = ({ navigation }: Props) => {
     </TouchableWithoutFeedback>
   );
 };
+
+const styles = StyleSheet.create({
+  resultsContainer: {
+    height: "100%",
+  },
+});
 
 export default ExplorePage;
