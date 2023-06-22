@@ -94,10 +94,10 @@ const ParkingsList: React.FC<Props> = ({ parkings, setSelectedLocation }) => {
       )}
       <View style={tw`flex justify-center items-center bg-transparent w-full`}>
         <TouchableOpacity
-          style={tw`bg-white border-indigo-600 border-2 p-2 m-2 flex rounded`}
+          style={tw`bg-white border-[#257bf0] border-2 p-2 m-2 flex rounded`}
           onPress={handleLocationExpand}
         >
-          <Text style={tw`text-indigo-600 font-semibold`}>
+          <Text style={tw`text-[#257bf0] font-semibold`}>
             Search Further Out ?
           </Text>
         </TouchableOpacity>

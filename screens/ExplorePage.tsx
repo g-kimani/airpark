@@ -82,7 +82,7 @@ const ExplorePage = ({ navigation }: Props) => {
             <View>
               <TouchableOpacity onPress={toggleViewMode}>
                 <View
-                  style={tw`flex justify-center items-center bg-indigo-900 p-2.5 rounded-md shadow mx-2`}
+                  style={tw`flex justify-center items-center bg-[#257bf0] p-2.5 rounded-md shadow mx-2`}
                 >
                   <FontAwesome5
                     name={viewMode === "map" ? "list-alt" : "map"}
