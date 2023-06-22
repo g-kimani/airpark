@@ -12,6 +12,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
+import Modal from "react-native-modal";
 import * as ImagePicker from "expo-image-picker";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import * as SecureStore from "expo-secure-store";
@@ -36,6 +37,7 @@ const ProfilePage = ({ navigation }: Props) => {
   const [isLoading, setIsLoading] = useState(true);
   const [disabled, setDisabled] = useState(true);
   const [buttonText, setButtonText] = useState("Edit");
+  const [isModalVisible, setIsModalVisible] = React.useState(false);
 
   useEffect(() => {
     setIsLoading(true);
@@ -56,6 +58,8 @@ const ProfilePage = ({ navigation }: Props) => {
       navigation.replace("LoginScreen");
     });
   };
+
+  const handleModal = () => setIsModalVisible((prevValue) => !prevValue);
 
   const defaultImage =
     "https://i.pinimg.com/564x/65/25/a0/6525a08f1df98a2e3a545fe2ace4be47.jpg";
@@ -227,6 +231,52 @@ const ProfilePage = ({ navigation }: Props) => {
                         </View>
                       )}
                     </Formik>
+                    <TouchableOpacity onPress={handleModal}>
+                      <View style={tw`items-center`}>
+                        <Text style={tw`text-base text-indigo-800`}>
+                          Find out more about us
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                    <Modal isVisible={isModalVisible}>
+                      <TouchableOpacity
+                        style={{
+                          flex: 1,
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                        activeOpacity={1}
+                        onPress={handleModal}
+                      >
+                        <View
+                          style={{
+                            backgroundColor: "white",
+                            borderRadius: 10,
+                            padding: 20,
+                          }}
+                        >
+                          <Text
+                            style={{
+                              textAlign: "center",
+                              fontSize: 18,
+                              fontWeight: "bold",
+                              marginBottom: 20,
+                            }}
+                          >
+                            Welcome to AirPark
+                          </Text>
+                          <Text style={{ textAlign: "center", fontSize: 18 }}>
+                            Your go-to parking app for convenient and
+                            hassle-free parking solutions. Our app is designed
+                            to help you find available parking spaces and
+                            connect with hosts who offer secure parking options.
+                            Whether you're a traveler in need of a parking spot
+                            or a host looking to monetize your parking space,
+                            we've got you covered.
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    </Modal>
                   </View>
                 </View>
               </View>
