@@ -1,4 +1,11 @@
-import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ActivityIndicator,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import tw from "twrnc";
 import { Calendar } from "react-native-calendars";
@@ -22,6 +29,7 @@ const BookingForm = ({ visible, setVisible, parking }: Props) => {
   const [daysNum, setDaysNum] = useState(1);
   const [calculatedPrice, setCalculatedPrice] = useState(0);
   const [submitDisbaled, setSubmitDisabled] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigation = useNavigation();
 
@@ -36,6 +44,7 @@ const BookingForm = ({ visible, setVisible, parking }: Props) => {
   }, [selectedStartDate, endDate]);
 
   const handleBooking = () => {
+    setIsLoading(true);
     const booking = {
       parking_id: parking.parking_id,
       booking_start: selectedStartDate,
@@ -43,6 +52,8 @@ const BookingForm = ({ visible, setVisible, parking }: Props) => {
       price: calculatedPrice,
     };
     postBooking(booking).then(({ booking }) => {
+      setIsLoading(false);
+
       navigation.navigate("My Parkings");
     });
   };
@@ -97,15 +108,19 @@ const BookingForm = ({ visible, setVisible, parking }: Props) => {
                 submitDisbaled ? "gray-500" : "indigo-600"
               } px-3 py-2 shadow-sm `}
               onPress={handleBooking}
-              disabled={submitDisbaled}
+              disabled={submitDisbaled || isLoading}
             >
-              <Text
-                style={tw`text-sm font-semibold text-${
-                  submitDisbaled ? "gray-500" : "indigo-600"
-                }`}
-              >
-                Book Now
-              </Text>
+              {isLoading ? (
+                <ActivityIndicator color={submitDisbaled ? "gray" : "indigo"} />
+              ) : (
+                <Text
+                  style={tw`text-sm font-semibold text-${
+                    submitDisbaled ? "gray-500" : "indigo-600"
+                  }`}
+                >
+                  Book Now
+                </Text>
+              )}
             </TouchableOpacity>
           </View>
         </View>
