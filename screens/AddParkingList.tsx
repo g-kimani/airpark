@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Text,
   View,
@@ -22,17 +22,9 @@ import { useNavigation } from "@react-navigation/native";
 import { useFormik } from "formik";
 import * as yup from "yup";
 
-const formSchema = yup.object().shape({
-  location: yup.object().required("Location is required"),
-  price: yup
-    .string()
-    .required("Price is required")
-    .matches(/^\d+(\.\d{2})?$/, "Invalid price format"),
-});
-
 const AddParkingList = () => {
   const [location, setLocation] = useState({});
-  const [price, setPrice] = useState("0");
+  const [price, setPrice] = useState("");
   const [image, setImage] = useState({});
   const [description, setDescription] = useState("");
   const [disableSubmit, setDisableSubmit] = useState(false);
@@ -40,48 +32,6 @@ const AddParkingList = () => {
 
   const { setParkings } = useContext<ParkingContextTypes>(ParkingsContext);
   const navigation = useNavigation();
-
-  const formik = useFormik({
-    initialValues: {
-      location: {},
-      price: "",
-      image: {},
-      description: "",
-    },
-    validationSchema: formSchema,
-    onSubmit: (values) => {
-      Keyboard.dismiss();
-      const request = {
-        ...values.location,
-        price: values.price,
-        image: values.image,
-        description: values.description,
-      };
-      console.log(
-        "🚀 ~ file: AddParkingList.tsx:48 ~ handleSubmit ~ parking:",
-        request
-      );
-      setDisableSubmit(true);
-      setIsLoading(true);
-      postParking(request)
-        .then(({ parking }) => {
-          setParkings((prev: any) => {
-            return { list: [...prev.list, parking] };
-          });
-          parking = {
-            ...parking,
-            latitude: parking.location.x,
-            longitude: parking.location.y,
-          };
-          navigation.navigate("ManageParkings", { parking });
-        })
-        .catch((err) => alert(err))
-        .finally(() => {
-          setDisableSubmit(false);
-          setIsLoading(false); // Set isLoading to false after navigating
-        });
-    },
-  });
 
   function pickImage() {
     ImagePicker.launchImageLibraryAsync({
@@ -92,8 +42,8 @@ const AddParkingList = () => {
     })
       .then((result) => {
         if (!result.canceled) {
-          formik.values.image = result.assets[0];
-          // setImage(result.assets[0]);
+          // formik.values.image = result.assets[0];
+          setImage(result.assets[0]);
         }
       })
       .catch((err) => {
@@ -119,7 +69,7 @@ const AddParkingList = () => {
           latitude: parking.location.x,
           longitude: parking.location.y,
         };
-        navigation.navigate("ManageParkings", { parking });
+        navigation.navigate("ManageParking", { parking });
       })
       .catch((err) => alert(err))
       .finally(() => {
@@ -127,6 +77,18 @@ const AddParkingList = () => {
         setIsLoading(false); // Set isLoading to false after navigating
       });
   }
+
+  useEffect(() => {
+    if (
+      Object.keys(location).length === 0 ||
+      Object.keys(image).length === 0 ||
+      price === ""
+    ) {
+      setDisableSubmit(true);
+    } else {
+      setDisableSubmit(false);
+    }
+  }, [location, image, price]);
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior="position">
@@ -139,10 +101,10 @@ const AddParkingList = () => {
           <View
             style={tw`flex relative mx-auto justify-center items-center w-4/5 min-h-220px my-4 bg-slate-200 rounded-md `}
           >
-            {Object.keys(formik.values.image).length ? (
+            {Object.keys(image).length ? (
               <>
                 <Image
-                  source={{ uri: formik.values.image.uri }}
+                  source={{ uri: image.uri }}
                   style={{ width: 200, height: 200 }}
                 />
                 <TouchableOpacity
@@ -169,6 +131,19 @@ const AddParkingList = () => {
             placeholder="Your parking location?"
           />
           <Text style={tw`text-sm font-medium leading-6 text-gray-900 mt-4`}>
+            Price (£ / per day):
+          </Text>
+          <TextInput
+            placeholder="£0.00"
+            value={price}
+            keyboardType={"decimal-pad"}
+            onChangeText={(text) => setPrice(text)}
+            style={[
+              styles.inputBg,
+              tw`w-full rounded-md border-0 py-1.5 px-4 text-gray-900 shadow-sm `,
+            ]}
+          />
+          <Text style={tw`text-sm font-medium leading-6 text-gray-900 mt-4`}>
             Description (optional):
           </Text>
           <TextInput
@@ -182,22 +157,12 @@ const AddParkingList = () => {
               tw`w-full rounded-md border-0 py-1.5 px-4 text-gray-900 min-h-75px shadow-sm `,
             ]}
           />
-          <Text style={tw`text-sm font-medium leading-6 text-gray-900 mt-4`}>
-            Price (£ / per day):
-          </Text>
-          <TextInput
-            placeholder="0.00"
-            value={price}
-            keyboardType={"decimal-pad"}
-            onChangeText={(text) => setPrice(text)}
-            style={[
-              styles.inputBg,
-              tw`w-full rounded-md border-0 py-1.5 px-4 text-gray-900 shadow-sm `,
-            ]}
-          />
+
           <TouchableOpacity
             style={[
-              tw`rounded-md bg-indigo-600 px-3 py-2 shadow-sm m-8 mx-auto`,
+              tw`rounded-md bg-${
+                disableSubmit ? "gray-600" : "indigo-600"
+              } px-3 py-2 shadow-sm m-8 mx-auto`,
               {
                 width: 120,
                 height: 40,
