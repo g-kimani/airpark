@@ -9,6 +9,7 @@ import {
   Button,
   Image,
 } from "react-native";
+import ImageBlurLoading from "react-native-image-blur-loading";
 import { Entypo, MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import tw from "twrnc";
@@ -56,7 +57,10 @@ const IndividualParking = ({ route }: IndividualParkingProps) => {
     <SafeAreaView style={tw`mt-10`}>
       <View style={styles.container}>
         <View style={styles.parkingCover}>
-          <Image
+          <ImageBlurLoading
+            thumbnailSource={{
+              uri: "https://pixabay.com/illustrations/blur-brightness-background-blue-1889747/",
+            }}
             source={{ uri: parking.picture ? parking.picture : defaultImage }}
             style={styles.image}
           />
@@ -113,6 +117,7 @@ const styles = StyleSheet.create({
     height: "100%",
     resizeMode: "cover",
     borderRadius: 15,
+    flex: 1,
   },
   priceContainer: {
     position: "absolute",
