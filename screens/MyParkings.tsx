@@ -10,7 +10,7 @@ const Tab = createMaterialTopTabNavigator();
 
 const MyParkings = () => {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator onAnimatedValueUpdate={() => {}}>
       <Tab.Screen name="Booking History" component={BookingHistory} />
       <Tab.Screen name="Listed Parkings" component={ListedParkings} />
     </Tab.Navigator>
