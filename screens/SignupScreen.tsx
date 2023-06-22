@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
+  ActivityIndicator,
 } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
@@ -39,6 +40,7 @@ type Props = NativeStackScreenProps<NavigationStackParamList, "Signup">;
 const SignupScreen = ({ navigation }: Props) => {
   const { user, setUser } = useContext<UserContextTypes>(UserContext);
   const [avoidKeyboard, setAvoidKeyboard] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const formik = useFormik({
     initialValues: {
       firstname: "",
@@ -50,6 +52,7 @@ const SignupScreen = ({ navigation }: Props) => {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       Keyboard.dismiss();
+      setIsLoading(true);
       signUpUser(values)
         .then((data) => {
           setUser(data);
@@ -58,7 +61,8 @@ const SignupScreen = ({ navigation }: Props) => {
           saveToStore("user_id", String(data.user_id));
           navigation.replace("Home");
         })
-        .catch((err) => alert(err));
+        .catch((err) => alert(err))
+        .finally(() => setIsLoading(false));
     },
   });
   return (
@@ -143,8 +147,13 @@ const SignupScreen = ({ navigation }: Props) => {
           <TouchableOpacity
             style={styles.button}
             onPress={() => formik.submitForm()}
+            disabled={isLoading}
           >
-            <Text style={styles.buttonText}>Register</Text>
+            {isLoading ? (
+              <ActivityIndicator color="white" /> // Show ActivityIndicator while loading
+            ) : (
+              <Text style={styles.buttonText}>Register</Text>
+            )}
           </TouchableOpacity>
           <View style={styles.loginContainer}>
             <Text>Already have an account?</Text>
