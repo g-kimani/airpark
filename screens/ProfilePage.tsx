@@ -153,6 +153,9 @@ const ProfilePage = ({ navigation }: Props) => {
                       }}
                       onSubmit={(values) => {
                         const request = { ...values, image };
+                        if (userInfo?.avatar_url) {
+                          request.avatar_url = userInfo.avatar_url;
+                        }
                         patchUserProfile(request)
                           .then(({ user }) => {
                             setUserInfo(user);

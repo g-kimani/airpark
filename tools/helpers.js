@@ -42,7 +42,7 @@ export function getDaysBetweenDates(startDate, endDate) {
   const end = new Date(endDate);
 
   // Calculate the difference in days
-  const diffInDays = Math.round(Math.abs((start - end) / oneDay));
+  const diffInDays = Math.round(Math.abs((start - end) / oneDay)) + 1;
 
   return diffInDays;
 }

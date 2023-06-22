@@ -23,7 +23,11 @@ const IndividualBooking = ({ route }) => {
       longitude: Number(parking.longitude),
     };
     Geocoder.from(loc).then((result) => {
-      setAddress(result.results[0].formatted_address);
+      if (booking.status === "confirmed") {
+        setAddress(result.results[0].formatted_address);
+      } else {
+        setAddress(result.results[0].formatted_address.split(",")[0]);
+      }
     });
   }, [parking]);
   return (
@@ -35,7 +39,7 @@ const IndividualBooking = ({ route }) => {
         >
           Parking Info
         </Text>
-        <View style={tw`flex flex-row`}>
+        <View style={tw`flex flex-row justify-between`}>
           <View style={tw`flex-shrink`}>
             <Text style={tw`text-sm font-semibold leading-6 text-gray-900`}>
               Location:

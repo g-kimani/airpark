@@ -12,6 +12,7 @@ import { defaultImage } from "../assets/image_not_found.ts";
 import { useNavigation } from "@react-navigation/native";
 
 import tw from "twrnc";
+import { formatPrice } from "../tools/helpers.js";
 
 interface Parking {
   parking_id: number;
@@ -24,13 +25,22 @@ interface Parking {
 
 interface Props {
   parkings: Parking[];
+  setSelectedLocation: any;
 }
 
-const ParkingsList: React.FC<Props> = ({ parkings }) => {
+const ParkingsList: React.FC<Props> = ({ parkings, setSelectedLocation }) => {
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
   const handleParkingPress = (parking: Parking) => {
     navigation.navigate("IndividualParking", { parking });
+  };
+  const handleLocationExpand = () => {
+    setSelectedLocation((prev) => {
+      const location = { ...prev };
+      location.latitudeDelta += 0.1;
+      location.longitudeDelta += 0.1;
+      return location;
+    });
   };
   return (
     <View>
@@ -48,10 +58,10 @@ const ParkingsList: React.FC<Props> = ({ parkings }) => {
           keyExtractor={(item) => item.parking_id.toString()}
           renderItem={({ item }) => (
             <TouchableOpacity
-              style={{ margin: 20 }}
+              style={{ marginHorizontal: 20 }}
               onPress={() => handleParkingPress(item)}
             >
-              <View style={styles.item}>
+              <View style={tw`bg-white rounded-lg shadow-md my-4`}>
                 {isLoading && (
                   <View style={styles.loadingContainer}>
                     <ActivityIndicator size="large" color="red" />
@@ -65,15 +75,29 @@ const ParkingsList: React.FC<Props> = ({ parkings }) => {
                   onLoadStart={() => setIsLoading(true)}
                   onLoadEnd={() => setIsLoading(false)}
                 />
-                <View style={styles.detailsContainer}>
-                  <Text style={styles.location}>{item.area}</Text>
-                  <Text style={styles.price}>£{item.price}</Text>
+                <View
+                  style={tw`flex flex-row justify-between items-center p-2`}
+                >
+                  <Text style={styles.location}>
+                    <Text style={tw`text-gray-600`}>Area: </Text>
+                    {item.area}
+                  </Text>
+                  <Text style={styles.price}>
+                    <Text style={tw`text-gray-600`}>Price: </Text>
+                    {formatPrice(item.price)} /day
+                  </Text>
                 </View>
               </View>
             </TouchableOpacity>
           )}
         />
       )}
+      <TouchableOpacity
+        style={tw`bg-indigo-600 p-4 `}
+        onPress={handleLocationExpand}
+      >
+        <Text>Search Further Out ?</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -84,14 +108,12 @@ const styles = StyleSheet.create({
     width: "100%",
     alignSelf: "center",
   },
-  item: {
-    marginVertical: 8,
-  },
   image: {
     width: "100%",
     aspectRatio: 3 / 2,
     resizeMode: "cover",
-    borderRadius: 10,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
   },
   detailsContainer: {
     flexDirection: "row",
@@ -99,12 +121,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   location: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: "bold",
     marginVertical: 10,
+    display: "flex",
+    flexWrap: "wrap",
   },
   price: {
-    fontSize: 18,
+    fontSize: 16,
     marginVertical: 10,
   },
   loadingContainer: {
