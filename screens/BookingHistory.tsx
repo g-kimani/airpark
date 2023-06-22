@@ -5,16 +5,18 @@ import { getBookings } from "../utils";
 import BookingHistoryCard from "../Components/BookingHistoryCard";
 import { Booking } from "./types";
 import { sortBookings } from "../tools/helpers";
+import { useIsFocused } from "@react-navigation/native";
 
 const BookingHistory = () => {
   const [bookings, setBookings] = useState([]);
 
+  const isFocused = useIsFocused();
   useEffect(() => {
     getBookings().then(({ bookings }) => {
       bookings = sortBookings(bookings);
       setBookings(bookings);
     });
-  }, []);
+  }, [isFocused]);
   return (
     <View style={tw`p-4`}>
       <FlatList
