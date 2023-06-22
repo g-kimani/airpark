@@ -9,13 +9,11 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import ExploreCities from "../Components/ExploreCities";
-import citiesArray from "../data/citiesArray";
+
 import tw from "twrnc";
 import HomeSearch from "../Components/HomeSearch";
 import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
-import ExploreParkings from "../Components/ExploreParkings";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { NavigationStackParamList } from "./types";
 import { getParkings } from "../utils.js";

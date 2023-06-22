@@ -11,10 +11,6 @@ import * as SecureStore from "expo-secure-store";
 import HomeTabNav from "./Navigation/HomeTabNav";
 import { ParkingsContext } from "./contexts/ParkingsContext";
 import IndividualParking from "./screens/IndividualParking";
-import CitiesParkingList from "./screens/CitiesParkingList";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
-import Chat from "./screens/Chat";
 import ManageParking from "./screens/ManageParking";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import IndividualBooking from "./screens/IndividualBooking";
@@ -80,23 +76,6 @@ export default function App() {
                 component={ManageParking}
                 options={{ headerTitle: "Manage Parking" }}
               />
-              <Stack.Screen
-                name="CitiesParkingList"
-                component={CitiesParkingList}
-                options={{
-                  headerTitle: () => (
-                    <>
-                      <MaterialCommunityIcons
-                        name="city-variant-outline"
-                        size={24}
-                        color="black"
-                      />
-                      <Text style={{ fontSize: 18, marginLeft: 4 }}>City</Text>
-                    </>
-                  ),
-                }}
-              />
-              <Stack.Screen name="Chat" component={Chat} />
             </Stack.Navigator>
           </NavigationContainer>
         </SafeAreaProvider>
