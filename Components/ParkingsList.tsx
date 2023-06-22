@@ -43,7 +43,7 @@ const ParkingsList: React.FC<Props> = ({ parkings, setSelectedLocation }) => {
     });
   };
   return (
-    <View>
+    <View style={tw`flex shrink relative`}>
       {parkings.length === 0 ? (
         <View style={styles.noParkingsContainer}>
           <View style={tw`items-center py-10 m-10`}>
@@ -92,12 +92,16 @@ const ParkingsList: React.FC<Props> = ({ parkings, setSelectedLocation }) => {
           )}
         />
       )}
-      <TouchableOpacity
-        style={tw`bg-indigo-600 p-4 `}
-        onPress={handleLocationExpand}
-      >
-        <Text>Search Further Out ?</Text>
-      </TouchableOpacity>
+      <View style={tw`flex justify-center items-center bg-transparent w-full`}>
+        <TouchableOpacity
+          style={tw`bg-white border-indigo-600 border-2 p-2 m-2 flex rounded`}
+          onPress={handleLocationExpand}
+        >
+          <Text style={tw`text-indigo-600 font-semibold`}>
+            Search Further Out ?
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
