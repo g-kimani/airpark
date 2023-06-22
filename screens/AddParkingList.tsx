@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Text,
   View,
@@ -19,10 +19,12 @@ import tw from "twrnc";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ParkingContextTypes } from "./types";
 import { useNavigation } from "@react-navigation/native";
+import { useFormik } from "formik";
+import * as yup from "yup";
 
 const AddParkingList = () => {
   const [location, setLocation] = useState({});
-  const [price, setPrice] = useState("0");
+  const [price, setPrice] = useState("");
   const [image, setImage] = useState({});
   const [description, setDescription] = useState("");
   const [disableSubmit, setDisableSubmit] = useState(false);
@@ -40,6 +42,7 @@ const AddParkingList = () => {
     })
       .then((result) => {
         if (!result.canceled) {
+          // formik.values.image = result.assets[0];
           setImage(result.assets[0]);
         }
       })
@@ -66,7 +69,7 @@ const AddParkingList = () => {
           latitude: parking.location.x,
           longitude: parking.location.y,
         };
-        navigation.navigate("IndividualParking", { parking });
+        navigation.navigate("ManageParking", { parking });
       })
       .catch((err) => alert(err))
       .finally(() => {
@@ -74,6 +77,18 @@ const AddParkingList = () => {
         setIsLoading(false); // Set isLoading to false after navigating
       });
   }
+
+  useEffect(() => {
+    if (
+      Object.keys(location).length === 0 ||
+      Object.keys(image).length === 0 ||
+      price === ""
+    ) {
+      setDisableSubmit(true);
+    } else {
+      setDisableSubmit(false);
+    }
+  }, [location, image, price]);
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior="position">
@@ -116,6 +131,19 @@ const AddParkingList = () => {
             placeholder="Your parking location?"
           />
           <Text style={tw`text-sm font-medium leading-6 text-gray-900 mt-4`}>
+            Price (£ / per day):
+          </Text>
+          <TextInput
+            placeholder="£0.00"
+            value={price}
+            keyboardType={"decimal-pad"}
+            onChangeText={(text) => setPrice(text)}
+            style={[
+              styles.inputBg,
+              tw`w-full rounded-md border-0 py-1.5 px-4 text-gray-900 shadow-sm `,
+            ]}
+          />
+          <Text style={tw`text-sm font-medium leading-6 text-gray-900 mt-4`}>
             Description (optional):
           </Text>
           <TextInput
@@ -129,22 +157,12 @@ const AddParkingList = () => {
               tw`w-full rounded-md border-0 py-1.5 px-4 text-gray-900 min-h-75px shadow-sm `,
             ]}
           />
-          <Text style={tw`text-sm font-medium leading-6 text-gray-900 mt-4`}>
-            Price (£ / per day):
-          </Text>
-          <TextInput
-            placeholder="0.00"
-            value={price}
-            keyboardType={"decimal-pad"}
-            onChangeText={(text) => setPrice(text)}
-            style={[
-              styles.inputBg,
-              tw`w-full rounded-md border-0 py-1.5 px-4 text-gray-900 shadow-sm `,
-            ]}
-          />
+
           <TouchableOpacity
             style={[
-              tw`rounded-md bg-indigo-600 px-3 py-2 shadow-sm m-8 mx-auto`,
+              tw`rounded-md bg-${
+                disableSubmit ? "gray-600" : "indigo-600"
+              } px-3 py-2 shadow-sm m-8 mx-auto`,
               {
                 width: 120,
                 height: 40,
