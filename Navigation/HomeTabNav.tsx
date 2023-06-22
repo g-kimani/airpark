@@ -4,9 +4,9 @@ import HomePage from "../screens/HomePage";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 
 import AddParkingList from "../screens/AddParkingList";
-import Inbox from "../screens/Inbox";
+
 import ProfilePage from "../screens/ProfilePage";
-import Bookings from "../screens/Bookings";
+
 import ExplorePage from "../screens/ExplorePage";
 import MyParkings from "../screens/MyParkings";
 
@@ -35,15 +35,7 @@ const HomeTabNav = () => {
           ),
         }}
       />
-      <Tab.Screen
-        name="Messages"
-        component={Inbox}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="chatbox-outline" size={size} color={color} />
-          ),
-        }}
-      />
+
       <Tab.Screen
         name="My Parkings"
         component={MyParkings}

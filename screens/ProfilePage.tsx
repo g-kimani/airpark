@@ -64,7 +64,7 @@ const ProfilePage = ({ navigation }: Props) => {
       quality: 1,
     });
 
-    if (!result.cancelled) {
+    if (!result.canceled) {
       setImage(result.assets[0].uri);
     }
   };
@@ -136,9 +136,7 @@ const ProfilePage = ({ navigation }: Props) => {
                     >
                       {({ handleChange, handleBlur, handleSubmit, values }) => (
                         <View style={styles.form}>
-                          <Text style={tw`text-decoration-line: underline`}>
-                            Firstname
-                          </Text>
+                          <Text>Firstname</Text>
                           <TextInput
                             id="firstname"
                             placeholder="First Name"
@@ -150,9 +148,7 @@ const ProfilePage = ({ navigation }: Props) => {
                             value={values.firstname}
                             editable={!disabled}
                           />
-                          <Text style={tw`text-decoration-line: underline`}>
-                            Lastname
-                          </Text>
+                          <Text>Lastname</Text>
                           <TextInput
                             id="lastname"
                             placeholder="Last Name"
@@ -165,9 +161,7 @@ const ProfilePage = ({ navigation }: Props) => {
                             value={values.lastname}
                             editable={!disabled}
                           />
-                          <Text style={tw`text-decoration-line: underline`}>
-                            Username
-                          </Text>
+                          <Text>Username</Text>
                           <TextInput
                             id="username"
                             placeholder="Username"
@@ -180,9 +174,7 @@ const ProfilePage = ({ navigation }: Props) => {
                             value={values.username}
                             editable={!disabled}
                           />
-                          <Text style={tw`text-decoration-line: underline`}>
-                            Email
-                          </Text>
+                          <Text>Email</Text>
                           <TextInput
                             id="email"
                             placeholder="email"
@@ -248,7 +240,7 @@ const styles = StyleSheet.create({
   },
   button: {
     padding: 10,
-    backgroundColor: "red",
+    backgroundColor: "#00296b",
     borderRadius: 10,
     margin: 5,
     width: "30%",
