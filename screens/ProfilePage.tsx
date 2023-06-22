@@ -79,6 +79,10 @@ const ProfilePage = ({ navigation }: Props) => {
     }
   };
 
+  const capitaliseName = (string: string): string => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <KeyboardAvoidingView
@@ -104,7 +108,9 @@ const ProfilePage = ({ navigation }: Props) => {
                       <Image source={{ uri: image }} style={styles.picture} />
                     )}
                     <View style={tw`items-center`}>
-                      <Text style={tw`text-4xl`}>{userInfo.firstname}</Text>
+                      <Text style={tw`text-4xl`}>
+                        {capitaliseName(userInfo.firstname)}
+                      </Text>
                       <TouchableOpacity onPress={pickImage}>
                         <View style={tw`flex flex-row items-center`}>
                           <Feather name="edit" size={18} color="black" />
@@ -145,7 +151,7 @@ const ProfilePage = ({ navigation }: Props) => {
                               !disabled && styles.enabledInputText,
                             ]}
                             onChangeText={handleChange("firstname")}
-                            value={values.firstname}
+                            value={capitaliseName(values.firstname)}
                             editable={!disabled}
                           />
                           <Text>Lastname</Text>
@@ -158,7 +164,7 @@ const ProfilePage = ({ navigation }: Props) => {
                             ]}
                             onChangeText={handleChange("lastname")}
                             onBlur={handleBlur("lastname")}
-                            value={values.lastname}
+                            value={capitaliseName(values.lastname)}
                             editable={!disabled}
                           />
                           <Text>Username</Text>
