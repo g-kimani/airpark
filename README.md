@@ -4,7 +4,7 @@ Whether you're visiting a busy city, attending an event, or exploring a new area
 
 ## Demo video
 
-<img src="./assets/Demo.gif" width="50%" alt="gif showing the mobile app in use">
+<img src="./assets/Demo.gif" width="80%" alt="gif showing the mobile app in use">
 
 ## Installation and setup
 
@@ -23,7 +23,7 @@ $ git clone https://github.com/g-kimani/airpark.git
 Navigate into the repo:
 
 ```
-$ cd fe-nc-news
+$ cd airpark
 ```
 
 ### Install dependencies:
